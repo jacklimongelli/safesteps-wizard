@@ -645,21 +645,14 @@ function App(){
       <div style={{maxWidth:760,margin:"0 auto",background:WHITE,borderRadius:12,boxShadow:"0 20px 60px rgba(0,0,0,0.28)",overflow:"hidden"}}>
         {panels[step]}
         <div style={nR}>
-          <div>{step>0&&<button style={BS} onClick={()=>setStep(s=>s-1)}>Back</button>}</div>
+          <div>{step>0&&<button style={BS} onClick={()=>setStep(s=>s-1)}>← Back</button>}</div>
           <div style={{display:"flex",gap:9,alignItems:"center"}}>
             <span style={{fontSize:"0.68rem",color:LABEL}}>Step {step+1} of {STEPS.length}</span>
             {step<STEPS.length-1
               ?<button style={{...BP,opacity:canNext()?1:0.4,cursor:canNext()?"pointer":"not-allowed"}} onClick={()=>canNext()&&goNext()}>
-                {step===0?"Find Nearby Facilities":step===1?"Find Emergency Rooms":"Next"}
+                {"Next →"}
               </button>
-              :<button style={BP} onClick={()=>{
-                const w=window.open("","_blank");
-                const el=document.getElementById("printable-sheet");
-                w.document.write("<html><head><title>Safe Steps Emergency Sheet</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Inter,-apple-system,sans-serif}</style></head><body>"+el.innerHTML+"</body></html>");
-                w.document.close();
-                w.focus();
-                setTimeout(()=>w.print(),500);
-              }}>Print / Save as PDF</button>
+              :null
             }
           </div>
         </div>
