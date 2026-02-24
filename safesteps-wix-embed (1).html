@@ -519,7 +519,13 @@ function PreviewStep(props){
       "utilData="+enc(utilData),
       "manUtils="+enc(manualUtils),
     ].join("&");
-    window.open("https://jacklimongelli.github.io/safesteps-wizard/safesteps-sheet.html?"+params,"_blank");
+    const a=document.createElement("a");
+    a.href="https://jacklimongelli.github.io/safesteps-wizard/safesteps-sheet.html?"+params;
+    a.target="_blank";
+    a.rel="noopener noreferrer";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
   return(
     <div>
