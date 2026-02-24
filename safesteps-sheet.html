@@ -139,11 +139,10 @@ function buildSheet(){
 
   // CONTACTS
   html+=`<div style="margin-bottom:11px">${sectionHeader("Emergency Contacts")}
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
     ${card(cardLabel("Family Contact 1",BLUE)+cell("Name",contacts.fam1?.name)+cell("Phone",contacts.fam1?.phone)+cell("Relationship",contacts.fam1?.rel))}
     ${card(cardLabel("Family Contact 2",BLUE)+cell("Name",contacts.fam2?.name)+cell("Phone",contacts.fam2?.phone)+cell("Relationship",contacts.fam2?.rel))}
     ${card(cardLabel("Neighbor / Local",STEEL)+cell("Name",contacts.neighbor?.name)+cell("Phone",contacts.neighbor?.phone)+cell("Relationship",contacts.neighbor?.rel))}
-    ${card(`${cardLabel("☣ Poison Control","#a01020")}<div style="font-size:0.84rem;font-weight:700;color:${RED}">(800) 222-1222</div><div style="font-size:0.58rem;color:${LABEL}">National Hotline — 24/7</div>`,"#fff8f8","#f0c0c0")}
   </div></div>`;
 
   // PETS

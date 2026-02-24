@@ -38,10 +38,12 @@ async function placesCall(body){
   return res.json();
 }
 
-function distMiles(lat1,lng1,lat2,lng2){
-  const R=3958.8,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
-  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
-  return(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))).toFixed(1);
+async function getDriving(origin,destLat,destLng){
+  try{
+    const res=await placesCall({type:"directions",origin,dest:destLat+","+destLng});
+    if(res.error)return null;
+    return{distance:res.distance,duration:res.duration};
+  }catch{return null;}
 }
 
 async function searchNearby(address,placeType,keyword){
@@ -54,9 +56,13 @@ async function searchNearby(address,placeType,keyword){
   const detailed=await Promise.all(
     places.slice(0,4).map(async p=>{
       try{
-        const det=await placesCall({type:"details",place_id:p.place_id});
-        return{name:det.name||p.name,address:det.address||p.address,phone:det.phone||"",distance:distMiles(lat,lng,p.lat,p.lng)+" mi"};
-      }catch{return{name:p.name,address:p.address,phone:"",distance:distMiles(lat,lng,p.lat,p.lng)+" mi"};}
+        const[det,drive]=await Promise.all([
+          placesCall({type:"details",place_id:p.place_id}),
+          getDriving(address,p.lat,p.lng),
+        ]);
+        const distLabel=drive?drive.distance+" ("+drive.duration+")":"";
+        return{name:det.name||p.name,address:det.address||p.address,phone:det.phone||"",distance:distLabel};
+      }catch{return{name:p.name,address:p.address,phone:"",distance:""};}
     })
   );
   return detailed;
@@ -430,7 +436,6 @@ function PrintSheet({address,members,er,urgentCares,contacts,pets,utilData,selec
             {[{k:"fam1",lb:"Family Contact 1",c:BLUE},{k:"fam2",lb:"Family Contact 2",c:BLUE},{k:"neighbor",lb:"Neighbor / Local",c:STEEL}].map(({k,lb,c})=>(
               <MC key={k}><CL color={c}>{lb}</CL><F lbl="Name" val={contacts[k]?.name}/><F lbl="Phone" val={contacts[k]?.phone}/><F lbl="Relationship" val={contacts[k]?.rel}/></MC>
             ))}
-            <MC bg="#fff8f8" border="#f0c0c0"><CL color="#a01020">☣ Poison Control</CL><div style={{fontSize:"0.84rem",fontWeight:700,color:RED}}>(800) 222-1222</div><div style={{fontSize:"0.58rem",color:LABEL}}>National Hotline — 24/7</div></MC>
           </div>
         </div>
         {pets.filter(p=>p.name).length>0&&(
