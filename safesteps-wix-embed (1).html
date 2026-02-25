@@ -519,27 +519,7 @@ function PreviewStep(props){
       "utilData="+enc(utilData),
       "manUtils="+enc(manualUtils),
     ].join("&");
-    // Fetch the sheet template and inject data, then download as HTML file
-    fetch("https://jacklimongelli.github.io/safesteps-wizard/safesteps-sheet.html")
-      .then(r=>r.text())
-      .then(template=>{
-        // Inject the params as a script at the top so the page loads with data
-        const script=`<script>window.__SS_PARAMS__=${JSON.stringify({address,members,
-          er:erSelected!==null?erOptions?.[erSelected]:null,
-          uc:ucSelected.map(i=>ucOptions?.[i]),
-          contacts,pets,shutoffs,
-          selUtils:selectedUtils,utilData,manUtils:manualUtils
-        })}<\/script>`;
-        const injected=template.replace('<script>',script+'<script>');
-        const blob=new Blob([injected],{type:"text/html"});
-        const a=document.createElement("a");
-        a.href=URL.createObjectURL(blob);
-        a.download="SafeSteps_Emergency_Sheet.html";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
-      });
+    window.open("https://jacklimongelli.github.io/safesteps-wizard/safesteps-sheet.html?"+params,"_blank");
   };
   return(
     <div>
