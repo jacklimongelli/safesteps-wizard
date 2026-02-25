@@ -76,7 +76,7 @@ function sectionHeader(text){
 }
 
 function card(content,bg=FILL,border=RULE,extraStyle=""){
-  return `<div style="border:1.5px solid ${border};border-radius:4px;padding:8px 10px;background:${bg};${extraStyle}">${content}</div>`;
+  return `<div style="border:1.5px solid ${border};border-radius:4px;padding:8px 10px;background:${bg};height:100%;${extraStyle}">${content}</div>`;
 }
 
 function cardLabel(text,color=BLUE){
@@ -95,7 +95,7 @@ function buildSheet(){
       <div style="font-size:0.46rem;letter-spacing:0.18em;text-transform:uppercase;color:#7a9ac8;margin-top:5px">Veteran-Built Home Preparedness</div>
     </div>
     <div style="text-align:right">
-      <div style="font-family:Georgia,serif;font-size:1.05rem;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;color:white">Family Emergency Sheet</div>
+      <div style="font-family:Georgia,serif;font-size:1.05rem;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;color:white">${address.lastName?address.lastName+" Family Emergency Sheet":"Family Emergency Sheet"}</div>
       <span style="background:${RED};color:white;font-size:0.44rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:2px 9px;border-radius:20px;display:inline-block;margin-top:3px">Post on Refrigerator</span>
     </div>
   </div>`;
@@ -105,7 +105,7 @@ function buildSheet(){
   // ADDRESS
   html+=`
   <div style="background:${ICE};border:1.5px solid ${RULE};border-left:5px solid ${RED};padding:7px 11px;margin-bottom:11px;display:flex;align-items:center;gap:9px">
-    <span style="font-size:1.1rem;opacity:0.6">📍</span>
+    <span style="font-size:1.1rem;opacity:0.6">🏠</span>
     <div style="flex:1">
       <div style="font-size:0.46rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:${RED};margin-bottom:4px">Home Address</div>
       <div style="display:grid;grid-template-columns:2fr 1fr 0.5fr 0.6fr;gap:7px">
@@ -167,18 +167,18 @@ function buildSheet(){
   }
 
   // UTILITIES + PHONE NUMBERS
-  html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px">
-  <div>${sectionHeader("Utility Shutoffs")}
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:stretch">
+  html+=`<div style="margin-bottom:11px">
+  <div>
+    <div style="display:flex;gap:11px;margin-bottom:4px">
+      <div style="flex:1">${sectionHeader("Utility Shutoffs")}</div>
+      <div style="flex:1">${sectionHeader("Important Phone Numbers")}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;gap:6px;align-items:stretch">
       ${[{k:"gas",lb:"🔥 Gas Meter",c:"#8a4010",bg:"#fff8f0",b:"#e8c090"},
-         {k:"elec",lb:"⚡ Electrical Panel",c:"#6a6010",bg:"#f8f8f0",b:"#d8d090"},
+         {k:"elec",lb:"⚡ Elec. Panel",c:"#6a6010",bg:"#f8f8f0",b:"#d8d090"},
          {k:"water",lb:"💧 Water Main",c:"#1a3a7a",bg:"#f0f6ff",b:"#a0b8e0"}].map(u=>
         card(cardLabel(u.lb,u.c)+(selUtils[u.k]==="na"?`<div style="font-size:0.68rem;color:${LABEL};font-style:italic">No ${u.k==="elec"?"electricity":u.k}</div>`:cell("Location",shutoffs[u.k])),u.bg,u.b)
       ).join("")}
-    </div>
-  </div>
-  <div>${sectionHeader("Important Phone Numbers")}
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;align-items:stretch">
       ${card(`${cardLabel("☣ Poison Control","#a01020")}<div style="font-weight:700;color:${RED};font-size:0.76rem">(800) 222-1222</div>`,"#fff8f8","#f0c0c0")}
       ${card(`${cardLabel("🔥 Gas Emergency","#8a4010")}${selUtils.gas==="na"?`<div style="font-size:0.66rem;color:${LABEL};font-style:italic">N/A</div>`:`<div style="font-weight:700;font-size:0.76rem;color:#8a4010">${gP("gas")||"—"}</div><div style="font-size:0.58rem;color:${LABEL}">${gN("gas")||""}</div>`}`,"#fff8f0","#e8c090")}
       ${card(`${cardLabel("⚡ Power Outage","#6a6010")}${selUtils.elec==="na"?`<div style="font-size:0.66rem;color:${LABEL};font-style:italic">N/A</div>`:`<div style="font-weight:700;font-size:0.76rem;color:#6a6010">${gP("elec")||"—"}</div><div style="font-size:0.58rem;color:${LABEL}">${gN("elec")||""}</div>`}`,"#f8f8f0","#d8d090")}
@@ -188,8 +188,8 @@ function buildSheet(){
   // ADDITIONAL INFO
   html+=`<div>${sectionHeader("Additional Info")}
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
-    ${card(`<div style="display:flex;align-items:center;gap:7px"><span style="font-size:1.2rem;opacity:0.55;flex-shrink:0">🏠</span><div style="flex:1">${cardLabel("Primary Rally Point","#2a6040")}${cell("Location",contacts.rally1)}</div></div>`,"#f0f8f0","#a0c8a0")}
-    ${card(`<div style="display:flex;align-items:center;gap:7px"><span style="font-size:1.2rem;opacity:0.55;flex-shrink:0">🌲</span><div style="flex:1">${cardLabel("Alternate Rally Point","#4a6030")}${cell("Location",contacts.rally2)}</div></div>`,"#f6f8f0","#b8c8a0")}
+    ${card(`<div style="display:flex;align-items:center;gap:7px"><span style="font-size:1.2rem;opacity:0.55;flex-shrink:0">📍</span><div style="flex:1">${cardLabel("Primary Rally Point","#2a6040")}${cell("Location",contacts.rally1)}</div></div>`,"#f0f8f0","#a0c8a0")}
+    ${card(`<div style="display:flex;align-items:center;gap:7px"><span style="font-size:1.2rem;opacity:0.55;flex-shrink:0">📍</span><div style="flex:1">${cardLabel("Alternate Rally Point","#4a6030")}${cell("Location",contacts.rally2)}</div></div>`,"#f6f8f0","#b8c8a0")}
     ${card(`${cardLabel("🔒 Family Password","#7a5a10")}<div style="font-size:0.9rem;font-weight:700;color:#5a3a08;letter-spacing:0.1em;margin-top:3px">${contacts.password||"—"}</div>`,"#fffaf0","#e8d8a0")}
   </div></div>`;
 
