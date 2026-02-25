@@ -9,6 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
+  html,body{overflow:hidden;height:100%}
   body{font-family:'Inter',-apple-system,sans-serif;background:#0b1e3d}
   input:focus{outline:none} button{font-family:inherit}
   @keyframes spin{to{transform:rotate(360deg)}}
@@ -46,11 +47,11 @@ async function getDriving(origin,destLat,destLng){
   }catch{return null;}
 }
 
-async function searchNearby(address,placeType,keyword){
+async function searchNearby(address,placeType,keyword,keywords){
   const geo=await placesCall({type:"geocode",address});
   if(geo.error) throw new Error(geo.error+(geo.status?" ("+geo.status+")":""));
   const {lat,lng}=geo;
-  const nearby=await placesCall({type:"nearby",lat,lng,placeType,keyword});
+  const nearby=await placesCall({type:"nearby",lat,lng,placeType,keyword,keywords});
   if(nearby.error) throw new Error(nearby.error+(nearby.status?" ("+nearby.status+")":""));
   const places=nearby.results||[];
   const detailed=await Promise.all(
@@ -559,7 +560,7 @@ function App(){
     if(ucLoading||ucOptions)return;
     setUcLoading(true);setUcError("");
     try{
-      const results=await searchNearby(addr,"doctor","urgent care");
+      const results=await searchNearby(addr,null,null,["urgent care","walk-in clinic","urgent care center","MedExpress","MinuteClinic"]);
       setUcOptions(results.length>0?results.slice(0,4):null);
       if(!results.length)setUcError("Google Maps returned no urgent care near this address.");
     }catch(e){
@@ -661,6 +662,16 @@ function App(){
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+
+<script>
+function sendHeight(){
+  const h=document.body.scrollHeight;
+  window.parent.postMessage({action:"resize",height:h},"*");
+}
+// Send on load and on any DOM change
+window.addEventListener("load", sendHeight);
+new MutationObserver(sendHeight).observe(document.body,{subtree:true,childList:true,attributes:true});
 </script>
 </body>
 </html>
