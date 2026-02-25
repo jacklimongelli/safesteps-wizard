@@ -9,9 +9,11 @@
   body{font-family:Inter,-apple-system,sans-serif;background:#f0f2f5}
   @media print{
     *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important}
+    @page{margin:0;size:letter portrait}
     .no-print{display:none!important}
-    body{background:white!important}
-    .sheet-wrap{box-shadow:none!important;margin:0!important;border-radius:0!important}
+    body{background:white!important;margin:0;padding:0}
+    .page-wrap{padding:0!important;margin:0!important;max-width:100vw!important}
+    #sheet{box-shadow:none!important;margin:0!important;border-radius:0!important;border:none!important;transform-origin:top left}
   }
 </style>
 </head>
@@ -27,7 +29,7 @@
   </button>
 </div>
 
-<div style="max-width:900px;margin:24px auto;padding:0 16px 48px">
+<div class="page-wrap" style="max-width:900px;margin:24px auto;padding:0 16px 48px">
   <div class="sheet-wrap" id="sheet" style="background:white;border:1px solid #c5cede;border-top:5px solid #0b1e3d;border-radius:4px;box-shadow:0 4px 24px rgba(0,0,0,0.10)">
     <!-- Sheet rendered by JS below -->
   </div>
@@ -207,6 +209,39 @@ function buildSheet(){
 }
 
 document.getElementById("sheet").innerHTML=buildSheet();
+</script>
+
+<script>
+function scaleSheetForPrint(){
+  const sheet=document.getElementById("sheet");
+  if(!sheet)return;
+  // Letter page at 96dpi = 816x1056px, minus 0 margins
+  const pageH=1056;
+  const pageW=816;
+  const sheetH=sheet.scrollHeight;
+  const sheetW=sheet.scrollWidth;
+  const scaleH=pageH/sheetH;
+  const scaleW=pageW/sheetW;
+  const scale=Math.min(scaleH,scaleW,1); // never scale up, only down
+  sheet.style.transform="scale("+scale+")";
+  sheet.style.width=(100/scale)+"%";
+}
+
+// Run before printing
+if(window.matchMedia){
+  window.matchMedia("print").addListener(function(mq){
+    if(mq.matches) scaleSheetForPrint();
+    else{ 
+      const sheet=document.getElementById("sheet");
+      if(sheet){sheet.style.transform="";sheet.style.width="";}
+    }
+  });
+}
+window.onbeforeprint=scaleSheetForPrint;
+window.onafterprint=function(){
+  const sheet=document.getElementById("sheet");
+  if(sheet){sheet.style.transform="";sheet.style.width="";}
+};
 </script>
 </body>
 </html>
