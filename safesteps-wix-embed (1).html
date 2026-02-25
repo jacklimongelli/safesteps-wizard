@@ -505,28 +505,13 @@ function PrintSheet({address,members,er,urgentCares,contacts,pets,utilData,selec
 }
 
 function PreviewStep(props){
-  const openPrint=()=>{
-    const enc=v=>encodeURIComponent(JSON.stringify(v));
-    const params=[
-      "address="+enc(address),
-      "members="+enc(members),
-      "er="+enc(erSelected!==null?erOptions?.[erSelected]:null),
-      "uc="+enc(ucSelected.map(i=>ucOptions?.[i])),
-      "contacts="+enc(contacts),
-      "pets="+enc(pets),
-      "shutoffs="+enc(shutoffs),
-      "selUtils="+enc(selectedUtils),
-      "utilData="+enc(utilData),
-      "manUtils="+enc(manualUtils),
-    ].join("&");
-    window.open("https://jacklimongelli.github.io/safesteps-wizard/safesteps-sheet.html?"+params,"_blank");
-  };
+
   return(
     <div>
       <div style={cH}><h2 style={cT}>Preview Your Emergency Sheet</h2><p style={cS}>Review below, then click the button to print or save as PDF.</p></div>
       <div style={cB}>
         <div style={{textAlign:"center",marginBottom:16}}>
-          <button style={{...BP,fontSize:"1rem",padding:"12px 32px"}} onClick={openPrint}>
+          <button style={{...BP,fontSize:"1rem",padding:"12px 32px"}} onClick={props.openPrint}>
             🖨 Print / Save as PDF
           </button>
           <div style={{fontSize:"0.7rem",color:LABEL,marginTop:7}}>Opens in a new tab — use your browser's print dialog to save as PDF</div>
@@ -593,6 +578,23 @@ function App(){
     return true;
   };
 
+  const openPrint=()=>{
+    const enc=v=>encodeURIComponent(JSON.stringify(v));
+    const params=[
+      "address="+enc(address),
+      "members="+enc(members),
+      "er="+enc(erSelected!==null?erOptions?.[erSelected]:null),
+      "uc="+enc(ucSelected.map(i=>ucOptions?.[i])),
+      "contacts="+enc(contacts),
+      "pets="+enc(pets),
+      "shutoffs="+enc(shutoffs),
+      "selUtils="+enc(selectedUtils),
+      "utilData="+enc(utilData),
+      "manUtils="+enc(manualUtils),
+    ].join("&");
+    window.open("https://jacklimongelli.github.io/safesteps-wizard/safesteps-sheet.html?"+params,"_blank");
+  };
+
   const goNext=()=>{
     const n=step+1;setStep(n);
     if(n===2)loadER();
@@ -618,7 +620,7 @@ function App(){
       shutoffs={shutoffs} onShutoff={(t,v)=>setShutoffs(u=>({...u,[t]:v}))}
       manualUtils={manualUtils} onManual={onManual}/>,
     <PreviewStep address={address} members={members} er={er} urgentCares={urgentCares}
-      contacts={contacts} pets={pets} utilData={utilData} selectedUtils={selectedUtils} shutoffs={shutoffs} manualUtils={manualUtils}/>,
+      contacts={contacts} pets={pets} utilData={utilData} selectedUtils={selectedUtils} shutoffs={shutoffs} manualUtils={manualUtils} openPrint={openPrint}/>,
   ];
 
   return(
