@@ -212,6 +212,7 @@ function AddressStep({data,setData}){
           <Inp label="State (2-letter)" value={data.state} onChange={v=>u("state",v)} placeholder="VA"/>
           <Inp label="Zip Code" value={data.zip} onChange={v=>u("zip",v)} placeholder="22901"/>
         </div>
+        <div style={{marginTop:13}}><Inp label="Family Last Name" value={data.lastName||""} onChange={v=>u("lastName",v)} placeholder="e.g. Smith"/></div>
       </div>
     </div>
   );
@@ -341,7 +342,7 @@ function PetsStep({pets,setPets}){
 
 const UTIL_TYPES=[
   {key:"gas",label:"Gas",emoji:"🔥",color:"#8a4010",bg:"#fff8f0",border:"#e8c090"},
-  {key:"elec",label:"Electric",emoji:"⚡",color:"#6a6010",bg:"#f8f8f0",border:"#d8d090"},
+  {key:"elec",label:"Elec. Panel",emoji:"⚡",color:"#6a6010",bg:"#f8f8f0",border:"#d8d090"},
   {key:"water",label:"Water",emoji:"💧",color:"#1a3a7a",bg:"#f0f6ff",border:"#a0b8e0"},
 ];
 
@@ -395,13 +396,13 @@ function PrintSheet({address,members,er,urgentCares,contacts,pets,utilData,selec
           <div style={{fontSize:"0.46rem",letterSpacing:"0.18em",textTransform:"uppercase",color:"#7a9ac8",marginTop:5}}>Veteran-Built Home Preparedness</div>
         </div>
         <div style={{textAlign:"right"}}>
-          <div style={{fontFamily:"Georgia,serif",fontSize:"1.05rem",fontWeight:800,letterSpacing:"0.05em",textTransform:"uppercase",color:WHITE}}>Family Emergency Sheet</div>
+          <div style={{fontFamily:"Georgia,serif",fontSize:"1.05rem",fontWeight:800,letterSpacing:"0.05em",textTransform:"uppercase",color:WHITE}}>{address.lastName?address.lastName+" Family Emergency Sheet":"Family Emergency Sheet"}</div>
           <span style={{background:RED,color:WHITE,fontSize:"0.44rem",fontWeight:700,letterSpacing:"0.2em",textTransform:"uppercase",padding:"2px 9px",borderRadius:20,display:"inline-block",marginTop:3}}>Post on Refrigerator</span>
         </div>
       </div>
       <div style={{padding:"13px 20px 16px"}}>
         <div style={{background:ICE,border:"1.5px solid "+RULE,borderLeft:"5px solid "+RED,padding:"7px 11px",marginBottom:11,display:"flex",alignItems:"center",gap:9}}>
-          <span style={{fontSize:"1.1rem",opacity:0.6}}>📍</span>
+          <span style={{fontSize:"1.1rem",opacity:0.6}}>🏠</span>
           <div style={{flex:1}}>
             <div style={{fontSize:"0.46rem",fontWeight:700,letterSpacing:"0.2em",textTransform:"uppercase",color:RED,marginBottom:4}}>Home Address</div>
             <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 0.5fr 0.6fr",gap:7}}>
@@ -452,39 +453,35 @@ function PrintSheet({address,members,er,urgentCares,contacts,pets,utilData,selec
             </table>
           </div>
         )}
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:11,marginBottom:11}}>
-          <div>
-            <SH>Utility Shutoffs</SH>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
-              {[{key:"gas",lb:"🔥 Gas Meter",c:"#8a4010",bg:"#fff8f0",b:"#e8c090"},{key:"elec",lb:"⚡ Electrical Panel",c:"#6a6010",bg:"#f8f8f0",b:"#d8d090"},{key:"water",lb:"💧 Water Main",c:"#1a3a7a",bg:"#f0f6ff",b:"#a0b8e0"}].map(u=>(
-                <MC key={u.key} bg={u.bg} border={u.b}><CL color={u.c}>{u.lb}</CL>
-                  {selectedUtils[u.key]==="na"?<div style={{fontSize:"0.68rem",color:LABEL,fontStyle:"italic"}}>No {u.key==="elec"?"electricity":u.key}</div>:<F lbl="Location" val={shutoffs[u.key]}/>}
-                </MC>
-              ))}
-            </div>
+        <div style={{marginBottom:11}}>
+          <div style={{display:"flex",gap:11,marginBottom:4}}>
+            <div style={{flex:1}}><SH>Utility Shutoffs</SH></div>
+            <div style={{flex:1}}><SH>Important Phone Numbers</SH></div>
           </div>
-          <div>
-            <SH>Important Phone Numbers</SH>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:6}}>
-              <MC bg="#fff8f8" border="#f0c0c0"><CL color="#a01020">☣ Poison Control</CL><div style={{fontWeight:700,color:RED,fontSize:"0.76rem"}}>(800) 222-1222</div></MC>
-              {[{key:"gas",lb:"🔥 Gas Emergency",c:"#8a4010",bg:"#fff8f0",b:"#e8c090"},{key:"elec",lb:"⚡ Power Outage",c:"#6a6010",bg:"#f8f8f0",b:"#d8d090"}].map(u=>(
-                <MC key={u.key} bg={u.bg} border={u.b}><CL color={u.c}>{u.lb}</CL>
-                  {selectedUtils[u.key]==="na"?<div style={{fontSize:"0.66rem",color:LABEL,fontStyle:"italic"}}>N/A</div>
-                  :<><div style={{fontWeight:700,fontSize:"0.76rem",color:u.c}}>{gP(u.key)||"—"}</div><div style={{fontSize:"0.58rem",color:LABEL}}>{gN(u.key)||""}</div></>}
-                </MC>
-              ))}
-            </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr 1fr 1fr",gap:6,alignItems:"stretch"}}>
+            {[{key:"gas",lb:"🔥 Gas Meter",c:"#8a4010",bg:"#fff8f0",b:"#e8c090"},{key:"elec",lb:"⚡ Elec. Panel",c:"#6a6010",bg:"#f8f8f0",b:"#d8d090"},{key:"water",lb:"💧 Water Main",c:"#1a3a7a",bg:"#f0f6ff",b:"#a0b8e0"}].map(u=>(
+              <MC key={u.key} bg={u.bg} border={u.b}><CL color={u.c}>{u.lb}</CL>
+                {selectedUtils[u.key]==="na"?<div style={{fontSize:"0.68rem",color:LABEL,fontStyle:"italic"}}>No {u.key==="elec"?"electricity":u.key}</div>:<F lbl="Location" val={shutoffs[u.key]}/>}
+              </MC>
+            ))}
+            <MC bg="#fff8f8" border="#f0c0c0"><CL color="#a01020">☣ Poison Control</CL><div style={{fontWeight:700,color:RED,fontSize:"0.76rem"}}>(800) 222-1222</div></MC>
+            {[{key:"gas",lb:"🔥 Gas Emergency",c:"#8a4010",bg:"#fff8f0",b:"#e8c090"},{key:"elec",lb:"⚡ Power Outage",c:"#6a6010",bg:"#f8f8f0",b:"#d8d090"}].map(u=>(
+              <MC key={u.key} bg={u.bg} border={u.b}><CL color={u.c}>{u.lb}</CL>
+                {selectedUtils[u.key]==="na"?<div style={{fontSize:"0.66rem",color:LABEL,fontStyle:"italic"}}>N/A</div>
+                :<><div style={{fontWeight:700,fontSize:"0.76rem",color:u.c}}>{gP(u.key)||"—"}</div><div style={{fontSize:"0.58rem",color:LABEL}}>{gN(u.key)||""}</div></>}
+              </MC>
+            ))}
           </div>
         </div>
         <div>
           <SH>Additional Info</SH>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:7}}>
             <MC bg="#f0f8f0" border="#a0c8a0" style={{display:"flex",alignItems:"center",gap:7}}>
-              <span style={{fontSize:"1.2rem",opacity:0.55,flexShrink:0}}>🏠</span>
+              <span style={{fontSize:"1.2rem",opacity:0.55,flexShrink:0}}>📍</span>
               <div style={{flex:1}}><CL color="#2a6040">Primary Rally Point</CL><F lbl="Location" val={contacts.rally1}/></div>
             </MC>
             <MC bg="#f6f8f0" border="#b8c8a0" style={{display:"flex",alignItems:"center",gap:7}}>
-              <span style={{fontSize:"1.2rem",opacity:0.55,flexShrink:0}}>🌲</span>
+              <span style={{fontSize:"1.2rem",opacity:0.55,flexShrink:0}}>📍</span>
               <div style={{flex:1}}><CL color="#4a6030">Alternate Rally Point</CL><F lbl="Location" val={contacts.rally2}/></div>
             </MC>
             <MC bg="#fffaf0" border="#e8d8a0"><CL color="#7a5a10">🔒 Family Password</CL>
@@ -524,7 +521,7 @@ function PreviewStep(props){
 
 function App(){
   const[step,setStep]=useState(0);
-  const[address,setAddress]=useState({street:"",city:"",state:"",zip:""});
+  const[address,setAddress]=useState({street:"",city:"",state:"",zip:"",lastName:""});
   const[members,setMembers]=useState([blankM(),blankM()]);
   const[contacts,setContacts]=useState({fam1:{},fam2:{},neighbor:{},rally1:"",rally2:"",password:""});
   const[pets,setPets]=useState([]);
