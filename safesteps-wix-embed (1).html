@@ -653,7 +653,7 @@ function App(){
                 <div style={{width:26,height:26,borderRadius:"50%",background:i<step?RED:i===step?WHITE:"rgba(255,255,255,0.12)",border:"2px solid "+(i<step?RED:i===step?WHITE:"rgba(255,255,255,0.18)"),display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:i<step?WHITE:i===step?NAV:"rgba(255,255,255,0.35)",transition:"all .25s"}}>
                   {i<step?"✓":i+1}
                 </div>
-                <div className="step-label" style={{fontSize:"0.44rem",fontWeight:600,letterSpacing:"0.07em",textTransform:"uppercase",color:i<step?"rgba(255,255,255,0.8)":i===step?WHITE:"rgba(255,255,255,0.28)",marginTop:4,textAlign:"center",whiteSpace:"nowrap"}}>{st}</div>
+
               </div>
               {i<STEPS.length-1&&<div style={{flex:1,height:2,background:i<step?RED:"rgba(255,255,255,0.1)",marginTop:-13,transition:"background .25s"}}/>}
             </div>
