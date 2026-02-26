@@ -12,6 +12,22 @@
   html,body{overflow:hidden;height:100%}
   body{font-family:'Inter',-apple-system,sans-serif;background:#0b1e3d}
   input:focus{outline:none} button{font-family:inherit}
+  @media(max-width:600px){
+    .step-grid-3{grid-template-columns:1fr!important}
+    .step-grid-2{grid-template-columns:1fr!important}
+    .fam-table{font-size:0.65rem}
+    .fam-table th,.fam-table td{padding:3px 4px!important;font-size:0.55rem!important}
+    .contact-grid{grid-template-columns:1fr!important}
+    .step-indicator{padding:8px 6px 0!important;overflow:hidden!important}
+    .step-indicator .step-label{display:none!important}
+    .step-indicator .step-dot{width:18px!important;height:18px!important;font-size:7px!important;flex-shrink:0}
+    .step-indicator>div{padding-bottom:10px!important}
+    .step-connector{min-width:4px!important;flex:1}
+    .nav-row{padding:12px 14px!important}
+    .card-body{padding:16px 14px 14px!important}
+    .card-header{padding:14px 14px 12px!important}
+    .step-dot-wrap{width:28px!important;flex-shrink:0!important}
+  }
   @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
   .tbl-input{border:none;background:transparent;font-family:inherit;font-size:0.78rem;color:#141c2b;padding:5px 7px;width:100%;outline:none}
@@ -205,10 +221,10 @@ function AddressStep({data,setData}){
   const u=(k,v)=>setData(d=>({...d,[k]:v}));
   return(
     <div>
-      <div style={cH}><h2 style={cT}>Home Address</h2><p style={cS}>Used to find your nearest ER, urgent care, and utility providers.</p></div>
-      <div style={cB}>
+      <div style={cH} className="card-header"><h2 style={cT}>Home Address</h2><p style={cS}>Used to find your nearest ER, urgent care, and utility providers.</p></div>
+      <div style={cB} className="card-body">
         <div style={{marginBottom:13}}><Inp label="Street Address" value={data.street} onChange={v=>u("street",v)} placeholder="e.g. 1234 Jefferson Avenue"/></div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:11}}>
+        <div className="step-grid-3" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:11}}>
           <Inp label="City" value={data.city} onChange={v=>u("city",v)} placeholder="Charlottesville"/>
           <Inp label="State (2-letter)" value={data.state} onChange={v=>u("state",v)} placeholder="VA"/>
           <Inp label="Zip Code" value={data.zip} onChange={v=>u("zip",v)} placeholder="22901"/>
@@ -226,10 +242,10 @@ function FamilyStep({members,setMembers}){
   const upd=(i,k,v)=>setMembers(ms=>ms.map((m,idx)=>idx===i?{...m,[k]:v}:m));
   return(
     <div>
-      <div style={cH}><h2 style={cT}>Family Members</h2><p style={cS}>Add everyone who lives in or regularly stays at your home.</p></div>
-      <div style={cB}>
+      <div style={cH} className="card-header"><h2 style={cT}>Family Members</h2><p style={cS}>Add everyone who lives in or regularly stays at your home.</p></div>
+      <div style={cB} className="card-body">
         <div style={{overflowX:"auto"}}>
-          <table style={{width:"100%",borderCollapse:"collapse",fontSize:"0.76rem"}}>
+          <table className="fam-table" style={{width:"100%",borderCollapse:"collapse",fontSize:"0.76rem"}}>
             <thead><tr><th style={{...TH,width:24}}>#</th>{FCOLS.map(c=><th key={c} style={TH}>{c}</th>)}<th style={TH}></th></tr></thead>
             <tbody>
               {members.map((m,i)=>(
@@ -254,8 +270,8 @@ function FacilityStep({title,subtitle,options,loading,errorMsg,selected,onSelect
   const multi=!!onToggle;
   return(
     <div>
-      <div style={cH}><h2 style={cT}>{title}</h2><p style={cS}>{subtitle}</p></div>
-      <div style={cB}>
+      <div style={cH} className="card-header"><h2 style={cT}>{title}</h2><p style={cS}>{subtitle}</p></div>
+      <div style={cB} className="card-body">
         {loading
           ?<Spinner msg={"Searching Google Maps for nearby "+title.toLowerCase().replace(/[^a-z ]/gi,"")+"."}/>
           :options&&options.length>0
@@ -293,16 +309,16 @@ function ContactsStep({contacts,setContacts}){
   const u3=useCallback((f,v)=>upd("neighbor",f,v),[upd]);
   return(
     <div>
-      <div style={cH}><h2 style={cT}>Emergency Contacts</h2><p style={cS}>Who should be called if primary family members are unreachable?</p></div>
-      <div style={cB}>
-        <div style={{display:"flex",flexDirection:"column",gap:11}}>
+      <div style={cH} className="card-header"><h2 style={cT}>Emergency Contacts</h2><p style={cS}>Who should be called if primary family members are unreachable?</p></div>
+      <div style={cB} className="card-body">
+        <div className="contact-grid" style={{display:"flex",flexDirection:"column",gap:11}}>
           <ContactCard title="Family Contact 1" data={contacts.fam1||{}} onChange={u1}/>
           <ContactCard title="Family Contact 2" data={contacts.fam2||{}} onChange={u2}/>
           <ContactCard title="Neighbor / Local Contact" data={contacts.neighbor||{}} onChange={u3} accentColor={STEEL}/>
         </div>
         <div style={{marginTop:18}}>
           <SH>Rally Points &amp; Family Password</SH>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:11,marginTop:6}}>
+          <div className="step-grid-3" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:11,marginTop:6}}>
             <Inp label="Primary Rally Point" value={contacts.rally1||""} onChange={v=>setContacts(c=>({...c,rally1:v}))} placeholder="e.g. Neighbor mailbox across street"/>
             <Inp label="Alternate Rally Point" value={contacts.rally2||""} onChange={v=>setContacts(c=>({...c,rally2:v}))} placeholder="e.g. Corner of Oak St & Main"/>
             <Inp label="Family Password" value={contacts.password||""} onChange={v=>setContacts(c=>({...c,password:v}))} placeholder="e.g. SYCAMORE"/>
@@ -317,19 +333,19 @@ function PetsStep({pets,setPets}){
   const upd=(i,k,v)=>setPets(ps=>ps.map((p,idx)=>idx===i?{...p,[k]:v}:p));
   return(
     <div>
-      <div style={cH}><h2 style={cT}>Pets</h2><p style={cS}>First responders search for pets. Skip if none.</p></div>
-      <div style={cB}>
+      <div style={cH} className="card-header"><h2 style={cT}>Pets</h2><p style={cS}>First responders search for pets. Skip if none.</p></div>
+      <div style={cB} className="card-body">
         {pets.length===0&&<div style={{textAlign:"center",padding:"14px 0 18px",color:LABEL,fontSize:"0.82rem"}}>No pets added yet.</div>}
         {pets.map((p,i)=>(
           <div key={i} style={{border:"1.5px solid "+RULE,borderRadius:8,padding:"12px 13px",background:FILL,marginBottom:9,position:"relative"}}>
             <div style={{fontSize:"0.56rem",fontWeight:700,letterSpacing:"0.16em",textTransform:"uppercase",color:STEEL,marginBottom:9}}>Pet {i+1}</div>
             <button onClick={()=>setPets(ps=>ps.filter((_,idx)=>idx!==i))} style={{position:"absolute",top:8,right:10,background:"transparent",border:"none",color:"#ccc",cursor:"pointer",fontSize:14}}>x</button>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9,marginBottom:9}}>
+            <div className="step-grid-3" style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:9,marginBottom:9}}>
               <Inp label="Name" value={p.name} onChange={v=>upd(i,"name",v)} placeholder="e.g. Ranger"/>
               <Inp label="Species / Breed" value={p.breed} onChange={v=>upd(i,"breed",v)} placeholder="e.g. Golden Retriever"/>
               <Inp label="Color / Markings" value={p.color} onChange={v=>upd(i,"color",v)} placeholder="e.g. Golden, white chest"/>
             </div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9}}>
+            <div className="step-grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9}}>
               <Inp label="Normally Located" value={p.location} onChange={v=>upd(i,"location",v)} placeholder="e.g. Crate in laundry room"/>
               <Inp label="Special Notes" value={p.notes} onChange={v=>upd(i,"notes",v)} placeholder="e.g. Friendly, will not bite"/>
             </div>
@@ -350,8 +366,8 @@ const UTIL_TYPES=[
 function UtilitiesStep({utilData,selected,onSelect,shutoffs,onShutoff,manualUtils,onManual}){
   return(
     <div>
-      <div style={cH}><h2 style={cT}>Utility Providers &amp; Shutoffs</h2><p style={cS}>Providers are pre-filled based on your state. Select yours and add shutoff locations.</p></div>
-      <div style={cB}>
+      <div style={cH} className="card-header"><h2 style={cT}>Utility Providers &amp; Shutoffs</h2><p style={cS}>Providers are pre-filled based on your state. Select yours and add shutoff locations.</p></div>
+      <div style={cB} className="card-body">
         {UTIL_TYPES.map(t=>(
           <div key={t.key} style={{marginBottom:20}}>
             <SH>{t.emoji} {t.label}</SH>
@@ -368,7 +384,7 @@ function UtilitiesStep({utilData,selected,onSelect,shutoffs,onShutoff,manualUtil
               {(utilData[t.key]||[]).length===0&&selected[t.key]!=="na"&&(
                 <div style={{border:"1.5px solid "+RULE,borderRadius:8,padding:"11px 13px",background:FILL}}>
                   <div style={{fontSize:"0.7rem",color:LABEL,marginBottom:9}}>No providers found for your state — enter manually:</div>
-                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9}}>
+                  <div className="step-grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9}}>
                     <Inp label="Provider Name" value={manualUtils[t.key]?.name||""} onChange={v=>onManual(t.key,"name",v)} placeholder={"e.g. City of Charlottesville Water"}/>
                     <Inp label="Emergency Phone" value={manualUtils[t.key]?.phone||""} onChange={v=>onManual(t.key,"phone",v)} placeholder="e.g. 434-970-3211"/>
                   </div>
@@ -506,8 +522,8 @@ function PreviewStep(props){
 
   return(
     <div>
-      <div style={cH}><h2 style={cT}>Preview Your Emergency Sheet</h2><p style={cS}>Review below, then click the button to print or save as PDF.</p></div>
-      <div style={cB}>
+      <div style={cH} className="card-header"><h2 style={cT}>Preview Your Emergency Sheet</h2><p style={cS}>Review below, then click the button to print or save as PDF.</p></div>
+      <div style={cB} className="card-body">
         <div style={{textAlign:"center",marginBottom:16}}>
           <button style={{...BP,fontSize:"1rem",padding:"12px 32px"}} onClick={props.openPrint}>
             🖨 Print / Save as PDF
@@ -622,16 +638,16 @@ function App(){
   ];
 
   return(
-    <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#0b1e3d 0%,#1a3a6b 100%)",fontFamily:"'Inter',-apple-system,sans-serif",padding:"24px 12px 56px",color:TEXT}}>
+    <div style={{minHeight:"100vh",background:"linear-gradient(135deg,#0b1e3d 0%,#1a3a6b 100%)",fontFamily:"'Inter',-apple-system,sans-serif",padding:"24px 12px 56px",color:TEXT,overflowX:"hidden"}}>
       <div style={{textAlign:"center",marginBottom:16}}>
         <div style={{fontWeight:900,fontSize:"1.4rem",color:WHITE,letterSpacing:"0.04em",textTransform:"uppercase"}}>Safe<span style={{color:RED}}>Steps</span></div>
         <div style={{fontSize:"0.52rem",letterSpacing:"0.2em",textTransform:"uppercase",color:"rgba(255,255,255,0.38)",marginTop:3}}>Family Emergency Sheet Builder</div>
       </div>
-      <div style={{maxWidth:760,margin:"0 auto 18px",background:"rgba(255,255,255,0.07)",borderRadius:10,padding:"16px 18px 0"}}>
+     <div className="step-indicator" style={{maxWidth:760,margin:"0 auto 18px",background:"rgba(255,255,255,0.07)",borderRadius:10,padding:"16px 18px 0",overflowX:"hidden"}}>
         <div style={{display:"flex",alignItems:"flex-start",paddingBottom:16}}>
           {STEPS.map((st,i)=>(
             <div key={i} style={{display:"flex",alignItems:"center",flex:1}}>
-              <div style={{display:"flex",flexDirection:"column",alignItems:"center",width:44,flexShrink:0,cursor:i<step?"pointer":"default"}} onClick={()=>i<step&&setStep(i)}>
+              <div className="step-dot-wrap" style={{display:"flex",flexDirection:"column",alignItems:"center",width:44,flexShrink:0,cursor:i<step?"pointer":"default"}} onClick={()=>i<step&&setStep(i)}>
                 <div style={{width:26,height:26,borderRadius:"50%",background:i<step?RED:i===step?WHITE:"rgba(255,255,255,0.12)",border:"2px solid "+(i<step?RED:i===step?WHITE:"rgba(255,255,255,0.18)"),display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:i<step?WHITE:i===step?NAV:"rgba(255,255,255,0.35)",transition:"all .25s"}}>
                   {i<step?"✓":i+1}
                 </div>
@@ -644,7 +660,7 @@ function App(){
       </div>
       <div style={{maxWidth:760,margin:"0 auto",background:WHITE,borderRadius:12,boxShadow:"0 20px 60px rgba(0,0,0,0.28)",overflow:"hidden"}}>
         {panels[step]}
-        <div style={nR}>
+        <div style={nR} className="nav-row">
           <div>{step>0&&<button style={BS} onClick={()=>setStep(s=>s-1)}>← Back</button>}</div>
           <div style={{display:"flex",gap:9,alignItems:"center"}}>
             <span style={{fontSize:"0.68rem",color:LABEL}}>Step {step+1} of {STEPS.length}</span>
