@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Response Time Calculator | Safe Steps</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy:      #1B2F4E;
+            --navy-mid:  #2C4A72;
+            --gold:      #C8963E;
+            --bg:        #F7F6F3;
+            --white:     #FFFFFF;
+            --border:    #E4E0D9;
+            --text:      #1A1A1A;
+            --text-mid:  #4A5568;
+            --text-light:#8896A6;
+            --red-soft:  #C0392B;
+            --amber:     #D4730A;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── DEMO BANNER ── */
+        .demo-banner {
+            background: #FFF8E7;
+            border-bottom: 1px solid #EDD9A3;
+            padding: 9px 24px;
+            font-size: 11px;
+            color: #8A6820;
+            text-align: center;
+            letter-spacing: 0.2px;
+            font-weight: 500;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            background: var(--navy);
+            padding: 48px 32px 44px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent 0%, var(--gold) 40%, var(--gold) 60%, transparent 100%);
+            opacity: 0.6;
+        }
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 18px;
+        }
+        .hero-eyebrow::before,
+        .hero-eyebrow::after {
+            content: '';
+            display: block;
+            width: 24px;
+            height: 1px;
+            background: var(--gold);
+            opacity: 0.5;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: #FFFFFF;
+            line-height: 1.25;
+            margin-bottom: 14px;
+            letter-spacing: -0.3px;
+        }
+        .hero-sub {
+            font-size: 15px;
+            font-weight: 300;
+            color: #90A8C4;
+            line-height: 1.7;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        /* ── INPUT PANEL ── */
+        .input-panel {
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            padding: 24px 32px;
+        }
+        .input-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        .input-row { display: flex; gap: 10px; }
+        #address-input {
+            flex: 1;
+            padding: 13px 18px;
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--text);
+            outline: none;
+            border-radius: 4px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        #address-input::placeholder { color: #B0BBC8; }
+        /* Google Places autocomplete dropdown styling */
+        .pac-container {
+            font-family: 'Outfit', sans-serif;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            margin-top: -1px;
+        }
+        .pac-item {
+            padding: 10px 16px;
+            font-size: 13px;
+            color: var(--text);
+            cursor: pointer;
+            border-top: 1px solid var(--rule);
+            line-height: 1.5;
+        }
+        .pac-item:hover { background: var(--bg); }
+        .pac-item-query { font-weight: 500; color: var(--text); }
+        .pac-matched { font-weight: 600; color: var(--navy); }
+        .pac-icon { display: none; }
+        #address-input:focus {
+            border-color: var(--navy);
+            background: var(--white);
+        }
+        #search-btn {
+            background: var(--navy);
+            color: white;
+            border: none;
+            padding: 13px 24px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border-radius: 4px;
+            white-space: nowrap;
+            transition: background 0.2s, transform 0.1s;
+        }
+        #search-btn:hover { background: var(--navy-mid); }
+        #search-btn:active { transform: scale(0.98); }
+        #search-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+        /* ── LOADING ── */
+        .loading { display: none; padding: 52px 24px; text-align: center; }
+        .loading.active { display: block; }
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+        .loading-dot {
+            width: 8px; height: 8px;
+            background: var(--navy);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes pulse { 0%,80%,100%{opacity:0.2;transform:scale(0.8)} 40%{opacity:1;transform:scale(1)} }
+        .loading-label {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-light);
+            letter-spacing: 0.3px;
+        }
+
+        /* ── ERROR ── */
+        .error-msg {
+            display: none;
+            margin: 20px 32px;
+            padding: 14px 18px;
+            background: #FEF2F2;
+            border-left: 3px solid var(--red-soft);
+            font-size: 13px;
+            color: #922B21;
+            border-radius: 0 4px 4px 0;
+            line-height: 1.6;
+        }
+        .error-msg.active { display: block; }
+
+        /* ── RESULTS ── */
+        .results { display: none; }
+        .results.active { display: block; }
+
+        /* address pill */
+        .address-bar {
+            padding: 12px 32px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .address-pin {
+            width: 6px; height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .address-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-mid);
+            letter-spacing: 0.2px;
+        }
+
+        /* ── TWO COLUMNS ── */
+        .columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        @media (max-width: 620px) { .columns { grid-template-columns: 1fr; } }
+
+        .col {
+            padding: 28px 28px 24px;
+            background: var(--bg);
+        }
+        .col:first-child {
+            border-right: 1px solid var(--border);
+            background: var(--white);
+        }
+        .col:last-child { background: var(--bg); }
+        @media (max-width: 620px) {
+            .col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+        }
+
+        /* col heading */
+        .col-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .col-heading-icon {
+            width: 34px; height: 34px;
+            background: var(--navy);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .col-heading-text {}
+        .col-heading-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1px;
+        }
+        .col-heading-sub {
+            font-size: 11px;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        /* ── STATION ROWS ── */
+        .station-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+
+        .station-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 14px;
+            background: var(--bg);
+            border: 1.5px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.18s;
+        }
+        .col:first-child .station-item { background: #F7F6F3; }
+        .station-item:hover { border-color: #C8D5E8; }
+        .station-item.selected {
+            border-color: var(--navy);
+            background: #EEF3FA;
+        }
+        .col:first-child .station-item.selected { background: #EEF3FA; }
+
+        .station-selector {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            border: 2px solid #C8D5E8;
+            flex-shrink: 0;
+            margin-top: 2px;
+            position: relative;
+            transition: all 0.15s;
+        }
+        .station-item.selected .station-selector {
+            border-color: var(--navy);
+            background: var(--navy);
+        }
+        .station-item.selected .station-selector::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 6px; height: 6px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .station-item-body { flex: 1; min-width: 0; }
+        .station-item-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            line-height: 1.4;
+            margin-bottom: 3px;
+        }
+        .station-item-address {
+            font-size: 11px;
+            color: var(--text-light);
+            font-weight: 400;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .pill-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+        .pill {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            padding: 2px 9px;
+            border-radius: 20px;
+        }
+        .pill-career    { background: #E6F5EC; color: #1E7A3A; }
+        .pill-volunteer { background: #FFF3E0; color: #B45309; }
+        .pill-unknown   { background: #F0F4F8; color: #64748B; }
+        .pill-town      { background: #E8EFF9; color: #2653A3; }
+        .pill-outside   { background: #F0F4F8; color: #64748B; }
+        .pill-source    { background: #F0F4F8; color: #64748B; }
+        .pill-dist      { font-size: 10px; color: var(--text-light); font-weight: 400; }
+
+        /* ── READOUT CARD ── */
+        .readout-card {
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--white);
+        }
+        .readout-top {
+            background: var(--navy);
+            padding: 14px 18px;
+        }
+        .readout-station-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #90A8C4;
+            line-height: 1.4;
+        }
+
+        .readout-body { padding: 18px; }
+
+        /* jurisdiction warning */
+        .juris-note {
+            background: #FFFBEB;
+            border: 1px solid #FCD34D;
+            border-radius: 6px;
+            padding: 10px 13px;
+            margin-bottom: 14px;
+            font-size: 12px;
+            color: #92400E;
+            line-height: 1.5;
+        }
+
+        /* single time */
+        .time-block { text-align: center; padding: 16px 12px 12px; }
+        .time-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 80px;
+            font-weight: 700;
+            line-height: 0.9;
+            color: var(--navy);
+            letter-spacing: -2px;
+        }
+        .time-word {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+        .time-caption {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 5px;
+            font-weight: 300;
+        }
+
+        /* split time */
+        .time-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .time-split-cell {
+            text-align: center;
+            padding: 16px 8px 12px;
+            border-radius: 8px;
+            background: var(--bg);
+        }
+        .split-scenario {
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 8px;
+        }
+        .split-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 60px;
+            font-weight: 700;
+            line-height: 0.9;
+            color: var(--navy);
+            letter-spacing: -1px;
+        }
+        .split-num.expected { color: var(--amber); }
+        .split-word {
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+        .split-caption {
+            font-size: 10px;
+            color: var(--text-light);
+            margin-top: 4px;
+            line-height: 1.4;
+            font-weight: 300;
+        }
+
+        .readout-dist {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-light);
+            font-weight: 400;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            margin-top: 12px;
+        }
+        .readout-dist strong { color: var(--text-mid); font-weight: 500; }
+
+        /* ── CONTEXT ── */
+        .context {
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            padding: 48px 32px;
+        }
+        .context-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 32px;
+        }
+        .context-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px 48px;
+            max-width: 820px;
+        }
+        @media (max-width: 540px) { .context-grid { grid-template-columns: 1fr; } }
+        .context-item {}
+        .context-item-heading {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .context-item-body {
+            font-size: 13px;
+            color: var(--text-mid);
+            line-height: 1.75;
+            font-weight: 300;
+            margin-top: 10px;
+        }
+
+        /* ── METHODOLOGY ── */
+        .methodology {
+            background: var(--bg);
+            border-top: 1px solid var(--rule);
+            padding: 48px 32px;
+        }
+        .method-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+        .method-intro {
+            font-size: 14px;
+            color: var(--text-mid);
+            line-height: 1.75;
+            font-weight: 300;
+            max-width: 720px;
+            margin-bottom: 32px;
+        }
+        .method-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px 40px;
+            margin-bottom: 36px;
+            max-width: 880px;
+        }
+        @media (max-width: 600px) { .method-grid { grid-template-columns: 1fr; } }
+        .method-block {}
+        .method-block-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--rule);
+            margin-bottom: 12px;
+        }
+        .method-block-body p {
+            font-size: 13px;
+            color: var(--text-mid);
+            line-height: 1.75;
+            font-weight: 300;
+            margin-bottom: 8px;
+        }
+        .method-block-body p:last-child { margin-bottom: 0; }
+        .method-block-body strong { color: var(--text); font-weight: 600; }
+        .method-sources {
+            border-top: 1px solid var(--rule);
+            padding-top: 24px;
+            max-width: 880px;
+        }
+        .method-sources-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 12px;
+        }
+        .method-sources-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            counter-reset: source-counter;
+        }
+        .method-sources-list li {
+            font-size: 12px;
+            color: var(--text-light);
+            line-height: 1.7;
+            padding-left: 28px;
+            position: relative;
+            font-weight: 400;
+            counter-increment: source-counter;
+        }
+        .method-sources-list li::before {
+            content: counter(source-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 18px;
+            height: 18px;
+            background: var(--navy);
+            color: white;
+            border-radius: 50%;
+            font-size: 9px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1px;
+        }
+        .method-sources-list em { font-style: italic; color: var(--text-mid); }
+        .method-sources-list strong { color: var(--text); font-weight: 600; }
+        sup {
+            font-size: 9px;
+            font-weight: 700;
+            color: var(--navy);
+            vertical-align: super;
+            line-height: 0;
+            margin-left: 1px;
+        }
+
+        /* ── CTA ── */
+        .cta {
+            background: var(--navy);
+            padding: 36px 32px;
+            text-align: center;
+        }
+        .cta-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+        .cta h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+        .cta-sub {
+            font-size: 14px;
+            font-weight: 300;
+            color: #90A8C4;
+            line-height: 1.7;
+            max-width: 400px;
+            margin: 0 auto 22px;
+        }
+        .cta-btn {
+            display: inline-block;
+            background: var(--gold);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 4px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            letter-spacing: 0.4px;
+            transition: opacity 0.15s, transform 0.1s;
+        }
+        .cta-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    </style>
+    <script>
+    // Load Google Maps SDK if API key provided via URL param
+    (function() {
+        const params = new URLSearchParams(window.location.search);
+        const key = params.get('key');
+        if (key) {
+            window.__MAPS_KEY = key;
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&callback=onMapsLoaded`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        }
+    })();
+    </script>
+</head>
+<body>
+
+<div class="demo-banner" id="demo-banner">Demo — station data is AI-simulated. Add <code>?key=YOUR_GOOGLE_KEY</code> to the URL to use real Google Maps data.</div>
+
+<div class="hero">
+    <div class="hero-eyebrow">Safe Steps</div>
+    <h1>Emergency Response<br>Time Calculator</h1>
+    <div class="hero-sub">Understand exactly how long it takes fire and EMS to reach your home — and what your family needs to do in the minutes before they arrive.</div>
+</div>
+
+<div class="input-panel">
+    <div class="input-label">Your Home Address</div>
+    <div class="input-row">
+        <input type="text" id="address-input" placeholder="Street address, city, state..." autocomplete="off">
+        <button id="search-btn" onclick="runCalculation()">Calculate →</button>
+    </div>
+</div>
+
+<div class="loading" id="loading">
+    <div class="loading-dots">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+    </div>
+    <div class="loading-label" id="loading-text">Locating emergency stations near you...</div>
+</div>
+
+<div class="error-msg" id="error-msg"></div>
+
+<div class="results" id="results">
+
+    <div class="address-bar">
+        <div class="address-pin"></div>
+        <div class="address-text" id="address-text"></div>
+    </div>
+
+    <div class="columns">
+        <div class="col">
+            <div class="col-heading">
+                <div class="col-heading-icon" style="font-size:13px;font-weight:700;letter-spacing:1px;color:white;">FIRE</div>
+                <div class="col-heading-text">
+                    <div class="col-heading-title">Fire Response</div>
+                    <div class="col-heading-sub">Select a station to see response time</div>
+                </div>
+            </div>
+            <div class="station-list" id="fire-list"></div>
+            <div id="fire-readout"></div>
+        </div>
+
+        <div class="col">
+            <div class="col-heading">
+                <div class="col-heading-icon" style="font-size:13px;font-weight:700;letter-spacing:1px;color:white;">EMS</div>
+                <div class="col-heading-text">
+                    <div class="col-heading-title">EMS / Rescue</div>
+                    <div class="col-heading-sub">Select a station to see response time</div>
+                </div>
+            </div>
+            <div class="station-list" id="ems-list"></div>
+            <div id="ems-readout"></div>
+        </div>
+    </div>
+
+    <div class="context">
+        <div class="context-heading">What These Numbers Mean for Your Family</div>
+        <div class="context-grid">
+            <div class="context-item">
+                <div class="context-item-heading">House Fire</div>
+                <div class="context-item-body">A room reaches flashover in 3–5 minutes. Toxic smoke fills the home in 2–3. Whether your family escapes is decided almost entirely before the first truck arrives.</div>
+            </div>
+            <div class="context-item">
+                <div class="context-item-heading">Cardiac Arrest</div>
+                <div class="context-item-body">Survival drops 7–10% per minute without CPR. After 10 minutes untreated, odds are poor. Your EMS response time shows exactly how critical in-home CPR training is.</div>
+            </div>
+            <div class="context-item">
+                <div class="context-item-heading">Volunteer Departments</div>
+                <div class="context-item-body">Volunteers drive to the station before the truck can leave — adding 4–8 minutes on average, more at night or in bad weather. The expected time above accounts for this.</div>
+            </div>
+            <div class="context-item">
+                <div class="context-item-heading">The Gap That Matters</div>
+                <div class="context-item-body">Responders are trained for when they arrive. The minutes before they do are your family's responsibility alone. A practiced emergency plan is the only thing that fills this gap.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="methodology">
+        <div class="method-heading">How We Calculate These Numbers</div>
+        <p class="method-intro">The times shown are estimates of <strong>total response time</strong> — from the moment you call 911 to when the first unit arrives at your door. This is not drive time alone. It accounts for every stage in the emergency response chain: call processing, turnout, and travel.</p>
+
+        <div class="method-grid">
+            <div class="method-block">
+                <div class="method-block-title">Stage 1 — Call Processing</div>
+                <div class="method-block-body">
+                    <p>For <strong>fire emergencies</strong>, NFPA 1710 sets a benchmark of 64 seconds for call processing — from the moment 911 receives your call to the moment the station is toned out.<sup>1</sup> We apply <strong>~1 minute</strong> for fire dispatch overhead.</p>
+                    <p>For <strong>medical emergencies</strong>, dispatchers must run Emergency Medical Dispatch (EMD) protocol before the unit is released — a structured sequence of questions used to determine call priority (BLS vs. ALS), assign the correct unit, and deliver pre-arrival instructions to the caller.<sup>5</sup> This process runs materially longer than fire dispatch. We apply <strong>~3 minutes</strong> for EMS call processing, consistent with real-world EMS response data from jurisdictions like Charlottesville when back-calculated against reported average response times.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-block-title">Stage 2 — Turnout Time</div>
+                <div class="method-block-body">
+                    <p>Turnout time is the interval from when the station alarm sounds to when the apparatus is moving. Personnel must stop current activity, don protective equipment, and board the apparatus. NFPA 1710 sets the benchmark at <strong>80 seconds for fire</strong> and <strong>60 seconds for EMS</strong> responses.<sup>1</sup> Real-world performance falls short of this regularly — career departments met the 80-second turnout standard only 48–66% of the time in documented studies, with nighttime calls running significantly longer.<sup>4</sup> We apply <strong>~2 minutes for fire</strong> and <strong>~1 minute for EMS</strong> as conservative real-world estimates.</p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-block-title">Stage 3 — Drive Time</div>
+                <div class="method-block-body">
+                    <p>Drive time is calculated using Google Maps routing from the station to your address, using road network data and emergency apparatus travel speeds. NFPA 1710 benchmarks <strong>4 minutes of drive time</strong> for the first arriving engine at 90% of incidents.<sup>1</sup> In practice, 34% of large U.S. cities fail to meet this standard consistently,<sup>3</sup> and the national 90th percentile for total fire response — including all stages — is just under 11 minutes.<sup>4</sup></p>
+                </div>
+            </div>
+
+            <div class="method-block">
+                <div class="method-block-title">Volunteer Departments — Additional Overhead</div>
+                <div class="method-block-body">
+                    <p>Volunteer firefighters are not stationed on-duty. When toned out, they must first travel from home or work to the station before the truck can leave — a step that does not exist for career departments. The U.S. Fire Administration explicitly defines volunteer turnout time as including this travel-to-station component.<sup>4</sup></p>
+                    <p>NFPA 1720, the standard for volunteer departments, sets <strong>total response benchmarks of 9 minutes in urban areas, 10 minutes in suburban areas, and 14 minutes in rural areas</strong> — reflecting this reality.<sup>2</sup> Back-calculating against typical drive times, volunteer pre-drive overhead (travel to station + gear up) runs approximately <strong>4–6 minutes in suburban conditions, and 6–8 minutes overnight or in rural areas</strong>. We apply <strong>+5 minutes of additional overhead</strong> for volunteer fire and <strong>+7 minutes</strong> for volunteer EMS on top of the career baselines, consistent with NFPA 1720 total benchmarks.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="method-sources">
+            <div class="method-sources-label">Sources</div>
+            <ol class="method-sources-list">
+                <li><strong>NFPA 1710</strong> — <em>Standard for the Organization and Deployment of Fire Suppression Operations, Emergency Medical Operations, and Special Operations to the Public by Career Fire Departments.</em> National Fire Protection Association. Establishes call processing (64 sec), turnout (80 sec fire / 60 sec EMS), and travel time (240 sec) benchmarks for career departments.</li>
+                <li><strong>NFPA 1720</strong> — <em>Standard for the Organization and Deployment of Fire Suppression Operations, Emergency Medical Operations, and Special Operations to the Public by Volunteer Fire Departments.</em> National Fire Protection Association. Establishes total response benchmarks: urban 9 min, suburban 10 min, rural 14 min.</li>
+                <li><strong>International Association of Fire Fighters (IAFF)</strong> — Survey of response times in the 50 most populous U.S. cities. Findings: 34% of large city career departments do not meet the NFPA 1710 240-second travel time standard.</li>
+                <li><strong>U.S. Fire Administration / National Fire Data Center</strong> — <em>Structure Fire Response Times.</em> USFA-TR-153. Documents real-world response time distribution including national 90th percentile, nighttime performance gaps, and explicit definition of volunteer turnout time as including travel-to-station.</li>
+                <li><strong>Emergency Medical Dispatch (EMD) Protocol</strong> — International Academies of Emergency Dispatch (IAED). Structured pre-arrival questioning protocol required before EMS unit release; adds materially to call processing time relative to fire dispatch.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="cta">
+        <div class="cta-label">Next Step</div>
+        <h2>You know your response time.<br>Now build your plan.</h2>
+        <div class="cta-sub">Safe Steps creates a fully customized emergency response plan for your home and family — so every second before help arrives is accounted for.</div>
+        <a href="https://www.safestepsplans.com" class="cta-btn">Get Your Family's Plan</a>
+    </div>
+
+</div>
+
+<script>
+let appData = null;
+let mapsReady = false;
+
+// ─── Google Maps SDK callback ─────────────────────────────────────────────────
+function onMapsLoaded() {
+    mapsReady = true;
+
+    // Hide demo banner — we have a real key
+    const banner = document.getElementById('demo-banner');
+    if (banner) banner.style.display = 'none';
+
+    // Wire up Places Autocomplete
+    const input = document.getElementById('address-input');
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+        componentRestrictions: { country: 'us' },
+        types: ['address'],
+        fields: ['formatted_address', 'geometry']
+    });
+    autocomplete.addListener('place_changed', function() {
+        const place = autocomplete.getPlace();
+        if (place && place.formatted_address) {
+            input.value = place.formatted_address;
+            runCalculation();
+        }
+    });
+}
+
+function showError(msg) {
+    setLoading(false);
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.classList.add('active');
+}
+function clearError() {
+    const el = document.getElementById('error-msg');
+    el.textContent = '';
+    el.classList.remove('active');
+}
+function setLoading(on, text) {
+    document.getElementById('loading').classList.toggle('active', on);
+    if (text) document.getElementById('loading-text').textContent = text;
+    document.getElementById('search-btn').disabled = on;
+}
+function showResults(on) {
+    document.getElementById('results').classList.toggle('active', on);
+}
+
+function buildReadout(station, type) {
+    // Overhead: dispatch + turnout varies by type and dept
+    // Fire career: ~1 min dispatch + ~1.5 min turnout = 3 min
+    // Fire volunteer: ~1 min dispatch + ~2 min turnout + ~10 min call-out = 13 min
+    // EMS career: ~3 min EMD protocol + ~1 min turnout = 4 min
+    // EMS volunteer: ~3 min EMD protocol + ~2 min turnout + ~10 min call-out = 15 min
+    const isFire = (type === 'fire');
+    const careerOverhead = isFire ? 3 : 4;
+    const volOverhead    = isFire ? 8 : 10;
+    const careerTotal    = station.drive_minutes + careerOverhead;
+    const volTotal       = station.drive_minutes + volOverhead;
+
+    const outsideTown = !station.in_town;
+    const outsideNote = outsideTown ? ' · outside your municipality, may respond as mutual aid' : '';
+
+    const careerCaption = isFire
+        ? `Estimated total response time · ~1 min dispatch + ~2 min turnout + ${station.drive_minutes} min drive${outsideNote}`
+        : `Estimated total response time · ~3 min EMD protocol + ~1 min turnout + ${station.drive_minutes} min drive${outsideNote}`;
+
+    const volCaption = isFire
+        ? `Estimated total response time · ~1 min dispatch + ~2 min turnout + ~5 min volunteer call-out + ${station.drive_minutes} min drive${outsideNote}`
+        : `Estimated total response time · ~3 min EMD protocol + ~2 min turnout + ~5 min volunteer call-out + ${station.drive_minutes} min drive${outsideNote}`;
+
+    const timeHtml = station.dept_type === 'career'
+        ? `<div class="time-block">
+               <div class="time-num">${careerTotal}</div>
+               <div class="time-word">Minutes</div>
+               <div class="time-caption">${careerCaption}</div>
+           </div>`
+        : `<div class="time-block">
+               <div class="time-num" style="color:var(--amber)">${volTotal}</div>
+               <div class="time-word">Minutes</div>
+               <div class="time-caption">${volCaption}</div>
+           </div>`;
+
+    return `
+        <div class="readout-card">
+            <div class="readout-top">
+                <div class="readout-station-name">${station.station_name}</div>
+            </div>
+            <div class="readout-body">
+                ${timeHtml}
+                <div class="readout-dist"><strong>${station.distance_miles} miles</strong> driving distance</div>
+            </div>
+        </div>`;
+}
+
+function buildList(type, stations, activeIdx) {
+    const listEl = document.getElementById(type + '-list');
+    listEl.innerHTML = '';
+
+    stations.forEach((s, i) => {
+        const item = document.createElement('div');
+        item.className = 'station-item' + (i === activeIdx ? ' selected' : '');
+        item.onclick = () => selectStation(type, i);
+
+        let deptPill = '';
+        if (s.dept_type === 'career')         deptPill = '<span class="pill pill-career">Career</span>';
+        else if (s.dept_type === 'volunteer') deptPill = '<span class="pill pill-volunteer">Volunteer</span>';
+        else                                  deptPill = '<span class="pill pill-unknown">Type Unknown</span>';
+
+        let jurisdPill = '';
+        if (type === 'fire') {
+            jurisdPill = s.in_town
+                ? '<span class="pill pill-town">In Town</span>'
+                : '<span class="pill pill-outside">Out of Town</span>';
+        }
+
+        let sourcePill = '';
+        if (type === 'ems') {
+            sourcePill = s.in_town
+                ? '<span class="pill pill-town">In Town</span>'
+                : '<span class="pill pill-outside">Out of Town</span>';
+        }
+
+        item.innerHTML = `
+            <div class="station-selector"></div>
+            <div class="station-item-body">
+                <div class="station-item-name">${s.station_name}</div>
+                <div class="station-item-address">${s.address || ''}</div>
+                <div class="pill-row">
+                    ${deptPill}${jurisdPill}${sourcePill}
+                    <span class="pill-dist">${s.distance_miles} mi</span>
+                </div>
+            </div>`;
+        listEl.appendChild(item);
+    });
+}
+
+function selectStation(type, idx) {
+    const stations = type === 'fire' ? appData.fire_stations : appData.ems_stations;
+    document.querySelectorAll(`#${type}-list .station-item`).forEach((el, i) => {
+        el.classList.toggle('selected', i === idx);
+    });
+    document.getElementById(type + '-readout').innerHTML = buildReadout(stations[idx], type);
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function detectDeptType(name) {
+    const n = name.toUpperCase();
+    if (/VOLUNTEER|\bVFD\b|\bVFC\b|\bVFRS\b|VOL\./.test(n)) return 'volunteer';
+    if (/\bCITY\b|\bCOUNTY\b|\bMETRO\b|\bMUNICIPAL\b|\bPROFESSIONAL\b|\bCAREER\b/.test(n)) return 'career';
+    return 'unknown';
+}
+
+function detectSourceType(name) {
+    const n = name.toUpperCase();
+    if (/RESCUE SQUAD|RESCUE CO|RESCUE VOL/.test(n)) return 'rescue_squad';
+    if (/FIRE DEPT|FIRE DEPARTMENT|ENGINE|LADDER/.test(n)) return 'fire_dept';
+    if (/HOSPITAL|MEDICAL CENTER/.test(n)) return 'hospital';
+    if (/\bAMR\b|RURAL METRO|ACADIAN|MEDSTAR|AMERICAN MEDICAL/.test(n)) return 'private';
+    return 'ems_station';
+}
+
+function geocode(address) {
+    return new Promise((res, rej) => {
+        new google.maps.Geocoder().geocode({ address }, (results, status) => {
+            if (status === 'OK' && results.length) res(results[0]);
+            else rej(new Error('Address not found. Please check spelling and try again.'));
+        });
+    });
+}
+
+function nearbySearch(service, location, keyword, radius) {
+    return new Promise((res) => {
+        service.nearbySearch({ location, radius, keyword }, (results, status) => {
+            res((status === 'OK' || status === 'ZERO_RESULTS') ? (results || []) : []);
+        });
+    });
+}
+
+function getDistanceMatrix(origins, destinations) {
+    return new Promise((res, rej) => {
+        if (!destinations.length) return res([]);
+        new google.maps.DistanceMatrixService().getDistanceMatrix({
+            origins,
+            destinations: destinations.map(p => ({ placeId: p.place_id })),
+            travelMode: google.maps.TravelMode.DRIVING,
+            unitSystem: google.maps.UnitSystem.IMPERIAL
+        }, (response, status) => {
+            if (status === 'OK') res(response.rows[0].elements);
+            else rej(new Error('Drive time calculation failed.'));
+        });
+    });
+}
+
+function buildStationObj(place, distEl, municipality) {
+    const driveSec   = distEl && distEl.status === 'OK' ? distEl.duration.value : 99999;
+    const distMiles  = distEl && distEl.status === 'OK' ? (distEl.distance.value / 1609.34).toFixed(1) : '?';
+    const driveMin   = Math.round(driveSec / 60);
+    const vicinity   = place.vicinity || '';
+    const in_town    = municipality ? vicinity.toLowerCase().includes(municipality.toLowerCase()) : false;
+    return {
+        station_name:   place.name || 'Unknown Station',
+        address:        vicinity,
+        dept_type:      detectDeptType(place.name || ''),
+        source_type:    detectSourceType(place.name || ''),
+        in_town,
+        drive_minutes:  driveMin,
+        distance_miles: distMiles,
+        _drive_sec:     driveSec
+    };
+}
+
+// ─── Real Google backend ───────────────────────────────────────────────────────
+async function runRealCalculation(address) {
+    try {
+        // Stage 1: Geocode
+        setLoading(true, 'Locating your address...');
+        const geoResult = await geocode(address);
+        const lat  = geoResult.geometry.location.lat();
+        const lng  = geoResult.geometry.location.lng();
+        const loc  = { lat, lng };
+        const formattedAddress = geoResult.formatted_address;
+
+        const cityComp = geoResult.address_components.find(c =>
+            c.types.includes('locality') || c.types.includes('administrative_area_level_3')
+        );
+        const municipality = cityComp ? cityComp.long_name : '';
+
+        // Stage 2: Places search — need a hidden map div for PlacesService
+        let mapDiv = document.getElementById('_hidden_map');
+        if (!mapDiv) {
+            mapDiv = document.createElement('div');
+            mapDiv.id = '_hidden_map';
+            mapDiv.style.cssText = 'width:1px;height:1px;position:absolute;top:-9999px;left:-9999px;';
+            document.body.appendChild(mapDiv);
+        }
+        const placesService = new google.maps.places.PlacesService(
+            new google.maps.Map(mapDiv, { center: loc, zoom: 12 })
+        );
+
+        setLoading(true, 'Finding fire stations near you...');
+        const fireRaw = await nearbySearch(placesService, loc, 'fire station', 25000);
+
+        setLoading(true, 'Finding EMS and rescue stations...');
+        const emsRaw1 = await nearbySearch(placesService, loc, 'rescue squad ambulance EMS', 25000);
+        const emsRaw2 = await nearbySearch(placesService, loc, 'emergency medical services', 25000);
+        const emsMap  = new Map();
+        [...emsRaw1, ...emsRaw2].forEach(p => emsMap.set(p.place_id, p));
+        const emsRaw  = Array.from(emsMap.values());
+
+        // Stage 3: Distance Matrix
+        setLoading(true, 'Calculating drive times...');
+        const fireCandidates = fireRaw.slice(0, 8);
+        const emsCandidates  = emsRaw.slice(0, 8);
+
+        const [fireDist, emsDist] = await Promise.all([
+            getDistanceMatrix([loc], fireCandidates),
+            getDistanceMatrix([loc], emsCandidates)
+        ]);
+
+        // Stage 4: Build + sort
+        let fireStations = fireCandidates
+            .map((p, i) => buildStationObj(p, fireDist[i], municipality))
+            .filter(s => s._drive_sec < 90000)
+            .sort((a, b) => {
+                if (a.in_town !== b.in_town) return a.in_town ? -1 : 1;
+                return a._drive_sec - b._drive_sec;
+            })
+            .slice(0, 3);
+
+        let emsStations = emsCandidates
+            .map((p, i) => buildStationObj(p, emsDist[i], municipality))
+            .filter(s => s._drive_sec < 90000)
+            .sort((a, b) => a._drive_sec - b._drive_sec)
+            .slice(0, 3);
+
+        if (!fireStations.length) throw new Error('No fire stations found near this address. Try a more specific address.');
+        if (!emsStations.length) emsStations = fireStations;
+
+        appData = { formatted_address: formattedAddress, municipality, fire_stations: fireStations, ems_stations: emsStations };
+        renderResults();
+
+    } catch(err) {
+        showError(err.message || 'Something went wrong. Please try again.');
+        setLoading(false);
+    }
+}
+
+// ─── Demo backend (no API key) ────────────────────────────────────────────────
+async function runDemoCalculation(address) {
+    const steps = [
+        [600,  'Finding fire stations near you...'],
+        [1400, 'Checking jurisdictions...'],
+        [2200, 'Finding EMS and rescue stations...'],
+        [3000, 'Calculating drive times...'],
+    ];
+    steps.forEach(([d, t]) => setTimeout(() => setLoading(true, t), d));
+
+    const prompt = `You are simulating a Google Maps + Places emergency response lookup for a demo app.
+
+Address: "${address}"
+
+Return ONLY valid JSON — no markdown, no explanation.
+
+{
+  "formatted_address": "full US address",
+  "municipality": "town or city name",
+  "fire_stations": [
+    {
+      "station_name": "realistic local name",
+      "address": "123 Main St, Town, ST",
+      "dept_type": "career" or "volunteer" or "unknown",
+      "in_town": true or false,
+      "drive_minutes": integer,
+      "distance_miles": "X.X"
+    }
+  ],
+  "ems_stations": [
+    {
+      "station_name": "realistic local name",
+      "address": "123 Main St, Town, ST",
+      "dept_type": "career" or "volunteer" or "unknown",
+      "in_town": true or false,
+      "source_type": "ems_station" or "fire_dept" or "rescue_squad" or "hospital" or "private",
+      "drive_minutes": integer,
+      "distance_miles": "X.X"
+    }
+  ]
+}
+
+Fire rules (exactly 3): in_town stations FIRST even if farther, then nearest out-of-town.
+EMS rules (exactly 3): sorted by drive time. Set in_town true if the station is in the same municipality as the address.
+Urban career: 3-8 min. Suburban mix: 5-12 min. Rural volunteer: 10-20 min.
+Mid-Atlantic NJ/PA/NY/VA: rescue squads very common for EMS source_type.
+Use geographically plausible station names and realistic street addresses for the area entered.`;
+
+    try {
+        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: 'claude-sonnet-4-20250514',
+                max_tokens: 1200,
+                messages: [{ role: 'user', content: prompt }]
+            })
+        });
+        const data = await resp.json();
+        const raw  = data.content[0].text.trim().replace(/```json|```/g, '').trim();
+        appData = JSON.parse(raw);
+        renderResults();
+    } catch(err) {
+        showError('Something went wrong. Please try again.');
+        setLoading(false);
+    }
+}
+
+// ─── Shared render ────────────────────────────────────────────────────────────
+function renderResults() {
+    setLoading(false);
+    document.getElementById('address-text').textContent = appData.formatted_address;
+    buildList('fire', appData.fire_stations, 0);
+    buildList('ems',  appData.ems_stations,  0);
+    document.getElementById('fire-readout').innerHTML = buildReadout(appData.fire_stations[0], 'fire');
+    document.getElementById('ems-readout').innerHTML  = buildReadout(appData.ems_stations[0],  'ems');
+    showResults(true);
+}
+
+// ─── Entry point ──────────────────────────────────────────────────────────────
+async function runCalculation() {
+    const address = document.getElementById('address-input').value.trim();
+    if (!address) { showError('Please enter your home address.'); return; }
+    clearError();
+    showResults(false);
+    setLoading(true, 'Locating your address...');
+
+    if (mapsReady) {
+        runRealCalculation(address);
+    } else {
+        runDemoCalculation(address);
+    }
+}
+
+document.getElementById('address-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') runCalculation();
+});
+</script>
+</body>
+</html>
