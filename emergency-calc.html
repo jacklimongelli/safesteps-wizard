@@ -31,16 +31,6 @@
         }
 
         /* ── DEMO BANNER ── */
-        .demo-banner {
-            background: #FFF8E7;
-            border-bottom: 1px solid #EDD9A3;
-            padding: 9px 24px;
-            font-size: 11px;
-            color: #8A6820;
-            text-align: center;
-            letter-spacing: 0.2px;
-            font-weight: 500;
-        }
 
         /* ── HERO ── */
         .hero {
@@ -672,7 +662,6 @@
 </head>
 <body>
 
-<div class="demo-banner" id="demo-banner">Demo — station data is AI-simulated. On safestepsplans.com, real Google Maps data is used.</div>
 
 <div class="hero">
     <div class="hero-eyebrow">Safe Steps</div>
@@ -939,81 +928,10 @@ async function runRealCalculation(address) {
 
         appData = { formatted_address: address, municipality, fire_stations: fireStations, ems_stations: emsStations };
 
-        const banner = document.getElementById('demo-banner');
-        if (banner) banner.style.display = 'none';
-
         renderResults();
 
     } catch(err) {
         showError(err.message || 'Something went wrong. Please try again.');
-        setLoading(false);
-    }
-}
-
-// ─── Demo backend (no API key) ────────────────────────────────────────────────
-async function runDemoCalculation(address) {
-    const steps = [
-        [600,  'Finding fire stations near you...'],
-        [1400, 'Checking jurisdictions...'],
-        [2200, 'Finding EMS and rescue stations...'],
-        [3000, 'Calculating drive times...'],
-    ];
-    steps.forEach(([d, t]) => setTimeout(() => setLoading(true, t), d));
-
-    const prompt = `You are simulating a Google Maps + Places emergency response lookup for a demo app.
-
-Address: "${address}"
-
-Return ONLY valid JSON — no markdown, no explanation.
-
-{
-  "formatted_address": "full US address",
-  "municipality": "town or city name",
-  "fire_stations": [
-    {
-      "station_name": "realistic local name",
-      "address": "123 Main St, Town, ST",
-      "dept_type": "career" or "volunteer" or "unknown",
-      "in_town": true or false,
-      "drive_minutes": integer,
-      "distance_miles": "X.X"
-    }
-  ],
-  "ems_stations": [
-    {
-      "station_name": "realistic local name",
-      "address": "123 Main St, Town, ST",
-      "dept_type": "career" or "volunteer" or "unknown",
-      "in_town": true or false,
-      "source_type": "ems_station" or "fire_dept" or "rescue_squad" or "hospital" or "private",
-      "drive_minutes": integer,
-      "distance_miles": "X.X"
-    }
-  ]
-}
-
-Fire rules (exactly 3): in_town stations FIRST even if farther, then nearest out-of-town.
-EMS rules (exactly 3): sorted by drive time. Set in_town true if the station is in the same municipality as the address.
-Urban career: 3-8 min. Suburban mix: 5-12 min. Rural volunteer: 10-20 min.
-Mid-Atlantic NJ/PA/NY/VA: rescue squads very common for EMS source_type.
-Use geographically plausible station names and realistic street addresses for the area entered.`;
-
-    try {
-        const resp = await fetch('https://api.anthropic.com/v1/messages', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                model: 'claude-sonnet-4-20250514',
-                max_tokens: 1200,
-                messages: [{ role: 'user', content: prompt }]
-            })
-        });
-        const data = await resp.json();
-        const raw  = data.content[0].text.trim().replace(/```json|```/g, '').trim();
-        appData = JSON.parse(raw);
-        renderResults();
-    } catch(err) {
-        showError('Something went wrong. Please try again.');
         setLoading(false);
     }
 }
@@ -1037,14 +955,7 @@ async function runCalculation() {
     showResults(false);
     setLoading(true, 'Locating your address...');
 
-    const onWix = window.location.hostname.includes('safestepsplans.com') ||
-                  window.location.hostname.includes('wixsite.com') ||
-                  window.location.hostname.includes('wix.com');
-    if (onWix) {
-        runRealCalculation(address);
-    } else {
-        runDemoCalculation(address);
-    }
+    runRealCalculation(address);
 }
 
 document.getElementById('address-input').addEventListener('keydown', e => {
