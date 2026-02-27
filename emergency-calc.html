@@ -666,24 +666,13 @@
         .cta-btn:hover { opacity: 0.9; transform: translateY(-1px); }
     </style>
     <script>
-    // Load Google Maps SDK if API key provided via URL param
-    (function() {
-        const params = new URLSearchParams(window.location.search);
-        const key = params.get('key');
-        if (key) {
-            window.__MAPS_KEY = key;
-            const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&callback=onMapsLoaded`;
-            script.async = true;
-            script.defer = true;
-            document.head.appendChild(script);
-        }
-    })();
+    // Wix backend proxy URL — all Google API calls go through here
+    window.__WIX_BACKEND = 'https://www.safestepsplans.com/_functions/places';
     </script>
 </head>
 <body>
 
-<div class="demo-banner" id="demo-banner">Demo — station data is AI-simulated. Add <code>?key=YOUR_GOOGLE_KEY</code> to the URL to use real Google Maps data.</div>
+<div class="demo-banner" id="demo-banner">Demo — station data is AI-simulated. On safestepsplans.com, real Google Maps data is used.</div>
 
 <div class="hero">
     <div class="hero-eyebrow">Safe Steps</div>
@@ -824,148 +813,6 @@
 
 <script>
 let appData = null;
-let mapsReady = false;
-
-// ─── Google Maps SDK callback ─────────────────────────────────────────────────
-function onMapsLoaded() {
-    mapsReady = true;
-
-    // Hide demo banner — we have a real key
-    const banner = document.getElementById('demo-banner');
-    if (banner) banner.style.display = 'none';
-
-    // Wire up Places Autocomplete
-    const input = document.getElementById('address-input');
-    const autocomplete = new google.maps.places.Autocomplete(input, {
-        componentRestrictions: { country: 'us' },
-        types: ['address'],
-        fields: ['formatted_address', 'geometry']
-    });
-    autocomplete.addListener('place_changed', function() {
-        const place = autocomplete.getPlace();
-        if (place && place.formatted_address) {
-            input.value = place.formatted_address;
-            runCalculation();
-        }
-    });
-}
-
-function showError(msg) {
-    setLoading(false);
-    const el = document.getElementById('error-msg');
-    el.textContent = msg;
-    el.classList.add('active');
-}
-function clearError() {
-    const el = document.getElementById('error-msg');
-    el.textContent = '';
-    el.classList.remove('active');
-}
-function setLoading(on, text) {
-    document.getElementById('loading').classList.toggle('active', on);
-    if (text) document.getElementById('loading-text').textContent = text;
-    document.getElementById('search-btn').disabled = on;
-}
-function showResults(on) {
-    document.getElementById('results').classList.toggle('active', on);
-}
-
-function buildReadout(station, type) {
-    // Overhead: dispatch + turnout varies by type and dept
-    // Fire career: ~1 min dispatch + ~1.5 min turnout = 3 min
-    // Fire volunteer: ~1 min dispatch + ~2 min turnout + ~10 min call-out = 13 min
-    // EMS career: ~3 min EMD protocol + ~1 min turnout = 4 min
-    // EMS volunteer: ~3 min EMD protocol + ~2 min turnout + ~10 min call-out = 15 min
-    const isFire = (type === 'fire');
-    const careerOverhead = isFire ? 3 : 4;
-    const volOverhead    = isFire ? 8 : 10;
-    const careerTotal    = station.drive_minutes + careerOverhead;
-    const volTotal       = station.drive_minutes + volOverhead;
-
-    const outsideTown = !station.in_town;
-    const outsideNote = outsideTown ? ' · outside your municipality, may respond as mutual aid' : '';
-
-    const careerCaption = isFire
-        ? `Estimated total response time · ~1 min dispatch + ~2 min turnout + ${station.drive_minutes} min drive${outsideNote}`
-        : `Estimated total response time · ~3 min EMD protocol + ~1 min turnout + ${station.drive_minutes} min drive${outsideNote}`;
-
-    const volCaption = isFire
-        ? `Estimated total response time · ~1 min dispatch + ~2 min turnout + ~5 min volunteer call-out + ${station.drive_minutes} min drive${outsideNote}`
-        : `Estimated total response time · ~3 min EMD protocol + ~2 min turnout + ~5 min volunteer call-out + ${station.drive_minutes} min drive${outsideNote}`;
-
-    const timeHtml = station.dept_type === 'career'
-        ? `<div class="time-block">
-               <div class="time-num">${careerTotal}</div>
-               <div class="time-word">Minutes</div>
-               <div class="time-caption">${careerCaption}</div>
-           </div>`
-        : `<div class="time-block">
-               <div class="time-num" style="color:var(--amber)">${volTotal}</div>
-               <div class="time-word">Minutes</div>
-               <div class="time-caption">${volCaption}</div>
-           </div>`;
-
-    return `
-        <div class="readout-card">
-            <div class="readout-top">
-                <div class="readout-station-name">${station.station_name}</div>
-            </div>
-            <div class="readout-body">
-                ${timeHtml}
-                <div class="readout-dist"><strong>${station.distance_miles} miles</strong> driving distance</div>
-            </div>
-        </div>`;
-}
-
-function buildList(type, stations, activeIdx) {
-    const listEl = document.getElementById(type + '-list');
-    listEl.innerHTML = '';
-
-    stations.forEach((s, i) => {
-        const item = document.createElement('div');
-        item.className = 'station-item' + (i === activeIdx ? ' selected' : '');
-        item.onclick = () => selectStation(type, i);
-
-        let deptPill = '';
-        if (s.dept_type === 'career')         deptPill = '<span class="pill pill-career">Career</span>';
-        else if (s.dept_type === 'volunteer') deptPill = '<span class="pill pill-volunteer">Volunteer</span>';
-        else                                  deptPill = '<span class="pill pill-unknown">Type Unknown</span>';
-
-        let jurisdPill = '';
-        if (type === 'fire') {
-            jurisdPill = s.in_town
-                ? '<span class="pill pill-town">In Town</span>'
-                : '<span class="pill pill-outside">Out of Town</span>';
-        }
-
-        let sourcePill = '';
-        if (type === 'ems') {
-            sourcePill = s.in_town
-                ? '<span class="pill pill-town">In Town</span>'
-                : '<span class="pill pill-outside">Out of Town</span>';
-        }
-
-        item.innerHTML = `
-            <div class="station-selector"></div>
-            <div class="station-item-body">
-                <div class="station-item-name">${s.station_name}</div>
-                <div class="station-item-address">${s.address || ''}</div>
-                <div class="pill-row">
-                    ${deptPill}${jurisdPill}${sourcePill}
-                    <span class="pill-dist">${s.distance_miles} mi</span>
-                </div>
-            </div>`;
-        listEl.appendChild(item);
-    });
-}
-
-function selectStation(type, idx) {
-    const stations = type === 'fire' ? appData.fire_stations : appData.ems_stations;
-    document.querySelectorAll(`#${type}-list .station-item`).forEach((el, i) => {
-        el.classList.toggle('selected', i === idx);
-    });
-    document.getElementById(type + '-readout').innerHTML = buildReadout(stations[idx], type);
-}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function detectDeptType(name) {
@@ -984,124 +831,117 @@ function detectSourceType(name) {
     return 'ems_station';
 }
 
-function geocode(address) {
-    return new Promise((res, rej) => {
-        new google.maps.Geocoder().geocode({ address }, (results, status) => {
-            if (status === 'OK' && results.length) res(results[0]);
-            else rej(new Error('Address not found. Please check spelling and try again.'));
-        });
+async function wixProxy(body) {
+    const resp = await fetch(window.__WIX_BACKEND, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
     });
+    if (!resp.ok) throw new Error(`Backend error: ${resp.status}`);
+    return resp.json();
 }
 
-function nearbySearch(service, location, keyword, radius) {
-    return new Promise((res) => {
-        service.nearbySearch({ location, radius, keyword }, (results, status) => {
-            res((status === 'OK' || status === 'ZERO_RESULTS') ? (results || []) : []);
-        });
-    });
+// Parse Google Directions duration string e.g. "7 mins" -> seconds
+function parseDuration(str) {
+    const h = str.match(/(\d+)\s*hour/);
+    const m = str.match(/(\d+)\s*min/);
+    return ((h ? parseInt(h[1]) : 0) * 3600) + ((m ? parseInt(m[1]) : 0) * 60);
 }
 
-function getDistanceMatrix(origins, destinations) {
-    return new Promise((res, rej) => {
-        if (!destinations.length) return res([]);
-        new google.maps.DistanceMatrixService().getDistanceMatrix({
-            origins,
-            destinations: destinations.map(p => ({ placeId: p.place_id })),
-            travelMode: google.maps.TravelMode.DRIVING,
-            unitSystem: google.maps.UnitSystem.IMPERIAL
-        }, (response, status) => {
-            if (status === 'OK') res(response.rows[0].elements);
-            else rej(new Error('Drive time calculation failed.'));
-        });
-    });
+// Parse Google Directions distance string e.g. "3.2 mi" -> "3.2"
+function parseDistance(str) {
+    const m = str.match(/([\d.]+)/);
+    return m ? m[1] : '?';
 }
 
-function buildStationObj(place, distEl, municipality) {
-    const driveSec   = distEl && distEl.status === 'OK' ? distEl.duration.value : 99999;
-    const distMiles  = distEl && distEl.status === 'OK' ? (distEl.distance.value / 1609.34).toFixed(1) : '?';
-    const driveMin   = Math.round(driveSec / 60);
-    const vicinity   = place.vicinity || '';
-    const in_town    = municipality ? vicinity.toLowerCase().includes(municipality.toLowerCase()) : false;
-    return {
-        station_name:   place.name || 'Unknown Station',
-        address:        vicinity,
-        dept_type:      detectDeptType(place.name || ''),
-        source_type:    detectSourceType(place.name || ''),
-        in_town,
-        drive_minutes:  driveMin,
-        distance_miles: distMiles,
-        _drive_sec:     driveSec
-    };
-}
-
-// ─── Real Google backend ───────────────────────────────────────────────────────
+// ─── Real backend via Wix proxy ───────────────────────────────────────────────
 async function runRealCalculation(address) {
     try {
         // Stage 1: Geocode
         setLoading(true, 'Locating your address...');
-        const geoResult = await geocode(address);
-        const lat  = geoResult.geometry.location.lat();
-        const lng  = geoResult.geometry.location.lng();
-        const loc  = { lat, lng };
-        const formattedAddress = geoResult.formatted_address;
+        const geo = await wixProxy({ type: 'geocode', address });
+        if (geo.error) throw new Error('Address not found. Please check spelling and try again.');
+        const { lat, lng } = geo;
 
-        const cityComp = geoResult.address_components.find(c =>
-            c.types.includes('locality') || c.types.includes('administrative_area_level_3')
-        );
-        const municipality = cityComp ? cityComp.long_name : '';
+        // Extract municipality from address string
+        const parts = address.split(',').map(s => s.trim());
+        const municipality = parts.length >= 3 ? parts[parts.length - 3] : (parts[0] || '');
 
-        // Stage 2: Places search — need a hidden map div for PlacesService
-        let mapDiv = document.getElementById('_hidden_map');
-        if (!mapDiv) {
-            mapDiv = document.createElement('div');
-            mapDiv.id = '_hidden_map';
-            mapDiv.style.cssText = 'width:1px;height:1px;position:absolute;top:-9999px;left:-9999px;';
-            document.body.appendChild(mapDiv);
-        }
-        const placesService = new google.maps.places.PlacesService(
-            new google.maps.Map(mapDiv, { center: loc, zoom: 12 })
-        );
-
+        // Stage 2: Fire stations
         setLoading(true, 'Finding fire stations near you...');
-        const fireRaw = await nearbySearch(placesService, loc, 'fire station', 25000);
+        const fireData = await wixProxy({
+            type: 'nearby', lat, lng,
+            keywords: ['fire station', 'fire department'],
+            radius: 25000
+        });
+        const fireRaw = fireData.results || [];
 
+        // Stage 3: EMS / rescue
         setLoading(true, 'Finding EMS and rescue stations...');
-        const emsRaw1 = await nearbySearch(placesService, loc, 'rescue squad ambulance EMS', 25000);
-        const emsRaw2 = await nearbySearch(placesService, loc, 'emergency medical services', 25000);
-        const emsMap  = new Map();
-        [...emsRaw1, ...emsRaw2].forEach(p => emsMap.set(p.place_id, p));
-        const emsRaw  = Array.from(emsMap.values());
+        const emsData = await wixProxy({
+            type: 'nearby', lat, lng,
+            keywords: ['rescue squad', 'ambulance EMS', 'emergency medical services'],
+            radius: 25000
+        });
+        const emsRaw = emsData.results || [];
 
-        // Stage 3: Distance Matrix
+        // Stage 4: Drive times
         setLoading(true, 'Calculating drive times...');
-        const fireCandidates = fireRaw.slice(0, 8);
-        const emsCandidates  = emsRaw.slice(0, 8);
+        const fireCandidates = fireRaw.slice(0, 5);
+        const emsCandidates  = emsRaw.length ? emsRaw.slice(0, 5) : fireRaw.slice(0, 5);
 
-        const [fireDist, emsDist] = await Promise.all([
-            getDistanceMatrix([loc], fireCandidates),
-            getDistanceMatrix([loc], emsCandidates)
+        const getDrivetime = async (station) => {
+            try {
+                const d = await wixProxy({
+                    type: 'directions',
+                    origin: address,
+                    dest: station.address || `${station.lat},${station.lng}`
+                });
+                return {
+                    driveSec:  d.duration ? parseDuration(d.duration) : 99999,
+                    distMiles: d.distance ? parseDistance(d.distance) : '?'
+                };
+            } catch(e) {
+                return { driveSec: 99999, distMiles: '?' };
+            }
+        };
+
+        const [fireTimes, emsTimes] = await Promise.all([
+            Promise.all(fireCandidates.map(getDrivetime)),
+            Promise.all(emsCandidates.map(getDrivetime))
         ]);
 
-        // Stage 4: Build + sort
+        const buildStation = (s, t) => ({
+            station_name:   s.name || 'Unknown Station',
+            address:        s.address || '',
+            dept_type:      detectDeptType(s.name || ''),
+            source_type:    detectSourceType(s.name || ''),
+            in_town:        municipality ? (s.address || '').toLowerCase().includes(municipality.toLowerCase()) : false,
+            drive_minutes:  Math.round(t.driveSec / 60),
+            distance_miles: t.distMiles,
+            _drive_sec:     t.driveSec
+        });
+
         let fireStations = fireCandidates
-            .map((p, i) => buildStationObj(p, fireDist[i], municipality))
+            .map((s, i) => buildStation(s, fireTimes[i]))
             .filter(s => s._drive_sec < 90000)
-            .sort((a, b) => {
-                if (a.in_town !== b.in_town) return a.in_town ? -1 : 1;
-                return a._drive_sec - b._drive_sec;
-            })
+            .sort((a, b) => a.in_town !== b.in_town ? (a.in_town ? -1 : 1) : a._drive_sec - b._drive_sec)
             .slice(0, 3);
 
         let emsStations = emsCandidates
-            .map((p, i) => buildStationObj(p, emsDist[i], municipality))
+            .map((s, i) => buildStation(s, emsTimes[i]))
             .filter(s => s._drive_sec < 90000)
             .sort((a, b) => a._drive_sec - b._drive_sec)
             .slice(0, 3);
 
         if (!fireStations.length) throw new Error('No fire stations found near this address. Try a more specific address.');
-        if (!emsStations.length) emsStations = fireStations;
+        if (!emsStations.length) emsStations = fireStations.slice(0, 3);
 
-        appData = { formatted_address: formattedAddress, municipality, fire_stations: fireStations, ems_stations: emsStations };
+        appData = { formatted_address: address, municipality, fire_stations: fireStations, ems_stations: emsStations };
+
+        const banner = document.getElementById('demo-banner');
+        if (banner) banner.style.display = 'none';
+
         renderResults();
 
     } catch(err) {
@@ -1197,7 +1037,10 @@ async function runCalculation() {
     showResults(false);
     setLoading(true, 'Locating your address...');
 
-    if (mapsReady) {
+    const onWix = window.location.hostname.includes('safestepsplans.com') ||
+                  window.location.hostname.includes('wixsite.com') ||
+                  window.location.hostname.includes('wix.com');
+    if (onWix) {
         runRealCalculation(address);
     } else {
         runDemoCalculation(address);
@@ -1207,6 +1050,17 @@ async function runCalculation() {
 document.getElementById('address-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') runCalculation();
 });
+
+// ─── Auto-height reporting to Wix parent ─────────────────────────────────────
+function reportHeight() {
+    const height = document.body.scrollHeight;
+    window.parent.postMessage({ action: 'resize', height }, '*');
+}
+
+// Report on load and whenever content changes
+window.addEventListener('load', reportHeight);
+const resizeObserver = new ResizeObserver(reportHeight);
+resizeObserver.observe(document.body);
 </script>
 </body>
 </html>
