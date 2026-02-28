@@ -937,12 +937,12 @@ async function runCalculation() {
 
         // Stage 2: Fire stations
         setLoading(true, 'Finding fire stations near you...');
-        const fireNearby = await placesCall({ type: 'nearby', lat, lng, keywords: ['fire station', 'fire department'], radius: 25000 });
+        const fireNearby = await placesCall({ type: 'nearby', lat, lng, placeType: 'fire_station', rankby: 'distance' });
         const firePlaces = (fireNearby.results || []).slice(0, 5);
 
         // Stage 3: EMS
         setLoading(true, 'Finding EMS and rescue stations...');
-        const emsNearby = await placesCall({ type: 'nearby', lat, lng, keywords: ['rescue squad', 'ambulance', 'emergency medical services'], radius: 25000 });
+        const emsNearby = await placesCall({ type: 'nearby', lat, lng, keywords: ['rescue squad', 'EMS', 'ambulance corps'], rankby: 'distance' });
         const emsPlaces = (emsNearby.results || []).slice(0, 5);
 
         // Stage 4: Drive times — same pattern as fridge sheet: pass lat,lng not address string
