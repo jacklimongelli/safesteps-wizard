@@ -821,13 +821,21 @@ function detectSourceType(name) {
 }
 
 async function wixProxy(body) {
+    console.log('[SafeSteps] wixProxy ->', body.type, body);
     const resp = await fetch(window.__WIX_BACKEND, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     });
-    if (!resp.ok) throw new Error(`Backend error: ${resp.status}`);
-    return resp.json();
+    console.log('[SafeSteps] wixProxy response status:', resp.status);
+    if (!resp.ok) {
+        const text = await resp.text();
+        console.error('[SafeSteps] wixProxy error body:', text);
+        throw new Error(`Backend error ${resp.status}: ${text}`);
+    }
+    const data = await resp.json();
+    console.log('[SafeSteps] wixProxy result:', data);
+    return data;
 }
 
 // Parse Google Directions duration string e.g. "7 mins" -> seconds
@@ -931,8 +939,10 @@ async function runRealCalculation(address) {
         renderResults();
 
     } catch(err) {
-        showError(err.message || 'Something went wrong. Please try again.');
+        console.error('[SafeSteps] runRealCalculation error:', err);
+        showError('Error: ' + (err.message || String(err)));
         setLoading(false);
+        throw err; // re-throw so top-level catch also sees it
     }
 }
 
@@ -954,8 +964,14 @@ async function runCalculation() {
     clearError();
     showResults(false);
     setLoading(true, 'Locating your address...');
-
-    runRealCalculation(address);
+    console.log('[SafeSteps] Starting calculation for:', address);
+    try {
+        await runRealCalculation(address);
+    } catch(err) {
+        console.error('[SafeSteps] Top-level error:', err);
+        showError('Error: ' + (err.message || err));
+        setLoading(false);
+    }
 }
 
 document.getElementById('address-input').addEventListener('keydown', e => {
