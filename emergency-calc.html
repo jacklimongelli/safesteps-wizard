@@ -940,13 +940,13 @@ async function runCalculation() {
         setLoading(true, 'Finding fire stations near you...');
         const [fireByType, fireByKeyword] = await Promise.all([
             placesCall({ type: 'nearby', lat, lng, placeType: 'fire_station', rankby: 'distance' }),
-            placesCall({ type: 'nearby', lat, lng, keywords: ['fire department', 'fire company', 'volunteer fire'], rankby: 'distance' })
+            placesCall({ type: 'nearby', lat, lng, keywords: ['fire department', 'fire company', 'volunteer fire', 'fire'], rankby: 'distance' })
         ]);
         // Merge and deduplicate by place_id
         const fireSeen = new Set();
         const firePlaces = [...(fireByType.results || []), ...(fireByKeyword.results || [])]
             .filter(p => { if (fireSeen.has(p.place_id)) return false; fireSeen.add(p.place_id); return true; })
-            .slice(0, 6);
+            .slice(0, 10);
 
         // Stage 3: EMS
         setLoading(true, 'Finding EMS and rescue stations...');
