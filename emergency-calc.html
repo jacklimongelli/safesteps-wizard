@@ -803,6 +803,27 @@
 <script>
 let appData = null;
 
+// ─── UI Utilities ─────────────────────────────────────────────────────────────
+function showError(msg) {
+    setLoading(false);
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.classList.add('active');
+}
+function clearError() {
+    const el = document.getElementById('error-msg');
+    el.textContent = '';
+    el.classList.remove('active');
+}
+function setLoading(on, text) {
+    document.getElementById('loading').classList.toggle('active', on);
+    if (text) document.getElementById('loading-text').textContent = text;
+    document.getElementById('search-btn').disabled = on;
+}
+function showResults(on) {
+    document.getElementById('results').classList.toggle('active', on);
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function detectDeptType(name) {
     const n = name.toUpperCase();
