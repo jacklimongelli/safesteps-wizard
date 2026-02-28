@@ -944,16 +944,17 @@ async function runCalculation() {
             placesCall({ type: 'nearby', lat, lng, placeType: 'fire_station', rankby: 'distance' }),
             placesCall({ type: 'nearby', lat, lng, keywords: ['fire department', 'fire company', 'volunteer fire', 'fire'], rankby: 'distance' })
         ]);
-        // Merge and deduplicate by place_id, filter out non-fire results
+        // Merge and deduplicate by place_id
+        // Positive filter: keep only results with fire-related words in name OR from official fire_station type
         const fireSeen = new Set();
-        const FIRE_EXCLUDE = /emergency management|oes\b|office of emergency|health dept|health department|police|sheriff|hospital|medical center/i;
+        const FIRE_KEEP = /fire (dept|department|station|company|co\b|district)|volunteer fire|vfd|vfc|fire & rescue|fire and rescue/i;
         const firePlaces = [...(fireByType.results || []).map(p => ({...p, _fromType: true})),
                            ...(fireByKeyword.results || []).map(p => ({...p, _fromKeyword: true}))]
             .filter(p => {
                 if (fireSeen.has(p.place_id)) return false;
                 fireSeen.add(p.place_id);
-                if (FIRE_EXCLUDE.test(p.name)) return false;
-                return true;
+                // Keep if official fire_station type OR name looks like a fire dept
+                return p._fromType || FIRE_KEEP.test(p.name || '');
             })
             .slice(0, 10);
 
