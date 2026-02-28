@@ -935,10 +935,18 @@ async function runCalculation() {
         const parts = address.split(',').map(s => s.trim());
         const municipality = parts.length >= 3 ? parts[parts.length - 3] : parts[0] || '';
 
-        // Stage 2: Fire stations
+        // Stage 2: Fire stations — two parallel searches to catch small volunteer depts
+        // that aren't tagged as fire_station type in Google Places
         setLoading(true, 'Finding fire stations near you...');
-        const fireNearby = await placesCall({ type: 'nearby', lat, lng, placeType: 'fire_station', rankby: 'distance' });
-        const firePlaces = (fireNearby.results || []).slice(0, 5);
+        const [fireByType, fireByKeyword] = await Promise.all([
+            placesCall({ type: 'nearby', lat, lng, placeType: 'fire_station', rankby: 'distance' }),
+            placesCall({ type: 'nearby', lat, lng, keywords: ['fire department', 'fire company', 'volunteer fire'], rankby: 'distance' })
+        ]);
+        // Merge and deduplicate by place_id
+        const fireSeen = new Set();
+        const firePlaces = [...(fireByType.results || []), ...(fireByKeyword.results || [])]
+            .filter(p => { if (fireSeen.has(p.place_id)) return false; fireSeen.add(p.place_id); return true; })
+            .slice(0, 6);
 
         // Stage 3: EMS
         setLoading(true, 'Finding EMS and rescue stations...');
