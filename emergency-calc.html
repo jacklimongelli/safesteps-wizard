@@ -655,10 +655,6 @@
         }
         .cta-btn:hover { opacity: 0.9; transform: translateY(-1px); }
     </style>
-    <script>
-    // Wix backend proxy URL — all Google API calls go through here
-    window.__WIX_BACKEND = 'https://www.safestepsplans.com/_functions/places';
-    </script>
 </head>
 <body>
 
@@ -824,175 +820,197 @@ function showResults(on) {
     document.getElementById('results').classList.toggle('active', on);
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-function detectDeptType(name) {
-    const n = name.toUpperCase();
-    if (/VOLUNTEER|\bVFD\b|\bVFC\b|\bVFRS\b|VOL\./.test(n)) return 'volunteer';
-    if (/\bCITY\b|\bCOUNTY\b|\bMETRO\b|\bMUNICIPAL\b|\bPROFESSIONAL\b|\bCAREER\b/.test(n)) return 'career';
-    return 'unknown';
-}
+// ─── Backend — exact same pattern as fridge sheet ─────────────────────────────
+const PROXY = 'https://www.safestepsplans.com/_functions/places';
 
-function detectSourceType(name) {
-    const n = name.toUpperCase();
-    if (/RESCUE SQUAD|RESCUE CO|RESCUE VOL/.test(n)) return 'rescue_squad';
-    if (/FIRE DEPT|FIRE DEPARTMENT|ENGINE|LADDER/.test(n)) return 'fire_dept';
-    if (/HOSPITAL|MEDICAL CENTER/.test(n)) return 'hospital';
-    if (/\bAMR\b|RURAL METRO|ACADIAN|MEDSTAR|AMERICAN MEDICAL/.test(n)) return 'private';
-    return 'ems_station';
-}
-
-async function wixProxy(body) {
-    console.log('[SafeSteps] wixProxy ->', body.type, body);
-    const resp = await fetch(window.__WIX_BACKEND, {
+async function placesCall(body) {
+    const res = await fetch(PROXY, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
     });
-    console.log('[SafeSteps] wixProxy response status:', resp.status);
-    if (!resp.ok) {
-        const text = await resp.text();
-        console.error('[SafeSteps] wixProxy error body:', text);
-        throw new Error(`Backend error ${resp.status}: ${text}`);
-    }
-    const data = await resp.json();
-    console.log('[SafeSteps] wixProxy result:', data);
-    return data;
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
 }
 
-// Parse Google Directions duration string e.g. "7 mins" -> seconds
-function parseDuration(str) {
-    const h = str.match(/(\d+)\s*hour/);
-    const m = str.match(/(\d+)\s*min/);
-    return ((h ? parseInt(h[1]) : 0) * 3600) + ((m ? parseInt(m[1]) : 0) * 60);
-}
-
-// Parse Google Directions distance string e.g. "3.2 mi" -> "3.2"
-function parseDistance(str) {
-    const m = str.match(/([\d.]+)/);
-    return m ? m[1] : '?';
-}
-
-// ─── Real backend via Wix proxy ───────────────────────────────────────────────
-async function runRealCalculation(address) {
+async function getDriving(origin, destLat, destLng) {
     try {
-        // Stage 1: Geocode
-        setLoading(true, 'Locating your address...');
-        const geo = await wixProxy({ type: 'geocode', address });
-        if (geo.error) throw new Error('Address not found. Please check spelling and try again.');
-        const { lat, lng } = geo;
-
-        // Extract municipality from address string
-        const parts = address.split(',').map(s => s.trim());
-        const municipality = parts.length >= 3 ? parts[parts.length - 3] : (parts[0] || '');
-
-        // Stage 2: Fire stations
-        setLoading(true, 'Finding fire stations near you...');
-        const fireData = await wixProxy({
-            type: 'nearby', lat, lng,
-            keywords: ['fire station', 'fire department'],
-            radius: 25000
-        });
-        const fireRaw = fireData.results || [];
-
-        // Stage 3: EMS / rescue
-        setLoading(true, 'Finding EMS and rescue stations...');
-        const emsData = await wixProxy({
-            type: 'nearby', lat, lng,
-            keywords: ['rescue squad', 'ambulance EMS', 'emergency medical services'],
-            radius: 25000
-        });
-        const emsRaw = emsData.results || [];
-
-        // Stage 4: Drive times
-        setLoading(true, 'Calculating drive times...');
-        const fireCandidates = fireRaw.slice(0, 5);
-        const emsCandidates  = emsRaw.length ? emsRaw.slice(0, 5) : fireRaw.slice(0, 5);
-
-        const getDrivetime = async (station) => {
-            try {
-                const d = await wixProxy({
-                    type: 'directions',
-                    origin: address,
-                    dest: station.address || `${station.lat},${station.lng}`
-                });
-                return {
-                    driveSec:  d.duration ? parseDuration(d.duration) : 99999,
-                    distMiles: d.distance ? parseDistance(d.distance) : '?'
-                };
-            } catch(e) {
-                return { driveSec: 99999, distMiles: '?' };
-            }
-        };
-
-        const [fireTimes, emsTimes] = await Promise.all([
-            Promise.all(fireCandidates.map(getDrivetime)),
-            Promise.all(emsCandidates.map(getDrivetime))
-        ]);
-
-        const buildStation = (s, t) => ({
-            station_name:   s.name || 'Unknown Station',
-            address:        s.address || '',
-            dept_type:      detectDeptType(s.name || ''),
-            source_type:    detectSourceType(s.name || ''),
-            in_town:        municipality ? (s.address || '').toLowerCase().includes(municipality.toLowerCase()) : false,
-            drive_minutes:  Math.round(t.driveSec / 60),
-            distance_miles: t.distMiles,
-            _drive_sec:     t.driveSec
-        });
-
-        let fireStations = fireCandidates
-            .map((s, i) => buildStation(s, fireTimes[i]))
-            .filter(s => s._drive_sec < 90000)
-            .sort((a, b) => a.in_town !== b.in_town ? (a.in_town ? -1 : 1) : a._drive_sec - b._drive_sec)
-            .slice(0, 3);
-
-        let emsStations = emsCandidates
-            .map((s, i) => buildStation(s, emsTimes[i]))
-            .filter(s => s._drive_sec < 90000)
-            .sort((a, b) => a._drive_sec - b._drive_sec)
-            .slice(0, 3);
-
-        if (!fireStations.length) throw new Error('No fire stations found near this address. Try a more specific address.');
-        if (!emsStations.length) emsStations = fireStations.slice(0, 3);
-
-        appData = { formatted_address: address, municipality, fire_stations: fireStations, ems_stations: emsStations };
-
-        renderResults();
-
-    } catch(err) {
-        console.error('[SafeSteps] runRealCalculation error:', err);
-        showError('Error: ' + (err.message || String(err)));
-        setLoading(false);
-        throw err; // re-throw so top-level catch also sees it
-    }
+        const res = await placesCall({ type: 'directions', origin, dest: destLat + ',' + destLng });
+        if (res.error) return null;
+        return { distance: res.distance, duration: res.duration };
+    } catch { return null; }
 }
 
-// ─── Shared render ────────────────────────────────────────────────────────────
-function renderResults() {
-    setLoading(false);
-    document.getElementById('address-text').textContent = appData.formatted_address;
-    buildList('fire', appData.fire_stations, 0);
-    buildList('ems',  appData.ems_stations,  0);
-    document.getElementById('fire-readout').innerHTML = buildReadout(appData.fire_stations[0], 'fire');
-    document.getElementById('ems-readout').innerHTML  = buildReadout(appData.ems_stations[0],  'ems');
-    showResults(true);
+// ─── Dept type detection ───────────────────────────────────────────────────────
+function detectDeptType(name) {
+    const n = (name || '').toUpperCase();
+    if (/VOLUNTEER|\bVFD\b|\bVFC\b|\bVFRS\b/.test(n)) return 'volunteer';
+    if (/\bCITY\b|\bCOUNTY\b|\bMETRO\b|\bMUNICIPAL\b|\bCAREER\b/.test(n)) return 'career';
+    return 'unknown';
 }
 
-// ─── Entry point ──────────────────────────────────────────────────────────────
+// ─── Render helpers ───────────────────────────────────────────────────────────
+function buildReadout(station, type) {
+    const isFire = (type === 'fire');
+    const careerOverhead = isFire ? 3 : 4;
+    const volOverhead    = isFire ? 8 : 10;
+    const driveMin = station.drive_minutes;
+    const total    = driveMin + (station.dept_type === 'volunteer' ? volOverhead : careerOverhead);
+    const color    = station.dept_type === 'volunteer' ? 'var(--amber)' : 'var(--navy)';
+    const outsideNote = station.in_town ? '' : ' · outside your municipality, may respond as mutual aid';
+    const caption = station.dept_type === 'volunteer'
+        ? (isFire
+            ? `Estimated total response time · ~1 min dispatch + ~2 min turnout + ~5 min volunteer call-out + ${driveMin} min drive${outsideNote}`
+            : `Estimated total response time · ~3 min EMD protocol + ~2 min turnout + ~5 min volunteer call-out + ${driveMin} min drive${outsideNote}`)
+        : (isFire
+            ? `Estimated total response time · ~1 min dispatch + ~2 min turnout + ${driveMin} min drive${outsideNote}`
+            : `Estimated total response time · ~3 min EMD protocol + ~1 min turnout + ${driveMin} min drive${outsideNote}`);
+    return `
+        <div class="readout-card">
+            <div class="readout-top">
+                <div class="readout-station-name">${station.station_name}</div>
+            </div>
+            <div class="readout-body">
+                <div class="time-block">
+                    <div class="time-num" style="color:${color}">${total}</div>
+                    <div class="time-word">Minutes</div>
+                    <div class="time-caption">${caption}</div>
+                </div>
+                <div class="readout-dist"><strong>${station.distance_miles} miles</strong> driving distance</div>
+            </div>
+        </div>`;
+}
+
+function buildList(type, stations, activeIdx) {
+    const listEl = document.getElementById(type + '-list');
+    listEl.innerHTML = '';
+    stations.forEach((s, i) => {
+        const item = document.createElement('div');
+        item.className = 'station-item' + (i === activeIdx ? ' selected' : '');
+        item.onclick = () => selectStation(type, i);
+        let deptPill = '';
+        if (s.dept_type === 'career')         deptPill = '<span class="pill pill-career">Career</span>';
+        else if (s.dept_type === 'volunteer') deptPill = '<span class="pill pill-volunteer">Volunteer</span>';
+        else                                  deptPill = '<span class="pill pill-unknown">Type Unknown</span>';
+        const jurisdPill = s.in_town
+            ? '<span class="pill pill-town">In Town</span>'
+            : '<span class="pill pill-outside">Out of Town</span>';
+        item.innerHTML = `
+            <div class="station-selector"></div>
+            <div class="station-item-body">
+                <div class="station-item-name">${s.station_name}</div>
+                <div class="station-item-address">${s.address || ''}</div>
+                <div class="pill-row">
+                    ${deptPill}${jurisdPill}
+                    <span class="pill-dist">${s.distance_miles} mi</span>
+                </div>
+            </div>`;
+        listEl.appendChild(item);
+    });
+}
+
+function selectStation(type, idx) {
+    const stations = type === 'fire' ? appData.fire_stations : appData.ems_stations;
+    document.querySelectorAll('#' + type + '-list .station-item').forEach((el, i) => {
+        el.classList.toggle('selected', i === idx);
+    });
+    document.getElementById(type + '-readout').innerHTML = buildReadout(stations[idx], type);
+}
+
+// ─── Main calculation ──────────────────────────────────────────────────────────
 async function runCalculation() {
     const address = document.getElementById('address-input').value.trim();
     if (!address) { showError('Please enter your home address.'); return; }
     clearError();
     showResults(false);
-    setLoading(true, 'Locating your address...');
-    console.log('[SafeSteps] Starting calculation for:', address);
+
     try {
-        await runRealCalculation(address);
+        // Stage 1: Geocode
+        setLoading(true, 'Locating your address...');
+        const geo = await placesCall({ type: 'geocode', address });
+        if (geo.error) throw new Error('Address not found: ' + geo.status);
+        const { lat, lng } = geo;
+
+        // Extract municipality from address string for in-town detection
+        const parts = address.split(',').map(s => s.trim());
+        const municipality = parts.length >= 3 ? parts[parts.length - 3] : parts[0] || '';
+
+        // Stage 2: Fire stations
+        setLoading(true, 'Finding fire stations near you...');
+        const fireNearby = await placesCall({ type: 'nearby', lat, lng, keywords: ['fire station', 'fire department'], radius: 25000 });
+        const firePlaces = (fireNearby.results || []).slice(0, 5);
+
+        // Stage 3: EMS
+        setLoading(true, 'Finding EMS and rescue stations...');
+        const emsNearby = await placesCall({ type: 'nearby', lat, lng, keywords: ['rescue squad', 'ambulance', 'emergency medical services'], radius: 25000 });
+        const emsPlaces = (emsNearby.results || []).slice(0, 5);
+
+        // Stage 4: Drive times — same pattern as fridge sheet: pass lat,lng not address string
+        setLoading(true, 'Calculating drive times...');
+
+        const buildStations = async (places) => {
+            const results = await Promise.all(places.map(async p => {
+                try {
+                    const [det, drive] = await Promise.all([
+                        placesCall({ type: 'details', place_id: p.place_id }),
+                        getDriving(address, p.lat, p.lng)
+                    ]);
+                    const driveMin = drive ? parseDuration(drive.duration) : 99;
+                    const in_town = municipality ? (det.address || p.address || '').toLowerCase().includes(municipality.toLowerCase()) : false;
+                    return {
+                        station_name:   det.name || p.name,
+                        address:        det.address || p.address || '',
+                        dept_type:      detectDeptType(det.name || p.name),
+                        in_town,
+                        drive_minutes:  driveMin,
+                        distance_miles: drive ? drive.distance.replace(' mi', '') : '?',
+                        _drive_min:     driveMin
+                    };
+                } catch {
+                    return null;
+                }
+            }));
+            return results.filter(Boolean);
+        };
+
+        const [fireStations, emsStations] = await Promise.all([
+            buildStations(firePlaces),
+            buildStations(emsPlaces)
+        ]);
+
+        // Sort: fire = in-town first, then by drive time. EMS = drive time only.
+        fireStations.sort((a, b) => a.in_town !== b.in_town ? (a.in_town ? -1 : 1) : a._drive_min - b._drive_min);
+        emsStations.sort((a, b) => a._drive_min - b._drive_min);
+
+        if (!fireStations.length) throw new Error('No fire stations found near this address.');
+
+        appData = {
+            formatted_address: address,
+            municipality,
+            fire_stations: fireStations.slice(0, 3),
+            ems_stations:  (emsStations.length ? emsStations : fireStations).slice(0, 3)
+        };
+
+        setLoading(false);
+        document.getElementById('address-text').textContent = address;
+        buildList('fire', appData.fire_stations, 0);
+        buildList('ems',  appData.ems_stations,  0);
+        document.getElementById('fire-readout').innerHTML = buildReadout(appData.fire_stations[0], 'fire');
+        document.getElementById('ems-readout').innerHTML  = buildReadout(appData.ems_stations[0],  'ems');
+        showResults(true);
+
     } catch(err) {
-        console.error('[SafeSteps] Top-level error:', err);
-        showError('Error: ' + (err.message || err));
+        showError(err.message || 'Something went wrong. Please try again.');
         setLoading(false);
     }
+}
+
+// Parse "7 mins" or "1 hour 3 mins" → integer minutes
+function parseDuration(str) {
+    if (!str) return 99;
+    const h = str.match(/(\d+)\s*hour/);
+    const m = str.match(/(\d+)\s*min/);
+    return ((h ? parseInt(h[1]) : 0) * 60) + (m ? parseInt(m[1]) : 0);
 }
 
 document.getElementById('address-input').addEventListener('keydown', e => {
@@ -1004,8 +1022,6 @@ function reportHeight() {
     const height = document.body.scrollHeight;
     window.parent.postMessage({ action: 'resize', height }, '*');
 }
-
-// Report on load and whenever content changes
 window.addEventListener('load', reportHeight);
 const resizeObserver = new ResizeObserver(reportHeight);
 resizeObserver.observe(document.body);
