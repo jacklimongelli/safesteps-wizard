@@ -472,6 +472,11 @@
             background: var(--white);
             border-top: 1px solid var(--border);
             padding: 48px 32px;
+            text-align: left;
+        }
+        .context-inner {
+            max-width: 900px;
+            margin: 0 auto;
         }
         .context-heading {
             font-family: 'Playfair Display', serif;
@@ -479,12 +484,14 @@
             font-weight: 700;
             color: var(--navy);
             margin-bottom: 32px;
+            text-align: center;
         }
         .context-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 28px 48px;
             max-width: 820px;
+            margin: 0 auto;
         }
         @media (max-width: 540px) { .context-grid { grid-template-columns: 1fr; } }
         .context-item {}
@@ -509,6 +516,8 @@
             background: var(--bg);
             border-top: 1px solid var(--rule);
             padding: 48px 32px;
+            max-width: 900px;
+            margin: 0 auto;
         }
         .method-heading {
             font-family: 'Playfair Display', serif;
@@ -718,6 +727,7 @@
     </div>
 
     <div class="context">
+        <div class="context-inner">
         <div class="context-heading">What These Numbers Mean for Your Family</div>
         <div class="context-grid">
             <div class="context-item">
@@ -737,6 +747,7 @@
                 <div class="context-item-body">Responders are trained for when they arrive. The minutes before they do are your family's responsibility alone. A practiced emergency plan is the only thing that fills this gap.</div>
             </div>
         </div>
+        </div><!-- /context-inner -->
     </div>
 
     <div class="methodology">
@@ -844,7 +855,11 @@ async function getDriving(origin, destLat, destLng) {
 // ─── Dept type detection ───────────────────────────────────────────────────────
 function detectDeptType(name, fromKeyword) {
     const n = (name || '').toUpperCase();
+    // Fire volunteer patterns
     if (/VOLUNTEER|\bVFD\b|\bVFC\b|\bVFRS\b|FIRE COMPANY|FIRE CO\./.test(n)) return 'volunteer';
+    // EMS volunteer patterns — first aid squads and rescue squads are almost always volunteer
+    if (/FIRST AID|RESCUE SQUAD|RESCUE CORPS|EMS SQUAD|AMBULANCE CORPS|AMBULANCE SQUAD/.test(n)) return 'volunteer';
+    // Career patterns
     if (/\bCITY\b|\bCOUNTY\b|\bMETRO\b|\bMUNICIPAL\b|\bCAREER\b/.test(n)) return 'career';
     // If it only showed up via volunteer keyword search, treat as volunteer
     if (fromKeyword) return 'volunteer';
@@ -937,26 +952,35 @@ async function runCalculation() {
         const parts = address.split(',').map(s => s.trim());
         const municipality = parts.length >= 3 ? parts[parts.length - 3] : parts[0] || '';
 
-        // Stage 2: Fire stations — query our USFA database (no Claude needed)
+        // Stage 2: Fire stations — two parallel searches, then Claude classifies/filters
         setLoading(true, 'Finding fire stations near you...');
-        const fireDbResult = await placesCall({ type: 'fire_db', lat, lng });
-        const fireDbStations = (fireDbResult.results || []).map(s => ({
-            station_name:   s.name,
-            address:        '',
-            dept_type:      s.dept_type,
-            in_town:        municipality ? s.name.toLowerCase().includes(municipality.toLowerCase()) : false,
-            drive_minutes:  parseDuration(s.duration),
-            distance_miles: s.distance ? s.distance.replace(' mi', '') : '?',
-            _drive_min:     parseDuration(s.duration)
-        }));
+        const [fireByType, fireByKeyword] = await Promise.all([
+            placesCall({ type: 'nearby', lat, lng, placeType: 'fire_station', rankby: 'distance' }),
+            placesCall({ type: 'nearby', lat, lng, keywords: ['fire department', 'fire company', 'volunteer fire', 'fire'], rankby: 'distance' })
+        ]);
+        // Merge and deduplicate before sending to Claude
+        const fireSeen = new Set();
+        const fireMerged = [...(fireByType.results || []), ...(fireByKeyword.results || [])]
+            .filter(p => { if (fireSeen.has(p.place_id)) return false; fireSeen.add(p.place_id); return true; })
+            .slice(0, 12);
+        // Claude filters junk and classifies volunteer vs career
+        setLoading(true, 'Classifying fire stations...');
+        const fireClassified = await placesCall({ type: 'classify', places: fireMerged, service_type: 'fire', home_address: address });
+        const firePlaces = (fireClassified.results || fireMerged).slice(0, 6);
+        // Build lookup map so dept_type survives the details/directions parallel fetch
+        const fireDeptTypeMap = {};
+        (fireClassified.results || []).forEach(p => { if (p.place_id) fireDeptTypeMap[p.place_id] = p.dept_type; });
 
         // Stage 3: EMS — search then Claude classifies/filters
         setLoading(true, 'Finding EMS and rescue stations...');
         const emsNearby = await placesCall({ type: 'nearby', lat, lng, keywords: ['rescue squad', 'EMS', 'ambulance corps', 'first aid squad'], rankby: 'distance' });
-        const emsPlaces = (emsNearby.results || []).slice(0, 5);
-        // Name-based dept_type detection — no Claude needed
+        const emsMerged = (emsNearby.results || []).slice(0, 12);
+        setLoading(true, 'Classifying EMS stations...');
+        const emsClassified = await placesCall({ type: 'classify', places: emsMerged, service_type: 'ems', home_address: address });
+        const emsPlaces = (emsClassified.results || emsMerged).slice(0, 5);
+        // Build lookup map so dept_type survives the details/directions parallel fetch
         const emsDeptTypeMap = {};
-        emsPlaces.forEach(p => { emsDeptTypeMap[p.place_id] = detectDeptType(p.name, false); });
+        (emsClassified.results || []).forEach(p => { if (p.place_id) emsDeptTypeMap[p.place_id] = p.dept_type; });
 
         // Stage 4: Drive times — same pattern as fridge sheet: pass lat,lng not address string
         setLoading(true, 'Calculating drive times...');
@@ -986,10 +1010,10 @@ async function runCalculation() {
             return results.filter(Boolean);
         };
 
-        const [emsStations] = await Promise.all([
+        const [fireStations, emsStations] = await Promise.all([
+            buildStations(firePlaces, fireDeptTypeMap),
             buildStations(emsPlaces, emsDeptTypeMap)
         ]);
-        const fireStations = fireDbStations;
 
         // Sort: fire = in-town first, then by drive time. EMS = drive time only.
         fireStations.sort((a, b) => a.in_town !== b.in_town ? (a.in_town ? -1 : 1) : a._drive_min - b._drive_min);
