@@ -937,24 +937,18 @@ async function runCalculation() {
         const parts = address.split(',').map(s => s.trim());
         const municipality = parts.length >= 3 ? parts[parts.length - 3] : parts[0] || '';
 
-        // Stage 2: Fire stations — two parallel searches, then Claude classifies/filters
+        // Stage 2: Fire stations — query our USFA database (no Claude classify needed)
         setLoading(true, 'Finding fire stations near you...');
-        const [fireByType, fireByKeyword] = await Promise.all([
-            placesCall({ type: 'nearby', lat, lng, placeType: 'fire_station', rankby: 'distance' }),
-            placesCall({ type: 'nearby', lat, lng, keywords: ['fire department', 'fire company', 'volunteer fire', 'fire'], rankby: 'distance' })
-        ]);
-        // Merge and deduplicate before sending to Claude
-        const fireSeen = new Set();
-        const fireMerged = [...(fireByType.results || []), ...(fireByKeyword.results || [])]
-            .filter(p => { if (fireSeen.has(p.place_id)) return false; fireSeen.add(p.place_id); return true; })
-            .slice(0, 12);
-        // Claude filters junk and classifies volunteer vs career
-        setLoading(true, 'Classifying fire stations...');
-        const fireClassified = await placesCall({ type: 'classify', places: fireMerged, service_type: 'fire', home_address: address });
-        const firePlaces = (fireClassified.results || fireMerged).slice(0, 6);
-        // Build lookup map so dept_type survives the details/directions parallel fetch
-        const fireDeptTypeMap = {};
-        (fireClassified.results || []).forEach(p => { if (p.place_id) fireDeptTypeMap[p.place_id] = p.dept_type; });
+        const fireDbResult = await placesCall({ type: 'fire_db', lat, lng });
+        const fireDbStations = (fireDbResult.results || []).map(s => ({
+            station_name:   s.name,
+            address:        '',
+            dept_type:      s.dept_type,
+            in_town:        municipality ? s.name.toLowerCase().includes(municipality.toLowerCase()) : false,
+            drive_minutes:  parseDuration(s.duration),
+            distance_miles: s.distance ? s.distance.replace(' mi', '') : '?',
+            _drive_min:     parseDuration(s.duration)
+        }));
 
         // Stage 3: EMS — search then Claude classifies/filters
         setLoading(true, 'Finding EMS and rescue stations...');
@@ -995,10 +989,11 @@ async function runCalculation() {
             return results.filter(Boolean);
         };
 
-        const [fireStations, emsStations] = await Promise.all([
-            buildStations(firePlaces, fireDeptTypeMap),
+        const [emsStations] = await Promise.all([
             buildStations(emsPlaces, emsDeptTypeMap)
         ]);
+
+        const fireStations = fireDbStations;
 
         // Sort: fire = in-town first, then by drive time. EMS = drive time only.
         fireStations.sort((a, b) => a.in_town !== b.in_town ? (a.in_town ? -1 : 1) : a._drive_min - b._drive_min);
