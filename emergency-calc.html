@@ -100,13 +100,13 @@
             color: var(--text-light);
             margin-bottom: 10px;
         }
-        .input-row { display: flex; gap: 10px; }
-        @media (max-width: 480px) {
-            .input-row { flex-direction: column; }
-            #search-btn { width: 100%; }
-        }
-        #address-input {
-            flex: 1;
+        .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .input-street { flex: 1 1 100%; }
+        .input-city   { flex: 2 1 160px; }
+        .input-state  { flex: 1 1 60px; }
+        .input-zip    { flex: 1 1 80px; }
+        .addr-field {
+            width: 100%;
             padding: 13px 18px;
             border: 1.5px solid var(--border);
             background: var(--bg);
@@ -117,8 +117,15 @@
             outline: none;
             border-radius: 4px;
             transition: border-color 0.2s, background 0.2s;
+            box-sizing: border-box;
         }
-        #address-input::placeholder { color: #B0BBC8; }
+        .addr-field::placeholder { color: #B0BBC8; }
+        .addr-field:focus { border-color: var(--navy); background: var(--white); }
+        .input-row-bottom { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+        @media (max-width: 480px) {
+            .input-city, .input-state, .input-zip { flex: 1 1 100%; }
+            #search-btn { width: 100%; }
+        }
         /* Google Places autocomplete dropdown styling */
         .pac-container {
             font-family: 'Outfit', sans-serif;
@@ -677,7 +684,20 @@
 <div class="input-panel">
     <div class="input-label">Your Home Address</div>
     <div class="input-row">
-        <input type="text" id="address-input" placeholder="Street address, city, state..." autocomplete="off">
+        <div class="input-street">
+            <input class="addr-field" id="addr-street" type="text" placeholder="Street address" autocomplete="off">
+        </div>
+    </div>
+    <div class="input-row-bottom">
+        <div class="input-city">
+            <input class="addr-field" id="addr-city" type="text" placeholder="City / Town" autocomplete="off">
+        </div>
+        <div class="input-state">
+            <input class="addr-field" id="addr-state" type="text" placeholder="State" autocomplete="off" maxlength="2">
+        </div>
+        <div class="input-zip">
+            <input class="addr-field" id="addr-zip" type="text" placeholder="ZIP" autocomplete="off" maxlength="5">
+        </div>
         <button id="search-btn" onclick="runCalculation()">Calculate →</button>
     </div>
 </div>
@@ -976,8 +996,12 @@ async function getFireStations(lat, lng, address, municipality) {
 
 // ─── Main calculation ──────────────────────────────────────────────────────────
 async function runCalculation() {
-    const address = document.getElementById('address-input').value.trim();
-    if (!address) { showError('Please enter your home address.'); return; }
+    const street = document.getElementById('addr-street').value.trim();
+    const city   = document.getElementById('addr-city').value.trim();
+    const state  = document.getElementById('addr-state').value.trim();
+    const zip    = document.getElementById('addr-zip').value.trim();
+    if (!street || !city || !state) { showError('Please enter your street address, city, and state.'); return; }
+    const address = [street, city, state, zip].filter(Boolean).join(', ');
     clearError();
     showResults(false);
 
@@ -988,9 +1012,8 @@ async function runCalculation() {
         if (geo.error) throw new Error('Address not found: ' + geo.status);
         const { lat, lng } = geo;
 
-        // Extract municipality from address string for in-town detection
-        const parts = address.split(',').map(s => s.trim());
-        const municipality = parts.length >= 3 ? parts[parts.length - 3] : parts[0] || '';
+        // Municipality comes directly from the city field — always accurate
+        const municipality = city;
 
         // Stage 2: Fire stations — client-side USFA database
         setLoading(true, 'Finding fire stations near you...');
@@ -1072,8 +1095,10 @@ function parseDuration(str) {
     return ((h ? parseInt(h[1]) : 0) * 60) + (m ? parseInt(m[1]) : 0);
 }
 
-document.getElementById('address-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') runCalculation();
+['addr-street','addr-city','addr-state','addr-zip'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+        if (e.key === 'Enter') runCalculation();
+    });
 });
 
 // ─── Auto-height reporting to Wix parent ─────────────────────────────────────
