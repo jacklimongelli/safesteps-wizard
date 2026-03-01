@@ -334,6 +334,7 @@
             margin-bottom: 6px;
             line-height: 1.4;
         }
+        .station-item-address:empty { display: none; }
 
         .pill-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
         .pill {
@@ -951,7 +952,7 @@ async function getFireStations(lat, lng, address, municipality) {
         .slice(0, 5)
         .map(s => ({
             station_name:   s.n,
-            address:        [s.n, s.c, s.s].filter(Boolean).join(', '),
+            address:        s.a || '',
             dept_type:      s.t,
             in_town:        municipality ? s.n.toLowerCase().includes(municipality.toLowerCase()) : false,
             drive_minutes:  parseDuration(s.drive.duration),
