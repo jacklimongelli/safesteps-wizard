@@ -952,6 +952,9 @@ async function runCalculation() {
         setLoading(true, 'Classifying fire stations...');
         const fireClassified = await placesCall({ type: 'classify', places: fireMerged, service_type: 'fire', home_address: address });
         const firePlaces = (fireClassified.results || fireMerged).slice(0, 6);
+        // Build lookup map so dept_type survives the details/directions parallel fetch
+        const fireDeptTypeMap = {};
+        (fireClassified.results || []).forEach(p => { if (p.place_id) fireDeptTypeMap[p.place_id] = p.dept_type; });
 
         // Stage 3: EMS — search then Claude classifies/filters
         setLoading(true, 'Finding EMS and rescue stations...');
@@ -960,11 +963,14 @@ async function runCalculation() {
         setLoading(true, 'Classifying EMS stations...');
         const emsClassified = await placesCall({ type: 'classify', places: emsMerged, service_type: 'ems', home_address: address });
         const emsPlaces = (emsClassified.results || emsMerged).slice(0, 5);
+        // Build lookup map so dept_type survives the details/directions parallel fetch
+        const emsDeptTypeMap = {};
+        (emsClassified.results || []).forEach(p => { if (p.place_id) emsDeptTypeMap[p.place_id] = p.dept_type; });
 
         // Stage 4: Drive times — same pattern as fridge sheet: pass lat,lng not address string
         setLoading(true, 'Calculating drive times...');
 
-        const buildStations = async (places) => {
+        const buildStations = async (places, deptTypeMap = {}) => {
             const results = await Promise.all(places.map(async p => {
                 try {
                     const [det, drive] = await Promise.all([
@@ -976,7 +982,7 @@ async function runCalculation() {
                     return {
                         station_name:   det.name || p.name,
                         address:        det.address || p.address || '',
-                        dept_type:      p.dept_type || detectDeptType(det.name || p.name, p._fromKeyword),
+                        dept_type:      deptTypeMap[p.place_id] || p.dept_type || detectDeptType(det.name || p.name, p._fromKeyword),
                         in_town,
                         drive_minutes:  driveMin,
                         distance_miles: drive ? drive.distance.replace(' mi', '') : '?',
@@ -990,8 +996,8 @@ async function runCalculation() {
         };
 
         const [fireStations, emsStations] = await Promise.all([
-            buildStations(firePlaces),
-            buildStations(emsPlaces)
+            buildStations(firePlaces, fireDeptTypeMap),
+            buildStations(emsPlaces, emsDeptTypeMap)
         ]);
 
         // Sort: fire = in-town first, then by drive time. EMS = drive time only.
