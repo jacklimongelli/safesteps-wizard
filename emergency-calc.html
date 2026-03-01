@@ -950,7 +950,7 @@ async function runCalculation() {
             .slice(0, 12);
         // Claude filters junk and classifies volunteer vs career
         setLoading(true, 'Classifying fire stations...');
-        const fireClassified = await placesCall({ type: 'classify', places: fireMerged, service_type: 'fire' });
+        const fireClassified = await placesCall({ type: 'classify', places: fireMerged, service_type: 'fire', home_address: address });
         const firePlaces = (fireClassified.results || fireMerged).slice(0, 6);
 
         // Stage 3: EMS — search then Claude classifies/filters
@@ -958,7 +958,7 @@ async function runCalculation() {
         const emsNearby = await placesCall({ type: 'nearby', lat, lng, keywords: ['rescue squad', 'EMS', 'ambulance corps', 'first aid squad'], rankby: 'distance' });
         const emsMerged = (emsNearby.results || []).slice(0, 12);
         setLoading(true, 'Classifying EMS stations...');
-        const emsClassified = await placesCall({ type: 'classify', places: emsMerged, service_type: 'ems' });
+        const emsClassified = await placesCall({ type: 'classify', places: emsMerged, service_type: 'ems', home_address: address });
         const emsPlaces = (emsClassified.results || emsMerged).slice(0, 5);
 
         // Stage 4: Drive times — same pattern as fridge sheet: pass lat,lng not address string
