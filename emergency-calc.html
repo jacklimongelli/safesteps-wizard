@@ -937,7 +937,7 @@ async function runCalculation() {
         const parts = address.split(',').map(s => s.trim());
         const municipality = parts.length >= 3 ? parts[parts.length - 3] : parts[0] || '';
 
-        // Stage 2: Fire stations — query our USFA database (no Claude classify needed)
+        // Stage 2: Fire stations — query our USFA database (no Claude needed)
         setLoading(true, 'Finding fire stations near you...');
         const fireDbResult = await placesCall({ type: 'fire_db', lat, lng });
         const fireDbStations = (fireDbResult.results || []).map(s => ({
@@ -953,13 +953,10 @@ async function runCalculation() {
         // Stage 3: EMS — search then Claude classifies/filters
         setLoading(true, 'Finding EMS and rescue stations...');
         const emsNearby = await placesCall({ type: 'nearby', lat, lng, keywords: ['rescue squad', 'EMS', 'ambulance corps', 'first aid squad'], rankby: 'distance' });
-        const emsMerged = (emsNearby.results || []).slice(0, 12);
-        setLoading(true, 'Classifying EMS stations...');
-        const emsClassified = await placesCall({ type: 'classify', places: emsMerged, service_type: 'ems', home_address: address });
-        const emsPlaces = (emsClassified.results || emsMerged).slice(0, 5);
-        // Build lookup map so dept_type survives the details/directions parallel fetch
+        const emsPlaces = (emsNearby.results || []).slice(0, 5);
+        // Name-based dept_type detection — no Claude needed
         const emsDeptTypeMap = {};
-        (emsClassified.results || []).forEach(p => { if (p.place_id) emsDeptTypeMap[p.place_id] = p.dept_type; });
+        emsPlaces.forEach(p => { emsDeptTypeMap[p.place_id] = detectDeptType(p.name, false); });
 
         // Stage 4: Drive times — same pattern as fridge sheet: pass lat,lng not address string
         setLoading(true, 'Calculating drive times...');
@@ -992,7 +989,6 @@ async function runCalculation() {
         const [emsStations] = await Promise.all([
             buildStations(emsPlaces, emsDeptTypeMap)
         ]);
-
         const fireStations = fireDbStations;
 
         // Sort: fire = in-town first, then by drive time. EMS = drive time only.
