@@ -233,13 +233,11 @@
 
         .col {
             padding: 28px 28px 24px;
-            background: var(--bg);
+            background: var(--white);
         }
         .col:first-child {
             border-right: 1px solid var(--border);
-            background: var(--white);
         }
-        .col:last-child { background: var(--bg); }
         @media (max-width: 620px) {
             .col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
         }
@@ -290,13 +288,13 @@
             cursor: pointer;
             transition: all 0.18s;
         }
-        .col:first-child .station-item { background: #F7F6F3; }
+        .station-item { background: #F7F6F3; }
         .station-item:hover { border-color: #C8D5E8; }
         .station-item.selected {
             border-color: var(--navy);
             background: #EEF3FA;
         }
-        .col:first-child .station-item.selected { background: #EEF3FA; }
+
 
         .station-selector {
             width: 18px; height: 18px;
@@ -511,10 +509,6 @@
             background: var(--bg);
             border-top: 1px solid var(--rule);
             padding: 48px 32px;
-        }
-        .methodology-inner {
-            max-width: 900px;
-            margin: 0 auto;
         }
         .method-heading {
             font-family: 'Playfair Display', serif;
@@ -746,7 +740,6 @@
     </div>
 
     <div class="methodology">
-        <div class="methodology-inner">
         <div class="method-heading">How We Calculate These Numbers</div>
         <p class="method-intro">The times shown are estimates of <strong>total response time</strong> — from the moment you call 911 to when the first unit arrives at your door. This is not drive time alone. It accounts for every stage in the emergency response chain: call processing, turnout, and travel.</p>
 
@@ -926,10 +919,9 @@ function selectStation(type, idx) {
     document.getElementById(type + '-readout').innerHTML = buildReadout(stations[idx], type);
 }
 
-// ─── Fire station database (loaded client-side from GitHub) ──────────────────
+// ─── Fire station database (client-side) ─────────────────────────────────────
 const FIRE_DB_URL = 'https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/fire-stations.json';
 let fireDbCache = null;
-
 async function loadFireDb() {
     if (fireDbCache) return fireDbCache;
     const res = await fetch(FIRE_DB_URL);
@@ -937,39 +929,33 @@ async function loadFireDb() {
     fireDbCache = await res.json();
     return fireDbCache;
 }
-
 function haversineMiles(lat1, lng1, lat2, lng2) {
     const R = 3958.8;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a = Math.sin(dLat/2)**2 +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng/2)**2;
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const dLat = (lat2-lat1)*Math.PI/180, dLng = (lng2-lng1)*Math.PI/180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+    return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
-
 async function getFireStations(lat, lng, address, municipality) {
     const db = await loadFireDb();
     const nearest10 = db
-        .map(s => ({ ...s, _miles: haversineMiles(lat, lng, s.lat, s.lng) }))
-        .sort((a, b) => a._miles - b._miles)
+        .map(s => ({...s, _miles: haversineMiles(lat, lng, s.lat, s.lng)}))
+        .sort((a,b) => a._miles - b._miles)
         .slice(0, 10);
-
     const withDrive = await Promise.all(nearest10.map(async s => {
         const drive = await getDriving(address, s.lat, s.lng);
-        return { ...s, drive };
+        return {...s, drive};
     }));
-
     return withDrive
         .filter(s => s.drive)
-        .sort((a, b) => parseDuration(a.drive.duration) - parseDuration(b.drive.duration))
+        .sort((a,b) => parseDuration(a.drive.duration) - parseDuration(b.drive.duration))
         .slice(0, 5)
         .map(s => ({
             station_name:   s.n,
-            address:        '',
+            address:        [s.n, s.c, s.s].filter(Boolean).join(', '),
             dept_type:      s.t,
             in_town:        municipality ? s.n.toLowerCase().includes(municipality.toLowerCase()) : false,
             drive_minutes:  parseDuration(s.drive.duration),
-            distance_miles: s.drive.distance.replace(' mi', ''),
+            distance_miles: s.drive.distance.replace(' mi',''),
             _drive_min:     parseDuration(s.drive.duration)
         }));
 }
@@ -992,7 +978,7 @@ async function runCalculation() {
         const parts = address.split(',').map(s => s.trim());
         const municipality = parts.length >= 3 ? parts[parts.length - 3] : parts[0] || '';
 
-        // Stage 2: Fire stations — client-side DB lookup + Directions only
+        // Stage 2: Fire stations — client-side DB + Directions only
         setLoading(true, 'Finding fire stations near you...');
         const fireStations = await getFireStations(lat, lng, address, municipality);
 
