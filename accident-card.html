@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safe Steps | Car Accident Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=DM+Mono:wght@400;500&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0D1F3C; --red:#C8102E; --gl:#DEDBD4;
+  --gm:#888075; --text:#0F0F0F; --white:#FFFFFF;
+  --edit-hint: #E8F0FE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Barlow',sans-serif;background:#E8E4DC;color:var(--text);padding:0;}
+
+/* ── Top bar ── */
+.topbar {
+  background: var(--navy);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-brand {
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900; font-size:16px;
+  letter-spacing:.08em; text-transform:uppercase;
+  color:var(--white);
+}
+.topbar-brand span { color:var(--red); }
+.topbar-hint {
+  font-size:11px; color:rgba(255,255,255,.5);
+  letter-spacing:.04em;
+}
+.topbar-right { display:flex; gap:8px; align-items:center; }
+.btn {
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700; font-size:12px;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:7px 16px; border:none; cursor:pointer;
+}
+.btn-print { background:var(--red); color:var(--white); }
+.btn-print:hover { background:#a50d24; }
+.btn-clear { background:rgba(255,255,255,.12); color:rgba(255,255,255,.7); }
+.btn-clear:hover { background:rgba(255,255,255,.2); }
+
+/* ── Page wrapper ── */
+.page { padding: 20px 0 48px; }
+.side-label {
+  text-align:center;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:700;
+  letter-spacing:.18em; text-transform:uppercase;
+  color:var(--gm); margin-bottom:6px;
+}
+
+/* ── Card sides ── */
+.side {
+  width:6in; height:4in;
+  background:var(--white);
+  border:1px solid #B0ADA6;
+  margin:0 auto 24px;
+  overflow:hidden;
+  display:flex; flex-direction:column;
+  position:relative;
+}
+
+/* ── Card header ── */
+.ch{background:var(--navy);padding:4pt 8pt 3.5pt;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.ch-l{display:flex;align-items:center;gap:5pt;}
+.ch-shield{width:13pt;height:13pt;background:var(--white);clip-path:polygon(50% 0%,100% 18%,100% 62%,50% 100%,0% 62%,0% 18%);flex-shrink:0;}
+.ch-brand{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:13pt;letter-spacing:.07em;text-transform:uppercase;color:var(--white);line-height:1;}
+.ch-brand span{color:var(--red);}
+.ch-right{font-family:'Barlow Condensed',sans-serif;font-size:7pt;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45);}
+
+/* ── Section heading ── */
+.sh{font-family:'Barlow Condensed',sans-serif;font-size:6.5pt;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--red);border-bottom:1pt solid var(--red);padding-bottom:1pt;margin-bottom:1.5pt;flex-shrink:0;}
+
+/* ── Info row ── */
+.ir{margin-bottom:0;}
+.il{font-size:5.5pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);line-height:1;}
+
+/* ── Editable value ── */
+.iv {
+  font-family:'DM Mono',monospace;
+  font-size:7pt; font-weight:500;
+  color:var(--text); line-height:1.1;
+  outline:none;
+  border-radius:1px;
+  min-width:20pt;
+  display:block;
+  background: #EEF3FF;
+  border-bottom: 1pt solid #93B4F5;
+  padding: 0 2pt;
+  cursor: text;
+}
+.iv:focus {
+  background: #DDE8FF;
+  box-shadow: 0 0 0 1pt rgba(66,133,244,.5);
+  border-bottom-color: #4285F4;
+}
+/* Placeholder when empty */
+.iv:empty::before {
+  content: attr(data-ph);
+  color: #A8BBDB;
+  font-style: italic;
+  pointer-events: none;
+}
+.iv:hover:not(:focus) {
+  background: #E4EDFF;
+  cursor: text;
+}
+
+.div{border:none;border-top:.75pt solid var(--gl);margin:0;flex-shrink:0;}
+.cf{background:var(--navy);padding:2.5pt 8pt;font-size:5pt;color:rgba(255,255,255,.38);letter-spacing:.03em;line-height:1.5;flex-shrink:0;}
+
+/* ── Side 1 layout ── */
+.s1b{flex:1;display:grid;grid-template-columns:1.72in 1fr;overflow:hidden;}
+.s1l{border-right:.75pt solid var(--gl);padding:4pt 6pt;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;}
+.s1r{padding:5pt 6pt;display:flex;flex-direction:column;overflow:hidden;}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:0 5pt;}
+.med-field{display:flex;flex-direction:column;gap:0;margin-bottom:1pt;}
+.med-label{font-size:5.5pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);line-height:1;}
+
+/* ── Steps ── */
+.steps{display:flex;flex-direction:column;justify-content:space-between;flex:1;min-height:0;}
+.si{display:grid;grid-template-columns:11pt 8pt 1fr;gap:3pt;align-items:start;}
+.sicon{width:10pt;height:10pt;flex-shrink:0;margin-top:1pt;}
+.sicon svg{width:10pt;height:10pt;display:block;}
+.scb{width:8pt;height:8pt;border:1pt solid #AAAAAA;flex-shrink:0;margin-top:1.5pt;}
+.st{font-size:7.8pt;line-height:1.35;color:var(--text);}
+.st strong{font-weight:600;}
+.st .note{font-size:6.5pt;color:var(--gm);display:block;margin-top:1pt;line-height:1.3;font-style:italic;}
+
+/* ── Side 2 layout ── */
+.s2b{flex:1;display:grid;grid-template-columns:1fr 1.45in;overflow:hidden;}
+.s2l{border-right:.75pt solid var(--gl);padding:5pt 7pt;display:flex;flex-direction:column;gap:7pt;overflow:hidden;}
+.s2r{padding:5pt 7pt;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;}
+
+.fig{display:grid;grid-template-columns:1fr 1fr;gap:3.5pt 8pt;margin-top:3pt;}
+.fi{display:flex;flex-direction:column;gap:1.5pt;}
+.fl{font-size:5.5pt;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gm);line-height:1;}
+.fline{border-bottom:.75pt solid #BBB;height:12pt;}
+
+.pl{display:flex;flex-direction:column;gap:2.5pt;margin-top:2pt;}
+.pi{display:flex;align-items:flex-start;gap:3.5pt;font-size:7pt;line-height:1.35;}
+.cb{width:7pt;height:7pt;border:1pt solid var(--navy);flex-shrink:0;margin-top:1pt;}
+
+.dont{background:var(--navy);padding:4pt 6pt;flex-shrink:0;}
+.dont-hed{font-family:'Barlow Condensed',sans-serif;font-size:7pt;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:2pt;}
+.dont-body{font-size:6.5pt;color:rgba(255,255,255,.88);line-height:1.5;}
+
+/* ── Edit mode indicator ── */
+.edit-badge {
+  position:absolute;
+  top:28pt;
+  right:4pt;
+  background:rgba(66,133,244,.15);
+  border:1px solid rgba(66,133,244,.3);
+  font-size:6pt;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:rgba(66,133,244,.8);
+  padding:1.5pt 4pt;
+  border-radius:2px;
+  pointer-events:none;
+}
+
+/* ── PRINT ── */
+@media print {
+  body{background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .topbar, .side-label, .edit-badge { display:none !important; }
+  .page { padding:0; }
+  .side{border:.5pt solid #BBB;page-break-after:always;margin:0 auto;box-shadow:none;}
+  .side:last-child{page-break-after:avoid;}
+  .iv { background:transparent !important; border-bottom:none !important; box-shadow:none !important; padding:0 !important; }
+  .iv:empty::before { content:''; }
+}
+@page{size:6in 4in;margin:0;}
+</style>
+</head>
+<body>
+
+<!-- SVG icons -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="ico-injury" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 12h3l2-7 4 14 3-9 2 2h4"/>
+    </symbol>
+    <symbol id="ico-hazard" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+      <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+    </symbol>
+    <symbol id="ico-911" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.12 2.18 2 2 0 012.11 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.45-.45a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+    </symbol>
+    <symbol id="ico-nofault" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+      <path d="M8 12c0 2.21 1.79 4 4 4s4-1.79 4-4"/>
+    </symbol>
+    <symbol id="ico-exchange" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/>
+      <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/>
+    </symbol>
+    <symbol id="ico-witness" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </symbol>
+    <symbol id="ico-camera" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+      <circle cx="12" cy="13" r="4"/>
+    </symbol>
+    <symbol id="ico-badge" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+      <polygon points="12,7 13.5,10.5 17,10.5 14.5,13 15.5,16.5 12,14.5 8.5,16.5 9.5,13 7,10.5 10.5,10.5"/>
+    </symbol>
+    <symbol id="ico-insurance" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="8" y1="13" x2="16" y2="13"/>
+      <line x1="8" y1="17" x2="12" y2="17"/>
+    </symbol>
+    <symbol id="ico-doctor" viewBox="0 0 24 24" fill="none" stroke="#C8102E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <line x1="12" y1="8" x2="12" y2="16"/>
+      <line x1="8" y1="12" x2="16" y2="12"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div>
+    <div class="topbar-brand">SAFE <span>STEPS</span></div>
+  </div>
+  <div class="topbar-hint">Click any field to edit &nbsp;·&nbsp; All fields optional</div>
+  <div class="topbar-right">
+    <button class="btn btn-clear" onclick="clearAll()">Clear All</button>
+    <button class="btn btn-print" onclick="window.print()">🖨&nbsp; Print Card</button>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ═══ SIDE 1 ═══ -->
+<div class="side-label">Side 1 — What To Do · Click any field to edit</div>
+<div class="side">
+  <div class="edit-badge">✎ editable</div>
+  <div class="ch">
+    <div class="ch-l">
+      <div class="ch-shield"></div>
+      <div class="ch-brand">SAFE <span>STEPS</span></div>
+    </div>
+    <div class="ch-right">Car Accident · Side 1 — What To Do</div>
+  </div>
+
+  <div class="s1b">
+    <div class="s1l">
+
+      <div>
+        <div class="sh">My Vehicle</div>
+        <div class="ir"><div class="il">Vehicle</div><div class="iv" contenteditable="true" data-ph="Year Color Make Model"></div></div>
+        <div class="pair" style="margin-bottom:0">
+          <div class="ir" style="margin-bottom:0"><div class="il">Plate</div><div class="iv" contenteditable="true" data-ph="VA · ABC-1234"></div></div>
+          <div class="ir" style="margin-bottom:0"><div class="il">Registration #</div><div class="iv" contenteditable="true" data-ph="VA 2024-00000"></div></div>
+        </div>
+        <div class="ir" style="margin-bottom:0"><div class="il">DL #</div><div class="iv" contenteditable="true" data-ph="State + Number"></div></div>
+        <div class="ir" style="margin-bottom:0"><div class="il">VIN</div><div class="iv" contenteditable="true" data-ph="17-character VIN"></div></div>
+      </div>
+
+      <div>
+        <div class="div"></div>
+        <div class="sh">My Insurance</div>
+        <div class="pair" style="margin-bottom:0">
+          <div class="ir" style="margin-bottom:0"><div class="il">Company</div><div class="iv" contenteditable="true" data-ph="USAA / State Farm…"></div></div>
+          <div class="ir" style="margin-bottom:0"><div class="il">Policy #</div><div class="iv" contenteditable="true" data-ph="POL-000000"></div></div>
+        </div>
+        <div class="ir" style="margin-bottom:0"><div class="il">Claims Phone</div><div class="iv" contenteditable="true" data-ph="(800) 000-0000"></div></div>
+      </div>
+
+      <div>
+        <div class="div"></div>
+        <div class="sh">Medical Info</div>
+        <div class="pair" style="margin-bottom:1pt">
+          <div class="med-field" style="margin-bottom:0">
+            <div class="med-label">Blood Type</div>
+            <div class="iv" contenteditable="true" data-ph="O+"></div>
+          </div>
+          <div class="med-field" style="margin-bottom:0">
+            <div class="med-label">Allergies</div>
+            <div class="iv" contenteditable="true" data-ph="Penicillin, etc."></div>
+          </div>
+        </div>
+        <div class="med-field" style="margin-bottom:1pt">
+          <div class="med-label">Current Medications</div>
+          <div class="iv" contenteditable="true" data-ph="Med name + dose"></div>
+          <div class="iv" contenteditable="true" data-ph="Med name + dose"></div>
+        </div>
+        <div class="med-field" style="margin-bottom:1pt">
+          <div class="med-label">Pre-existing Conditions</div>
+          <div class="iv" contenteditable="true" data-ph="e.g. Hypertension"></div>
+          <div class="iv" contenteditable="true" data-ph="e.g. Asthma"></div>
+        </div>
+        <div class="med-field" style="margin-bottom:0">
+          <div class="med-label">Primary Care Doctor &amp; Phone</div>
+          <div class="iv" contenteditable="true" data-ph="Dr. Name · (000) 000-0000"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="s1r">
+      <div class="sh" style="margin-bottom:3pt">Steps to Follow</div>
+      <div class="steps">
+        <div class="si">
+          <div class="sicon"><svg><use href="#ico-injury"/></svg></div>
+          <div class="scb"></div>
+          <div class="st"><strong>Check injuries.</strong> Don't move anyone with neck/back pain. Call 911 if hurt.</div>
+        </div>
+        <div class="si">
+          <div class="sicon"><svg><use href="#ico-hazard"/></svg></div>
+          <div class="scb"></div>
+          <div class="st"><strong>Hazard lights on.</strong> Move to shoulder if drivable. Do not leave the scene.</div>
+        </div>
+        <div class="si">
+          <div class="sicon"><svg><use href="#ico-911"/></svg></div>
+          <div class="scb"></div>
+          <div class="st"><strong>Call 911</strong> if injuries, major damage, or blocking traffic.
+            <span class="note">"Accident at _______ &amp; _______, near _______. There are / are not injuries."</span>
+          </div>
+        </div>
+        <div class="si">
+          <div class="sicon"><svg><use href="#ico-nofault"/></svg></div>
+          <div class="scb"></div>
+          <div class="st"><strong>No fault admission.</strong> Facts only — time, location, what you saw.</div>
+        </div>
+        <div class="si">
+          <div class="sicon"><svg><use href="#ico-exchange"/></svg></div>
+          <div class="scb"></div>
+          <div class="st"><strong>Exchange info</strong> with other driver. Fill in fields on Side 2.</div>
+        </div>
+        <div class="si">
+          <div class="sicon"><svg><use href="#ico-witness"/></svg></div>
+          <div class="scb"></div>
+          <div class="st"><strong>Get witnesses</strong> — names and phones before they leave.</div>
+        </div>
+        <div class="si">
+          <div class="sicon"><svg><use href="#ico-camera"/></svg></div>
+          <div class="scb"></div>
+          <div class="st"><strong>Photograph everything.</strong> See checklist on Side 2.</div>
+        </div>
+        <div class="si">
+          <div class="sicon"><svg><use href="#ico-badge"/></svg></div>
+          <div class="scb"></div>
+          <div class="st"><strong>Officer info:</strong> name, badge #, how to get the police report.</div>
+        </div>
+        <div class="si">
+          <div class="sicon"><svg><use href="#ico-insurance"/></svg></div>
+          <div class="scb"></div>
+          <div class="st"><strong>Call your insurance</strong> — even if not at fault. Report within 24–72 hrs.
+            <span class="note">Car undrivable? Call insurance and ask if they cover a tow and have a preferred body shop. Give that body shop name to the tow truck driver.</span>
+          </div>
+        </div>
+        <div class="si">
+          <div class="sicon"><svg><use href="#ico-doctor"/></svg></div>
+          <div class="scb"></div>
+          <div class="st"><strong>See a doctor.</strong> Whiplash and internal injuries may not appear for hours.
+            <span class="note">After: keep all medical bills, treatment records, and repair estimates for your claim.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cf">SAFE STEPS · safestepsplans.com &nbsp;·&nbsp; Keep this card in your glovebox. &nbsp;·&nbsp; <em>Not legal advice. Laws and insurance requirements vary by state.</em></div>
+</div>
+
+
+<!-- ═══ SIDE 2 ═══ -->
+<div class="side-label">Side 2 — Fill In at the Scene · Click any field to edit</div>
+<div class="side">
+  <div class="edit-badge">✎ editable</div>
+  <div class="ch">
+    <div class="ch-l">
+      <div class="ch-shield"></div>
+      <div class="ch-brand">SAFE <span>STEPS</span></div>
+    </div>
+    <div class="ch-right">Car Accident · Side 2 — Fill In at the Scene</div>
+  </div>
+
+  <div class="s2b">
+    <div class="s2l">
+      <div>
+        <div class="sh">Other Driver</div>
+        <div class="fig">
+          <div class="fi"><div class="fl">Full Name</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Phone Number</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Insurance Company</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Policy Number</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">License Plate</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Driver's License #</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Year / Make / Model</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Color</div><div class="fline"></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="sh">Incident Info</div>
+        <div class="fig">
+          <div class="fi"><div class="fl">Date &amp; Time</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Location / Intersection</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Weather / Road Conditions</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Witness — Name &amp; Phone</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Officer Name</div><div class="fline"></div></div>
+          <div class="fi"><div class="fl">Badge # &amp; Report #</div><div class="fline"></div></div>
+        </div>
+      </div>
+      <div class="dont">
+        <div class="dont-hed">Do Not</div>
+        <div class="dont-body">Admit fault &nbsp;·&nbsp; Apologize &nbsp;·&nbsp; Sign anything except the ticket &nbsp;·&nbsp; Leave the scene &nbsp;·&nbsp; Give a recorded statement to the other driver's insurance</div>
+      </div>
+    </div>
+
+    <div class="s2r">
+      <div>
+        <div class="sh">Photos to Take</div>
+        <div class="pl">
+          <div class="pi"><div class="cb"></div>All vehicles — wide shot (show positions)</div>
+          <div class="pi"><div class="cb"></div>Close-up of all damage</div>
+          <div class="pi"><div class="cb"></div>All license plates</div>
+          <div class="pi"><div class="cb"></div>Other driver's license + insurance card</div>
+          <div class="pi"><div class="cb"></div>Skid marks &amp; road surface</div>
+          <div class="pi"><div class="cb"></div>Street signs / intersection</div>
+          <div class="pi"><div class="cb"></div>Traffic signals / posted signs</div>
+          <div class="pi"><div class="cb"></div>Any visible injuries</div>
+        </div>
+      </div>
+      <div>
+        <div class="sh">Emergency Contacts</div>
+        <div style="margin-top:2pt;display:flex;flex-direction:column;gap:0;">
+          <div>
+            <div style="margin-bottom:1pt;"><div class="il">Relationship</div><div class="iv" contenteditable="true" data-ph="Spouse"></div></div>
+            <div style="margin-bottom:1pt;"><div class="il">Name</div><div class="iv" contenteditable="true" data-ph="Full name"></div></div>
+            <div style="margin-bottom:0;"><div class="il">Phone</div><div class="iv" contenteditable="true" data-ph="(000) 000-0000"></div></div>
+          </div>
+          <div class="div" style="margin:2pt 0;"></div>
+          <div>
+            <div style="margin-bottom:1pt;"><div class="il">Relationship</div><div class="iv" contenteditable="true" data-ph="Parent"></div></div>
+            <div style="margin-bottom:1pt;"><div class="il">Name</div><div class="iv" contenteditable="true" data-ph="Full name"></div></div>
+            <div style="margin-bottom:0;"><div class="il">Phone</div><div class="iv" contenteditable="true" data-ph="(000) 000-0000"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="cf">SAFE STEPS · safestepsplans.com &nbsp;·&nbsp; <em>Not legal advice. Laws and insurance requirements vary by state.</em></div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+function clearAll() {
+  if (!confirm('Clear all entered information?')) return;
+  document.querySelectorAll('[contenteditable="true"]').forEach(el => el.textContent = '');
+}
+
+// Prevent Enter key from adding <br> or <div> — just blur on Enter
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && e.target.hasAttribute('contenteditable')) {
+    e.preventDefault();
+    e.target.blur();
+  }
+});
+</script>
+
+<script>
+function sendHeight(){
+  const h=document.body.scrollHeight;
+  window.parent.postMessage({action:"resize",height:h},"*");
+}
+// Send on load and on any DOM change
+window.addEventListener("load", sendHeight);
+new MutationObserver(sendHeight).observe(document.body,{subtree:true,childList:true,attributes:true});
+</script>
+</body>
+</html>
