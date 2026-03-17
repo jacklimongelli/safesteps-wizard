@@ -279,9 +279,6 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
   </div>
 </div>
 
-<div style="background:#1a3a6b;padding:8px 24px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.08em;color:rgba(255,255,255,.7);">
-  🖨 &nbsp;<strong style="color:rgba(255,255,255,.9);">TO PRINT:</strong> &nbsp;When the print dialog opens, set Paper Size to <strong style="color:rgba(255,255,255,.9);">4×6"</strong> and Margins to <strong style="color:rgba(255,255,255,.9);">None</strong>. Each card prints on its own page.
-</div>
 
 <div class="page">
 
@@ -494,62 +491,27 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
 
 <script>
 function printCard() {
-  // Collect all current field values
-  const fields = {};
-  document.querySelectorAll('[contenteditable][data-ph]').forEach((el, i) => {
-    fields[i] = el.innerHTML;
-  });
-
-  // Clone both sides
-  const sides = document.querySelectorAll('.side');
-  let sidesHTML = '';
-  sides.forEach(s => {
-    const clone = s.cloneNode(true);
-    // Remove edit badge
-    const badge = clone.querySelector('.edit-badge');
-    if (badge) badge.remove();
-    // Remove blue highlights from iv fields
-    clone.querySelectorAll('.iv').forEach(el => {
-      el.style.background = 'transparent';
-      el.style.borderBottom = 'none';
-      el.style.padding = '0';
-    });
-    sidesHTML += clone.outerHTML;
-  });
-
-  // Get all stylesheets from current page
-  const styles = Array.from(document.querySelectorAll('style')).map(s => s.outerHTML).join('\n');
-  const links = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(l => l.outerHTML).join('\n');
-
-  const win = window.open('', '_blank', 'width=800,height=700');
-  win.document.write(`<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-${links}
-${styles}
-<style>
-  @page { size: 6in 4in; margin: 0; }
-  body { margin: 0; padding: 0; background: white; }
-  .side {
-    width: 6in !important;
-    height: 4in !important;
-    page-break-after: always;
-    box-shadow: none !important;
-    border: 0.5pt solid #BBB !important;
+  // Inject print-specific style override for 4x6 and clean fields
+  let style = document.getElementById('print-override');
+  if (!style) {
+    style = document.createElement('style');
+    style.id = 'print-override';
+    style.media = 'print';
+    document.head.appendChild(style);
   }
-  .side:last-child { page-break-after: avoid; }
-  .iv { background: transparent !important; border-bottom: none !important; padding: 0 !important; }
-  .iv:empty::before { content: ''; }
-</style>
-</head>
-<body>
-${sidesHTML}
-</body>
-</html>`);
-  win.document.close();
-  win.focus();
-  setTimeout(() => { win.print(); win.close(); }, 500);
+  style.textContent = `
+    @page { size: 4in 6in; margin: 0; }
+    body { background: white !important; }
+    .topbar { display: none !important; }
+    .page { padding: 0 !important; }
+    .card-wrap { transform: none !important; width: 4in !important; margin: 0 !important; }
+    .side { width: 4in !important; height: 6in !important; page-break-after: always; box-shadow: none !important; border: 0.5pt solid #BBB !important; }
+    .side:last-child { page-break-after: avoid; }
+    .edit-badge { display: none !important; }
+    .iv { background: transparent !important; border-bottom: none !important; box-shadow: none !important; padding: 0 !important; }
+    .iv:empty::before { content: ''; }
+  `;
+  window.print();
 }
 
 function clearAll() {
