@@ -559,22 +559,23 @@ function scaleCards() {
   const scale = Math.min(1.5, available / cardW);
 
   wraps.forEach(w => {
-    w.style.width = cardW + 'px';
-    w.style.height = cardH + 'px';
-    w.style.transform = 'scale(' + scale + ')';
-    w.style.transformOrigin = 'top center';
-    // IMPORTANT: set the wrapper height to match scaled height so next card doesn't overlap
-    w.style.marginBottom = ((cardH * scale) - cardH + 20) + 'px';
-    if (scale < 1) {
-      // Negative margin top to close the gap above when scaling down
-      w.style.marginTop = ((cardH * scale - cardH) / 2) + 'px';
-    } else {
-      w.style.marginTop = '0px';
+    // Set wrapper to scaled dimensions so layout flow is correct
+    w.style.width = Math.round(cardW * scale) + 'px';
+    w.style.height = Math.round(cardH * scale) + 'px';
+    w.style.overflow = 'hidden';
+    w.style.position = 'relative';
+    w.style.margin = '0 auto 20px';
+
+    // Scale the side INSIDE the wrapper
+    const side = w.querySelector('.side');
+    if (side) {
+      side.style.transform = 'scale(' + scale + ')';
+      side.style.transformOrigin = 'top left';
+      side.style.position = 'absolute';
+      side.style.top = '0';
+      side.style.left = '0';
     }
   });
-  // Also center cards on narrow screens
-  document.querySelector('.page').style.paddingLeft = pad + 'px';
-  document.querySelector('.page').style.paddingRight = pad + 'px';
   sendHeight();
 }
 
