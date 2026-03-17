@@ -500,12 +500,12 @@ function printCard() {
     document.head.appendChild(style);
   }
   style.textContent = `
-    @page { size: 4in 6in; margin: 0; }
+    @page { size: 6in 4in; margin: 0; }
     body { background: white !important; }
     .topbar { display: none !important; }
     .page { padding: 0 !important; }
-    .card-wrap { transform: none !important; width: 4in !important; margin: 0 !important; }
-    .side { width: 4in !important; height: 6in !important; page-break-after: always; box-shadow: none !important; border: 0.5pt solid #BBB !important; }
+    .card-wrap { transform: none !important; width: 6in !important; margin: 0 !important; }
+    .side { width: 6in !important; height: 4in !important; page-break-after: always; box-shadow: none !important; border: 0.5pt solid #BBB !important; }
     .side:last-child { page-break-after: avoid; }
     .edit-badge { display: none !important; }
     .iv { background: transparent !important; border-bottom: none !important; box-shadow: none !important; padding: 0 !important; }
