@@ -520,13 +520,17 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
 
 <script>
 function printCard() {
-  // Collect side HTML
   const sides = document.querySelectorAll('.side');
   let sidesHTML = '';
   sides.forEach(s => {
     const clone = s.cloneNode(true);
     const badge = clone.querySelector('.edit-badge');
     if (badge) badge.remove();
+    // Reset any JS-applied transforms on the side itself
+    clone.style.transform = 'none';
+    clone.style.position = 'static';
+    clone.style.width = '6in';
+    clone.style.height = '4in';
     clone.querySelectorAll('.iv').forEach(el => {
       el.style.background = 'transparent';
       el.style.borderBottom = 'none';
@@ -536,10 +540,7 @@ function printCard() {
     sidesHTML += clone.outerHTML + '\n';
   });
 
-  // Get fonts and inner CSS
   const fontLink = document.querySelector('link[rel="stylesheet"]').outerHTML;
-  const innerCSS = Array.from(document.querySelectorAll('style'))
-    .map(s => s.innerHTML).join('\n');
 
   const win = window.open('', '_blank', 'width=700,height=500');
   win.document.write(`<!DOCTYPE html>
@@ -550,45 +551,37 @@ ${fontLink}
 <style>
 @page { size: 6in 4in landscape; margin: 0; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: white; width: 6in; }
-${innerCSS}
-.side { width: 6in !important; height: 4in !important; box-shadow: none !important; border: 0.5pt solid #BBB !important; page-break-after: always; }
-.side:last-child { page-break-after: avoid; }
-.edit-badge { display: none !important; }
-
-  .topbar-center {
-    position: static;
-    transform: none;
-    order: -1;
-    width: 100%;
-    text-align: center;
-  }
-  .topbar-center img {
-    height: 28px !important;
-    margin: 0 auto;
-  }
-  .topbar-sub {
-    font-size: 9px;
-  }
-  .topbar-right {
-    width: 100%;
-    justify-content: center;
-    margin-left: 0;
-  }
-  .btn {
-    font-size: 11px;
-    padding: 7px 14px;
-  }
-}
+body { background: white; }
+:root { --navy:#0D1F3C; --red:#C8102E; --gl:#DEDBD4; --gm:#888075; --text:#0F0F0F; --white:#FFFFFF; }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=DM+Mono:wght@400;500&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style id="card-styles"></style>
 </head>
 <body>
 ${sidesHTML}
+<script>
+  // Copy only card-internal styles, skip page/layout styles
+  const allStyles = ${JSON.stringify(Array.from(document.querySelectorAll('style')).map(s => s.innerHTML).join('\n'))};
+  // Strip transforms and page-level rules
+  const clean = allStyles
+    .replace(/@media[^{]*\{[^}]*\}/g, '')
+    .replace(/\.page[^{]*\{[^}]*\}/g, '')
+    .replace(/\.topbar[^{]*\{[^}]*\}/g, '')
+    .replace(/\.card-wrap[^{]*\{[^}]*\}/g, '')
+    .replace(/\.btn[^{]*\{[^}]*\}/g, '')
+    .replace(/body\s*\{[^}]*\}/g, '')
+    .replace(/@page[^{]*\{[^}]*\}/g, '');
+  document.getElementById('card-styles').innerHTML = clean +
+    \`.side { width:6in !important; height:4in !important; transform:none !important;
+       position:static !important; box-shadow:none !important;
+       border:0.5pt solid #BBB !important; page-break-after:always; overflow:hidden; display:flex; flex-direction:column; }
+    .side:last-child { page-break-after:avoid; }
+    .edit-badge { display:none !important; }\`;
+  setTimeout(() => { window.print(); }, 800);
+<\/script>
 </body>
-</html>`);
+</html>\`);
   win.document.close();
-  win.focus();
-  setTimeout(() => { win.print(); }, 800);
 }
 
 function clearAll() {
