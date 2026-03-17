@@ -215,6 +215,37 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
 /* ── PRINT ── */
   .side:last-child { page-break-after:avoid; }
 }
+
+@media (max-width: 600px) {
+  .topbar {
+    padding: 12px 16px 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topbar-center {
+    position: static;
+    transform: none;
+    order: -1;
+    width: 100%;
+    text-align: center;
+  }
+  .topbar-center img {
+    height: 28px !important;
+    margin: 0 auto;
+  }
+  .topbar-sub {
+    font-size: 9px;
+  }
+  .topbar-right {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+  }
+  .btn {
+    font-size: 11px;
+    padding: 7px 14px;
+  }
+}
 </style>
 </head>
 <body>
@@ -526,6 +557,37 @@ ${innerCSS}
 .side { width: 6in !important; height: 4in !important; box-shadow: none !important; border: 0.5pt solid #BBB !important; page-break-after: always; }
 .side:last-child { page-break-after: avoid; }
 .edit-badge { display: none !important; }
+
+@media (max-width: 600px) {
+  .topbar {
+    padding: 12px 16px 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topbar-center {
+    position: static;
+    transform: none;
+    order: -1;
+    width: 100%;
+    text-align: center;
+  }
+  .topbar-center img {
+    height: 28px !important;
+    margin: 0 auto;
+  }
+  .topbar-sub {
+    font-size: 9px;
+  }
+  .topbar-right {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+  }
+  .btn {
+    font-size: 11px;
+    padding: 7px 14px;
+  }
+}
 </style>
 </head>
 <body>
