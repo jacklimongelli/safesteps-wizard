@@ -58,7 +58,18 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
 .btn-clear:hover { background:rgba(255,255,255,.2); }
 
 /* ── Page wrapper ── */
-.page { padding: 20px 0 48px; }
+.page {
+  padding: 20px 0 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+/* Scale the 6x4 cards to fit the screen width comfortably */
+.card-scaler {
+  width: 6in;
+  transform-origin: top center;
+}
 .side-label {
   text-align:center;
   font-family:'Barlow Condensed',sans-serif;
@@ -184,15 +195,23 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
 
 /* ── PRINT ── */
 @media print {
-  body{background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body { background:white !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .topbar, .side-label, .edit-badge { display:none !important; }
-  .page { padding:0; }
-  .side{border:.5pt solid #BBB;page-break-after:always;margin:0 auto;box-shadow:none;}
-  .side:last-child{page-break-after:avoid;}
+  .page { padding:0 !important; gap:0 !important; display:block !important; }
+  .card-scaler { width:6in !important; transform:none !important; }
+  .side {
+    width:6in !important;
+    height:4in !important;
+    border:.5pt solid #BBB !important;
+    box-shadow:none !important;
+    page-break-after:always;
+    margin:0 !important;
+  }
+  .side:last-child { page-break-after:avoid; }
   .iv { background:transparent !important; border-bottom:none !important; box-shadow:none !important; padding:0 !important; }
   .iv:empty::before { content:''; }
 }
-@page{size:6in 4in;margin:0;}
+@page { size:6in 4in; margin:0; }
 </style>
 </head>
 <body>
@@ -263,7 +282,8 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
 <div class="page">
 
 <!-- ═══ SIDE 1 ═══ -->
-<div class="side">
+<div class="card-scaler">
+  <div class="side">
   <div class="edit-badge">✎ editable</div>
   <div class="ch">
     <div class="ch-l">
@@ -391,10 +411,11 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
   </div>
   <div class="cf">SAFE STEPS · safestepsplans.com &nbsp;·&nbsp; Keep this card in your glovebox. &nbsp;·&nbsp; <em>Not legal advice. Laws and insurance requirements vary by state.</em></div>
 </div>
-
+</div>
 
 <!-- ═══ SIDE 2 ═══ -->
-<div class="side">
+<div class="card-scaler">
+  <div class="side">
   <div class="edit-badge">✎ editable</div>
   <div class="ch">
     <div class="ch-l">
@@ -469,6 +490,7 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
   </div>
   <div class="cf">SAFE STEPS · safestepsplans.com &nbsp;·&nbsp; <em>Not legal advice. Laws and insurance requirements vary by state.</em></div>
 </div>
+</div>
 
 </div><!-- /page -->
 
@@ -492,9 +514,25 @@ function sendHeight(){
   const h=document.body.scrollHeight;
   window.parent.postMessage({action:"resize",height:h},"*");
 }
-// Send on load and on any DOM change
 window.addEventListener("load", sendHeight);
 new MutationObserver(sendHeight).observe(document.body,{subtree:true,childList:true,attributes:true});
+
+// Scale cards to fit viewport
+function scaleCards() {
+  const scalers = document.querySelectorAll('.card-scaler');
+  const cardW = 6 * 96; // 6in at 96dpi = 576px
+  const vw = Math.min(window.innerWidth, 1100);
+  const padding = window.innerWidth < 600 ? 16 : 48;
+  const scale = Math.min(1.4, (vw - padding) / cardW);
+  scalers.forEach(s => {
+    s.style.transform = 'scale(' + scale + ')';
+    s.style.marginBottom = ((4 * 96 * scale) - (4 * 96) + 24) + 'px';
+    s.style.marginTop = '8px';
+  });
+  setTimeout(sendHeight, 50);
+}
+window.addEventListener('load', scaleCards);
+window.addEventListener('resize', scaleCards);
 </script>
 </body>
 </html>
