@@ -86,6 +86,35 @@ body {
 }
 
 /* ── Print ── */
+
+/* ── Editable fields ── */
+.iv {
+  font-family:'DM Mono',monospace;
+  font-size:7pt; font-weight:500;
+  color:var(--text); line-height:1.1;
+  outline:none; border-radius:1px;
+  min-width:20pt; display:block;
+  background: #EEF3FF;
+  border-bottom: 1pt solid #93B4F5;
+  padding: 0 2pt;
+  cursor: text;
+}
+.iv:focus {
+  background: #DDE8FF;
+  box-shadow: 0 0 0 1pt rgba(66,133,244,.5);
+  border-bottom-color: #4285F4;
+}
+.iv:empty::before {
+  content: attr(data-ph);
+  color: #A8BBDB;
+  font-style: italic;
+  pointer-events: none;
+}
+.iv:hover:not(:focus) {
+  background: #E4EDFF;
+  cursor: text;
+}
+
 @media print {
   body { background:white !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .topbar { display:none !important; }
@@ -101,7 +130,7 @@ body {
   .iv { background:transparent !important; border-bottom:none !important; box-shadow:none !important; padding:0 !important; }
   .iv:empty::before { content:''; }
 }
-@page { size:6in 4in; margin:0; }
+@page { size:6in 4in; margin:0; } margin:0; }
 
 
 :root {
@@ -139,35 +168,7 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
 .il{font-size:5.5pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);line-height:1;}
 
 /* ── Editable value ── */
-.iv {
-  font-family:'DM Mono',monospace;
-  font-size:7pt; font-weight:500;
-  color:var(--text); line-height:1.1;
-  outline:none;
-  border-radius:1px;
-  min-width:20pt;
-  display:block;
-  background: #EEF3FF;
-  border-bottom: 1pt solid #93B4F5;
-  padding: 0 2pt;
-  cursor: text;
-}
-.iv:focus {
-  background: #DDE8FF;
-  box-shadow: 0 0 0 1pt rgba(66,133,244,.5);
-  border-bottom-color: #4285F4;
-}
 /* Placeholder when empty */
-.iv:empty::before {
-  content: attr(data-ph);
-  color: #A8BBDB;
-  font-style: italic;
-  pointer-events: none;
-}
-.iv:hover:not(:focus) {
-  background: #E4EDFF;
-  cursor: text;
-}
 
 .div{border:none;border-top:.75pt solid var(--gl);margin:0;flex-shrink:0;}
 .cf{background:var(--navy);padding:2.5pt 8pt;font-size:5pt;color:rgba(255,255,255,.38);letter-spacing:.03em;line-height:1.5;flex-shrink:0;}
@@ -213,8 +214,6 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
 
 /* ── PRINT ── */
   .side:last-child { page-break-after:avoid; }
-  .iv { background:transparent !important; border-bottom:none !important; box-shadow:none !important; padding:0 !important; }
-  .iv:empty::before { content:''; }
 }
 </style>
 </head>
