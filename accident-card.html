@@ -520,68 +520,28 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
 
 <script>
 function printCard() {
+  // Temporarily reset inline styles set by scaleCards() so both sides print correctly
+  const wraps = document.querySelectorAll('.card-wrap');
   const sides = document.querySelectorAll('.side');
-  let sidesHTML = '';
+
+  // Save current styles
+  const wrapStyles = Array.from(wraps).map(w => w.style.cssText);
+  const sideStyles = Array.from(sides).map(s => s.style.cssText);
+
+  // Reset to print-friendly state
+  wraps.forEach(w => {
+    w.style.cssText = 'width:6in; height:4in; margin:0;';
+  });
   sides.forEach(s => {
-    const clone = s.cloneNode(true);
-    const badge = clone.querySelector('.edit-badge');
-    if (badge) badge.remove();
-    // Reset any JS-applied transforms on the side itself
-    clone.style.transform = 'none';
-    clone.style.position = 'static';
-    clone.style.width = '6in';
-    clone.style.height = '4in';
-    clone.querySelectorAll('.iv').forEach(el => {
-      el.style.background = 'transparent';
-      el.style.borderBottom = 'none';
-      el.style.padding = '0';
-      el.style.boxShadow = 'none';
-    });
-    sidesHTML += clone.outerHTML + '\n';
+    s.style.cssText = 'width:6in; height:4in; position:static; transform:none;';
   });
 
-  const fontLink = document.querySelector('link[rel="stylesheet"]').outerHTML;
+  // Print
+  window.print();
 
-  const win = window.open('', '_blank', 'width=700,height=500');
-  win.document.write(`<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-${fontLink}
-<style>
-@page { size: 6in 4in landscape; margin: 0; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { background: white; }
-:root { --navy:#0D1F3C; --red:#C8102E; --gl:#DEDBD4; --gm:#888075; --text:#0F0F0F; --white:#FFFFFF; }
-</style>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=DM+Mono:wght@400;500&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
-<style id="card-styles"></style>
-</head>
-<body>
-${sidesHTML}
-<script>
-  // Copy only card-internal styles, skip page/layout styles
-  const allStyles = ${JSON.stringify(Array.from(document.querySelectorAll('style')).map(s => s.innerHTML).join('\n'))};
-  // Strip transforms and page-level rules
-  const clean = allStyles
-    .replace(/@media[^{]*\{[^}]*\}/g, '')
-    .replace(/\.page[^{]*\{[^}]*\}/g, '')
-    .replace(/\.topbar[^{]*\{[^}]*\}/g, '')
-    .replace(/\.card-wrap[^{]*\{[^}]*\}/g, '')
-    .replace(/\.btn[^{]*\{[^}]*\}/g, '')
-    .replace(/body\s*\{[^}]*\}/g, '')
-    .replace(/@page[^{]*\{[^}]*\}/g, '');
-  document.getElementById('card-styles').innerHTML = clean +
-    \`.side { width:6in !important; height:4in !important; transform:none !important;
-       position:static !important; box-shadow:none !important;
-       border:0.5pt solid #BBB !important; page-break-after:always; overflow:hidden; display:flex; flex-direction:column; }
-    .side:last-child { page-break-after:avoid; }
-    .edit-badge { display:none !important; }\`;
-  setTimeout(() => { window.print(); }, 800);
-<\/script>
-</body>
-</html>\`);
-  win.document.close();
+  // Restore styles after print dialog closes
+  wraps.forEach((w, i) => { w.style.cssText = wrapStyles[i]; });
+  sides.forEach((s, i) => { s.style.cssText = sideStyles[i]; });
 }
 
 function clearAll() {
