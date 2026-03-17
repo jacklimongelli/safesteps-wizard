@@ -130,7 +130,7 @@ body {
   .iv { background:transparent !important; border-bottom:none !important; box-shadow:none !important; padding:0 !important; }
   .iv:empty::before { content:''; }
 }
-@page { size:6in 4in; margin:0; } margin:0; }
+@page { size: 6in 4in landscape; margin: 0; }
 
 
 :root {
@@ -491,27 +491,50 @@ body{font-family:'Barlow',sans-serif;background:#0b1e3d;color:var(--text);paddin
 
 <script>
 function printCard() {
-  // Inject print-specific style override for 4x6 and clean fields
-  let style = document.getElementById('print-override');
-  if (!style) {
-    style = document.createElement('style');
-    style.id = 'print-override';
-    style.media = 'print';
-    document.head.appendChild(style);
-  }
-  style.textContent = `
-    @page { size: 6in 4in; margin: 0; }
-    body { background: white !important; }
-    .topbar { display: none !important; }
-    .page { padding: 0 !important; }
-    .card-wrap { transform: none !important; width: 6in !important; margin: 0 !important; }
-    .side { width: 6in !important; height: 4in !important; page-break-after: always; box-shadow: none !important; border: 0.5pt solid #BBB !important; }
-    .side:last-child { page-break-after: avoid; }
-    .edit-badge { display: none !important; }
-    .iv { background: transparent !important; border-bottom: none !important; box-shadow: none !important; padding: 0 !important; }
-    .iv:empty::before { content: ''; }
-  `;
-  window.print();
+  // Collect side HTML
+  const sides = document.querySelectorAll('.side');
+  let sidesHTML = '';
+  sides.forEach(s => {
+    const clone = s.cloneNode(true);
+    const badge = clone.querySelector('.edit-badge');
+    if (badge) badge.remove();
+    clone.querySelectorAll('.iv').forEach(el => {
+      el.style.background = 'transparent';
+      el.style.borderBottom = 'none';
+      el.style.padding = '0';
+      el.style.boxShadow = 'none';
+    });
+    sidesHTML += clone.outerHTML + '\n';
+  });
+
+  // Get fonts and inner CSS
+  const fontLink = document.querySelector('link[rel="stylesheet"]').outerHTML;
+  const innerCSS = Array.from(document.querySelectorAll('style'))
+    .map(s => s.innerHTML).join('\n');
+
+  const win = window.open('', '_blank', 'width=700,height=500');
+  win.document.write(`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+${fontLink}
+<style>
+@page { size: 6in 4in landscape; margin: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: white; width: 6in; }
+${innerCSS}
+.side { width: 6in !important; height: 4in !important; box-shadow: none !important; border: 0.5pt solid #BBB !important; page-break-after: always; }
+.side:last-child { page-break-after: avoid; }
+.edit-badge { display: none !important; }
+</style>
+</head>
+<body>
+${sidesHTML}
+</body>
+</html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => { win.print(); }, 800);
 }
 
 function clearAll() {
