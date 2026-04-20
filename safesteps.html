@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safe Steps Plans LLC — Emergency Preparedness</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Special+Elite&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --tan:#C3A97D;
+  --dark:#1C1208;
+  --dark-bg:#0e0b05;
+  --red:#6e1008;
+}
+
+body{
+  font-family:'Special Elite',monospace;
+  background:#C3A97D;
+  color:#1C1208;
+  overflow-x:hidden;
+}
+
+/* ── PAGES ── */
+.page{display:none}
+.page.active{display:block}
+
+/* ── NAV ── */
+.site-nav{
+  position:sticky;top:0;z-index:200;
+  background:#C3A97D;
+  border-bottom:2px solid rgba(28,18,8,.28);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;height:58px;
+}
+.nav-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.35rem;letter-spacing:.2em;color:#1C1208;
+  cursor:pointer;text-decoration:none;
+}
+.nav-links{display:none;gap:24px;align-items:center}
+.nav-links a{
+  font-family:'Bebas Neue',sans-serif;font-size:.7rem;
+  letter-spacing:.14em;color:rgba(28,18,8,.65);
+  cursor:pointer;text-decoration:none;transition:color .15s;
+}
+.nav-links a:hover,.nav-links a.active{color:#1C1208}
+.nav-cta{
+  font-family:'Bebas Neue',sans-serif;font-size:.72rem;
+  letter-spacing:.12em;background:#1C1208;color:#C3A97D;
+  padding:9px 16px;border:none;cursor:pointer;
+  text-decoration:none;white-space:nowrap;
+}
+.hamburger{
+  display:flex;flex-direction:column;gap:5px;
+  background:none;border:none;cursor:pointer;padding:4px;
+}
+.hamburger span{display:block;width:22px;height:2px;background:#1C1208}
+.mobile-menu{
+  display:none;position:fixed;top:58px;left:0;right:0;
+  background:#C3A97D;border-bottom:2px solid rgba(28,18,8,.28);
+  z-index:190;padding:16px 20px;
+  flex-direction:column;gap:0;
+}
+.mobile-menu.open{display:flex}
+.mobile-menu a{
+  font-family:'Bebas Neue',sans-serif;font-size:.85rem;
+  letter-spacing:.14em;color:rgba(28,18,8,.72);
+  padding:13px 0;border-bottom:1px solid rgba(28,18,8,.1);
+  cursor:pointer;text-decoration:none;
+}
+.mobile-menu a:last-child{border-bottom:none}
+
+/* ── GRID TEXTURE WRAPPER ── */
+.textured{
+  background-color:#C3A97D;
+  background-image:
+    linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),
+    linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);
+  background-size:60px 60px,60px 60px,15px 15px,15px 15px;
+}
+
+/* ── CONTAINER ── */
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+/* ── DOC BAR ── */
+.docbar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 20px;border-bottom:1px solid rgba(28,18,8,.14);
+  background:rgba(28,18,8,.04);
+}
+.docbar .wrap{display:flex;justify-content:space-between;width:100%}
+.docid{font-family:'Bebas Neue',sans-serif;font-size:.65rem;letter-spacing:.2em;color:rgba(28,18,8,.7);border:1px solid rgba(28,18,8,.35);padding:2px 7px}
+.dtg{font-family:'Special Elite',monospace;font-size:.64rem;color:rgba(28,18,8,.65)}
+
+/* ── HERO ── */
+.hero{
+  padding:36px 20px 32px;border-bottom:2px solid rgba(28,18,8,.16);
+  position:relative;
+}
+.hero::before{content:'';position:absolute;top:10px;left:10px;width:20px;height:20px;border-top:2px solid rgba(28,18,8,.33);border-left:2px solid rgba(28,18,8,.33)}
+.hero::after{content:'';position:absolute;bottom:10px;right:10px;width:20px;height:20px;border-bottom:2px solid rgba(28,18,8,.33);border-right:2px solid rgba(28,18,8,.33)}
+.hero .wrap{position:relative;z-index:1}
+.sit-tag{font-family:'Bebas Neue',sans-serif;font-size:.62rem;letter-spacing:.3em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:12px}
+.sit-tag::before{content:'';display:block;width:14px;height:1px;background:rgba(28,18,8,.55)}
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,6vw,4.2rem);
+  line-height:1;letter-spacing:.03em;color:#1C1208;
+  margin-bottom:20px;
+}
+.bodytxt{
+  font-family:'Special Elite',monospace;font-size:.92rem;line-height:1.75;
+  color:rgba(28,18,8,.82);border-left:3px solid rgba(28,18,8,.36);
+  padding-left:14px;margin-bottom:26px;max-width:600px;
+}
+.ctas{display:flex;flex-direction:column;gap:10px;max-width:360px}
+.btnp{
+  display:block;width:100%;text-align:center;
+  font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.16em;
+  background:#1C1208;color:#C3A97D;padding:15px 0;
+  border:none;cursor:pointer;text-decoration:none;
+}
+.btns{
+  display:block;width:100%;text-align:center;
+  font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.16em;
+  background:transparent;color:#1C1208;padding:13px 0;
+  border:2px solid rgba(28,18,8,.33);cursor:pointer;text-decoration:none;
+}
+
+/* ── INTEL STATS ── */
+.intel-sec{
+  padding:24px 20px;border-bottom:2px solid rgba(28,18,8,.13);
+  background:rgba(28,18,8,.05);
+}
+.intel-hdr{
+  display:flex;justify-content:space-between;
+  font-family:'Bebas Neue',sans-serif;font-size:.6rem;letter-spacing:.26em;
+  color:rgba(28,18,8,.7);margin-bottom:14px;padding-bottom:8px;
+  border-bottom:1px solid rgba(28,18,8,.16);
+}
+.intel-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ic{background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.13);padding:13px 12px}
+.ic.threat{border-left:3px solid rgba(110,16,8,.58)}
+.ic.neutral{border-left:3px solid rgba(28,18,8,.28)}
+.itag{font-family:'Bebas Neue',sans-serif;font-size:.54rem;letter-spacing:.18em;color:rgba(28,18,8,.68);margin-bottom:4px}
+.ival{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;line-height:1;color:#1C1208}
+.ival .u{font-size:.82rem;color:rgba(28,18,8,.68)}
+.ic.threat .ival{color:#6e1008}
+.idesc{font-family:'Special Elite',monospace;font-size:.67rem;line-height:1.45;color:rgba(28,18,8,.72);margin-top:5px}
+
+/* ── SECTIONS ── */
+.sec{padding:26px 20px;border-bottom:2px solid rgba(28,18,8,.13)}
+.sec.darker{background:rgba(28,18,8,.04)}
+.sec-tag{font-family:'Bebas Neue',sans-serif;font-size:.58rem;letter-spacing:.3em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.sec-tag::before{content:'';display:block;width:12px;height:1px;background:rgba(28,18,8,.55)}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:.04em;color:#1C1208;line-height:1;margin-bottom:18px}
+
+/* ── PILLARS ── */
+.pillar{padding:15px;border:1px solid rgba(28,18,8,.11);margin-bottom:8px;background:rgba(28,18,8,.05);display:flex;gap:13px;align-items:flex-start}
+.pnum{font-family:'Bebas Neue',sans-serif;font-size:2.1rem;line-height:1;color:rgba(28,18,8,.18);flex-shrink:0;width:26px;margin-top:1px}
+.ptag{font-family:'Bebas Neue',sans-serif;font-size:.52rem;letter-spacing:.22em;color:rgba(28,18,8,.62);margin-bottom:3px}
+.pillar h3{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.05em;color:#1C1208;margin-bottom:5px}
+.pillar p{font-family:'Special Elite',monospace;font-size:.78rem;line-height:1.58;color:rgba(28,18,8,.74)}
+
+/* ── PHASES ── */
+.phase{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(28,18,8,.09)}
+.phase:last-child{border-bottom:none;padding-bottom:0}
+.plabel{font-family:'Bebas Neue',sans-serif;font-size:.55rem;letter-spacing:.16em;color:rgba(28,18,8,.62);writing-mode:vertical-rl;transform:rotate(180deg);flex-shrink:0;border-right:1px solid rgba(28,18,8,.28);padding-right:9px;height:54px;display:flex;align-items:center}
+.phase h4{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.06em;color:#1C1208;margin-bottom:4px}
+.phase p{font-family:'Special Elite',monospace;font-size:.76rem;line-height:1.52;color:rgba(28,18,8,.72)}
+
+/* ── CTA BAND ── */
+.ctaband{background:#1C1208;padding:32px 20px;text-align:center}
+.ctaband-ey{font-family:'Bebas Neue',sans-serif;font-size:.58rem;letter-spacing:.28em;color:rgba(195,169,125,.72);margin-bottom:10px}
+.ctaband h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:.04em;color:#C3A97D;line-height:1.1;margin-bottom:13px}
+.ctaband p{font-family:'Special Elite',monospace;font-size:.8rem;line-height:1.62;color:rgba(195,169,125,.75);margin-bottom:20px}
+.ctabtn{display:block;font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.16em;background:#C3A97D;color:#1C1208;padding:14px 0;border:none;cursor:pointer;text-decoration:none;margin-bottom:10px;width:100%}
+.ctabtn.out{background:transparent;color:#C3A97D;border:1px solid rgba(195,169,125,.4)}
+
+/* ── FOOTER ── */
+.site-footer{background:#0e0b05;padding:32px 20px 48px}
+.mfbrand{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.2em;color:#C3A97D;margin-bottom:7px}
+.mftagline{font-family:'Special Elite',monospace;font-size:.74rem;line-height:1.62;color:rgba(195,169,125,.62);margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid rgba(195,169,125,.09)}
+.mflinks{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:22px}
+.mfcol h4{font-family:'Bebas Neue',sans-serif;font-size:.58rem;letter-spacing:.22em;color:rgba(195,169,125,.52);margin-bottom:9px;padding-bottom:6px;border-bottom:1px solid rgba(195,169,125,.09)}
+.mfcol ul{list-style:none}
+.mfcol ul li{font-family:'Special Elite',monospace;font-size:.74rem;color:rgba(195,169,125,.62);padding:5px 0;cursor:pointer}
+.mfbot{border-top:1px solid rgba(195,169,125,.08);padding-top:15px}
+.mfcopy{font-family:'Special Elite',monospace;font-size:.62rem;color:rgba(195,169,125,.42);margin-bottom:3px}
+.mfvet{font-family:'Bebas Neue',sans-serif;font-size:.62rem;letter-spacing:.17em;color:rgba(195,169,125,.42)}
+
+/* ── INNER PAGE SHARED ── */
+.dw{
+  background-color:#C3A97D;
+  background-image:
+    linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),
+    linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);
+  background-size:60px 60px,60px 60px,15px 15px,15px 15px;
+  min-height:100vh;
+}
+.dw-sec{padding:26px 20px;border-bottom:2px solid rgba(28,18,8,.13)}
+.dw-eyebrow{font-family:'Bebas Neue',sans-serif;font-size:.6rem;letter-spacing:.3em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.dw-eyebrow::before{content:'';display:block;width:12px;height:1px;background:rgba(28,18,8,.55)}
+.dw-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:.04em;color:#1C1208;line-height:1.05;margin-bottom:14px}
+.dw-body{font-family:'Special Elite',monospace;font-size:.84rem;line-height:1.68;color:rgba(28,18,8,.75);border-left:3px solid rgba(28,18,8,.36);padding-left:14px}
+.dw-hero{padding:32px 20px 28px;border-bottom:2px solid rgba(28,18,8,.16);position:relative}
+.dw-hero::before{content:'';position:absolute;top:10px;left:10px;width:20px;height:20px;border-top:2px solid rgba(28,18,8,.33);border-left:2px solid rgba(28,18,8,.33)}
+.dw-hero::after{content:'';position:absolute;bottom:10px;right:10px;width:20px;height:20px;border-bottom:2px solid rgba(28,18,8,.33);border-right:2px solid rgba(28,18,8,.33)}
+.dw-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,5vw,3.5rem);line-height:1;letter-spacing:.03em;color:#1C1208;margin-bottom:16px}
+.dw-btnp{display:block;width:100%;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.16em;background:#1C1208;color:#C3A97D;padding:15px 0;border:none;cursor:pointer;text-decoration:none;margin-top:20px}
+.dw-btns{display:block;width:100%;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.16em;background:transparent;color:#1C1208;padding:13px 0;border:2px solid rgba(28,18,8,.33);cursor:pointer;text-decoration:none;margin-top:10px}
+.dw-footer{background:#0e0b05;padding:28px 20px 48px}
+.dw-footer-brand{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.2em;color:#C3A97D;margin-bottom:6px}
+.dw-footer-tag{font-family:'Special Elite',monospace;font-size:.7rem;color:rgba(195,169,125,.55);line-height:1.6}
+
+/* ── SERVICES ── */
+.eplan-card{display:flex;gap:16px;align-items:flex-start;padding:15px 0;border-bottom:1px solid rgba(28,18,8,.1)}
+.eplan-code{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;color:rgba(28,18,8,.18);flex-shrink:0;width:30px;margin-top:2px}
+.eplan-name{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.06em;color:#1C1208;margin-bottom:5px}
+.eplan-desc{font-family:'Special Elite',monospace;font-size:.72rem;line-height:1.55;color:rgba(28,18,8,.68)}
+.eplan-addon{background:rgba(28,18,8,.06);border:1px solid rgba(28,18,8,.16);border-left:3px solid #1C1208;padding:15px 16px;margin-top:18px}
+.eplan-addon-label{font-family:'Bebas Neue',sans-serif;font-size:.48rem;letter-spacing:.24em;color:rgba(28,18,8,.52);margin-bottom:4px}
+.eplan-addon-title{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.06em;color:#1C1208;margin-bottom:6px}
+.eplan-addon-desc{font-family:'Special Elite',monospace;font-size:.72rem;line-height:1.55;color:rgba(28,18,8,.68)}
+.pkg-item{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(28,18,8,.09)}
+.pkg-item:last-child{border-bottom:none}
+.pkg-tag{font-family:'Bebas Neue',sans-serif;font-size:.65rem;letter-spacing:.1em;color:rgba(28,18,8,.55);background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.16);width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pkg-name{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.05em;color:#1C1208;margin-bottom:2px}
+.pkg-scenarios{font-family:'Special Elite',monospace;font-size:.66rem;color:rgba(28,18,8,.58)}
+
+/* ── ASSESSMENT ── */
+.assess-progress{padding:12px 20px;border-bottom:1px solid rgba(28,18,8,.13);background:rgba(28,18,8,.04)}
+.ap-label{font-family:'Bebas Neue',sans-serif;font-size:.54rem;letter-spacing:.22em;color:rgba(28,18,8,.65);margin-bottom:8px;display:flex;justify-content:space-between}
+.ap-bar{height:3px;background:rgba(28,18,8,.12);border-radius:2px}
+.ap-fill{height:100%;border-radius:2px;background:#1C1208;transition:width .4s}
+.assess-step{padding:26px 20px;display:none}
+.assess-step.active{display:block}
+.as-num{font-family:'Bebas Neue',sans-serif;font-size:.54rem;letter-spacing:.25em;color:rgba(28,18,8,.62);margin-bottom:6px}
+.as-q{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.03em;color:#1C1208;line-height:1.1;margin-bottom:18px}
+.as-opts{display:flex;flex-direction:column;gap:9px}
+.as-opt{font-family:'Special Elite',monospace;font-size:.8rem;color:rgba(28,18,8,.72);background:rgba(28,18,8,.05);border:1px solid rgba(28,18,8,.16);padding:14px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:all .15s}
+.as-opt:hover,.as-opt.sel{background:rgba(28,18,8,.12);border-color:rgba(28,18,8,.45);color:#1C1208}
+.as-opt::after{content:'○';color:rgba(28,18,8,.35);font-size:.85rem}
+.as-opt.sel::after{content:'●';color:#1C1208}
+.as-nav{display:flex;gap:9px;margin-top:20px}
+.as-nav button{flex:1;font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.12em;padding:13px 0;border:none;cursor:pointer}
+.as-prev{background:rgba(28,18,8,.07);color:rgba(28,18,8,.65);border:1px solid rgba(28,18,8,.2)!important}
+.as-next{background:#1C1208;color:#C3A97D}
+.assess-result{padding:26px 20px;display:none}
+.ar-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:#1C1208;margin-bottom:12px;line-height:1}
+.ar-body{font-family:'Special Elite',monospace;font-size:.82rem;line-height:1.65;color:rgba(28,18,8,.74);margin-bottom:20px}
+.ar-rec{background:rgba(28,18,8,.06);border:1px solid rgba(28,18,8,.16);border-left:3px solid rgba(28,18,8,.55);padding:13px 16px;margin-bottom:11px}
+.ar-rec-label{font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.22em;color:rgba(28,18,8,.58);margin-bottom:4px}
+.ar-rec-val{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:#1C1208;letter-spacing:.04em}
+
+/* ── TRIAL ── */
+.trial-spots{background:rgba(110,16,8,.08);border:1px solid rgba(110,16,8,.28);padding:16px;display:flex;align-items:center;gap:14px;margin:22px 20px}
+.ts-num{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;color:#6e1008;line-height:1;flex-shrink:0}
+.ts-txt{font-family:'Special Elite',monospace;font-size:.74rem;line-height:1.5;color:rgba(28,18,8,.72)}
+.tw-item{display:flex;gap:13px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(28,18,8,.08)}
+.tw-item:last-child{border-bottom:none}
+.tw-icon{font-size:1.2rem;flex-shrink:0;margin-top:2px}
+.tw-name{font-family:'Bebas Neue',sans-serif;font-size:.98rem;letter-spacing:.04em;color:#1C1208;margin-bottom:3px}
+.tw-desc{font-family:'Special Elite',monospace;font-size:.74rem;line-height:1.52;color:rgba(28,18,8,.68)}
+.ask-item{padding:11px 0;border-bottom:1px solid rgba(28,18,8,.08)}
+.ask-item:last-child{border-bottom:none}
+.ask-label{font-family:'Bebas Neue',sans-serif;font-size:.52rem;letter-spacing:.2em;color:rgba(28,18,8,.62);margin-bottom:3px}
+.ask-val{font-family:'Special Elite',monospace;font-size:.8rem;color:rgba(28,18,8,.82)}
+.tf-field{margin-bottom:14px}
+.tf-label{font-family:'Bebas Neue',sans-serif;font-size:.52rem;letter-spacing:.2em;color:rgba(28,18,8,.65);margin-bottom:6px;display:block}
+.tf-input{width:100%;background:rgba(28,18,8,.05);border:1px solid rgba(28,18,8,.25);color:#1C1208;font-family:'Special Elite',monospace;font-size:.8rem;padding:12px 14px;outline:none}
+.tf-input::placeholder{color:rgba(28,18,8,.3)}
+
+/* ── TOOLS ── */
+.tool-card{border:1px solid rgba(28,18,8,.13);margin-bottom:13px;background:rgba(28,18,8,.05)}
+.tool-head{padding:15px 15px 11px;border-bottom:1px solid rgba(28,18,8,.1);display:flex;align-items:center;gap:13px}
+.tool-icon{font-size:1.6rem;flex-shrink:0}
+.tool-label{font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.22em;color:rgba(28,18,8,.6);margin-bottom:2px}
+.tool-name{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.04em;color:#1C1208}
+.tool-body{padding:13px 15px}
+.tool-desc{font-family:'Special Elite',monospace;font-size:.76rem;line-height:1.6;color:rgba(28,18,8,.72);margin-bottom:11px}
+.tool-btn{display:block;width:100%;font-family:'Bebas Neue',sans-serif;font-size:.84rem;letter-spacing:.14em;text-align:center;background:rgba(28,18,8,.07);color:#1C1208;border:1px solid rgba(28,18,8,.25);padding:11px 0;cursor:pointer;text-decoration:none}
+.tool-free{font-family:'Bebas Neue',sans-serif;font-size:.46rem;letter-spacing:.18em;background:rgba(28,80,28,.12);color:rgba(20,90,20,.8);border:1px solid rgba(28,80,28,.22);padding:2px 7px;display:inline-block;margin-bottom:5px}
+
+/* ── LOGIN ── */
+.login-wrap{padding:28px 20px}
+.login-avatar{width:60px;height:60px;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:20px}
+.login-field{margin-bottom:14px}
+.lf-label{font-family:'Bebas Neue',sans-serif;font-size:.52rem;letter-spacing:.2em;color:rgba(28,18,8,.65);margin-bottom:6px;display:block}
+.lf-input{width:100%;background:rgba(28,18,8,.05);border:1px solid rgba(28,18,8,.25);color:#1C1208;font-family:'Special Elite',monospace;font-size:.8rem;padding:12px 14px;outline:none}
+.lf-input::placeholder{color:rgba(28,18,8,.3)}
+.login-divider{display:flex;align-items:center;gap:11px;margin:16px 0}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:rgba(28,18,8,.14)}
+.login-divider span{font-family:'Bebas Neue',sans-serif;font-size:.52rem;letter-spacing:.2em;color:rgba(28,18,8,.42)}
+.portal-feature{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid rgba(28,18,8,.08)}
+.portal-feature:last-child{border-bottom:none}
+.pf-dot{width:7px;height:7px;background:#1C1208;border-radius:50%;flex-shrink:0;margin-top:5px}
+.pf-name{font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.04em;color:#1C1208;margin-bottom:3px}
+.pf-desc{font-family:'Special Elite',monospace;font-size:.7rem;line-height:1.5;color:rgba(28,18,8,.65)}
+
+/* typing cursor */
+.cur{display:inline-block;width:2px;height:.83em;background:rgba(28,18,8,.62);margin-left:1px;vertical-align:text-bottom;animation:cblink .75s step-end infinite}
+@keyframes cblink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ════════════════════════
+   DESKTOP BREAKPOINTS
+════════════════════════ */
+@media(min-width:640px){
+  .ctas{flex-direction:row}
+  .ctas .btnp,.ctas .btns{width:auto;padding-left:32px;padding-right:32px}
+  .intel-grid{grid-template-columns:repeat(4,1fr)}
+  .ctabtn{display:inline-block;width:auto;padding:14px 32px;margin-right:10px}
+  .ctaband{text-align:left}
+  .ctaband .wrap{display:flex;flex-direction:column;align-items:flex-start}
+}
+
+@media(min-width:768px){
+  .site-nav{padding:0 32px;height:64px}
+  .hamburger{display:none}
+  .nav-links{display:flex}
+
+  .hero,.dw-hero,.intel-sec,.sec,.dw-sec,.assess-progress,.login-wrap{padding-left:0;padding-right:0}
+  .hero,.dw-hero,.intel-sec,.sec,.dw-sec,.assess-progress,.assess-step,.assess-result,.login-wrap,.trial-spots,.dw-footer,.site-footer{padding-left:0;padding-right:0}
+
+  .hero .inner,.intel-inner,.sec-inner,.dw-sec-inner{max-width:960px;margin:0 auto;padding:0 32px}
+
+  /* make all sections use inner wrapper via padding on wrap */
+  section,
+  .hero,
+  .dw-hero,
+  .intel-sec,
+  .sec,
+  .dw-sec,
+  .assess-progress,
+  .assess-step,
+  .assess-result,
+  .login-wrap,
+  .docbar,
+  .ctaband,
+  .site-footer,
+  .dw-footer{
+    padding-left:calc((100% - 960px)/2 + 32px);
+    padding-right:calc((100% - 960px)/2 + 32px);
+  }
+
+  .trial-spots{
+    margin-left:calc((100% - 960px)/2 + 32px);
+    margin-right:calc((100% - 960px)/2 + 32px);
+    width:auto;
+  }
+
+  .pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .pillar{margin-bottom:0}
+
+  .phase-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+
+  .eplan-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .eplan-card{border-bottom:none;padding:14px;background:rgba(28,18,8,.05);border:1px solid rgba(28,18,8,.13)}
+
+  .tool-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .tool-card{margin-bottom:0}
+
+  .as-opts{display:grid;grid-template-columns:repeat(2,1fr)}
+
+  .dw-btnp,.dw-btns{display:inline-block;width:auto;padding-left:40px;padding-right:40px}
+  .dw-btns{margin-left:10px;margin-top:20px}
+}
+
+@media(max-width:767px){
+  /* ensure full-bleed on mobile */
+  .pillar-grid,.phase-grid,.eplan-grid,.tool-grid{display:block}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <a class="nav-logo" onclick="nav('home')">⬡ SAFE STEPS</a>
+  <div class="nav-links">
+    <a onclick="nav('home')" id="nl-home" class="active">Home</a>
+    <a onclick="nav('services')" id="nl-services">Services</a>
+    <a onclick="nav('assessment')" id="nl-assessment">Assessment</a>
+    <a onclick="nav('trial')" id="nl-trial">Trial Family</a>
+    <a onclick="nav('tools')" id="nl-tools">Free Tools</a>
+    <a onclick="nav('login')" id="nl-login">Portal</a>
+  </div>
+  <button class="nav-cta" onclick="nav('assessment')">GET MY PLAN</button>
+  <button class="hamburger" onclick="toggleMenu()" id="ham" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a onclick="nav('home');toggleMenu()">Home</a>
+  <a onclick="nav('services');toggleMenu()">Services</a>
+  <a onclick="nav('assessment');toggleMenu()">Assessment</a>
+  <a onclick="nav('trial');toggleMenu()">Trial Family</a>
+  <a onclick="nav('tools');toggleMenu()">Free Tools</a>
+  <a onclick="nav('login');toggleMenu()">Portal Login</a>
+</div>
+
+<!-- ══════════ HOME ══════════ -->
+<div class="page active textured" id="page-home">
+
+  <div class="docbar">
+    <div class="docid">SS-OPORD-001</div>
+    <div class="dtg">DTG: 2025-SEP-20 // UNCLASSIFIED</div>
+  </div>
+
+  <div class="hero textured">
+    <div class="sit-tag">1. SITUATION</div>
+    <h1 id="h1-type"></h1>
+    <div class="bodytxt">Custom emergency response plans for home invasion, house fire, and medical crises. Designed by combat veterans. Built for your home, your family, your terrain.</div>
+    <div class="ctas">
+      <a class="btnp" onclick="nav('services')">VIEW PLANS & PRICING</a>
+      <a class="btns" onclick="nav('assessment')">TAKE ASSESSMENT</a>
+    </div>
+  </div>
+
+  <div class="intel-sec">
+    <div class="intel-hdr"><span>INTEL BRIEF // RESPONSE TIMES</span><span>ALBEMARLE CO.</span></div>
+    <div class="intel-grid">
+      <div class="ic threat"><div class="itag">HOUSE FIRE</div><div class="ival" id="iv1">3<span class="u"> MIN</span></div><div class="idesc">Before floor 2 becomes uninhabitable.</div></div>
+      <div class="ic neutral"><div class="itag">FIRE DEPT.</div><div class="ival" id="iv2">10<span class="u"> MIN</span></div><div class="idesc">90th pct. response, Charlottesville.</div></div>
+      <div class="ic neutral"><div class="itag">EMS / POLICE</div><div class="ival" id="iv3">11<span class="u"> MIN</span></div><div class="idesc">Avg. combined response, area.</div></div>
+      <div class="ic threat"><div class="itag">NO PLAN</div><div class="ival" id="iv4">73<span class="u"> %</span></div><div class="idesc">Of families never drilled evacuation.</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-tag">2. MISSION</div>
+    <div class="sec-title">THREE PILLARS.<br>ONE MISSION.</div>
+    <div class="pillar-grid">
+      <div class="pillar"><div class="pnum">I</div><div><div class="ptag">PILLAR ONE // FAMILIES</div><h3>Empower Families</h3><p>Personalized plans and rehearsals that turn fear into readiness — calm, coordinated action when every second matters.</p></div></div>
+      <div class="pillar"><div class="pnum">II</div><div><div class="ptag">PILLAR TWO // COMMUNITIES</div><h3>Educate Communities</h3><p>Shared training that strengthens neighborhoods and builds resilient communities prepared to respond together.</p></div></div>
+      <div class="pillar"><div class="pnum">III</div><div><div class="ptag">PILLAR THREE // VETERANS</div><h3>Employ Veterans</h3><p>Purposeful post-service careers — military expertise turned into meaningful community impact at home.</p></div></div>
+    </div>
+  </div>
+
+  <div class="sec darker">
+    <div class="sec-tag">3. EXECUTION</div>
+    <div class="sec-title">HOW IT WORKS</div>
+    <div class="phase-grid">
+      <div class="phase"><div class="plabel">PHASE I</div><div><h4>Assessment</h4><p>Tell us about your home layout, family composition, and current security setup.</p></div></div>
+      <div class="phase"><div class="plabel">PHASE II</div><div><h4>Custom Plan</h4><p>Our veterans build your spiral-bound plan — fire, invasion, and medical emergencies.</p></div></div>
+      <div class="phase"><div class="plabel">PHASE III</div><div><h4>Train & Rehearse</h4><p>We run scenario drills and build the muscle memory that holds under stress.</p></div></div>
+      <div class="phase"><div class="plabel">PHASE IV</div><div><h4>Stay Ready</h4><p>Portal access keeps rehearsals, AAR notes, and equipment checks on track.</p></div></div>
+    </div>
+  </div>
+
+  <div class="ctaband">
+    <div class="ctaband-ey">// BEGIN YOUR ASSESSMENT //</div>
+    <h2>YOUR FAMILY.<br>YOUR HOME.<br>YOUR PLAN.</h2>
+    <p>A veteran advisor will build a plan specific to your layout, family, and biggest risks.</p>
+    <a class="ctabtn" onclick="nav('assessment')">START ASSESSMENT</a>
+    <a class="ctabtn out" onclick="nav('trial')">BECOME A TRIAL FAMILY</a>
+  </div>
+
+  <footer class="site-footer">
+    <div class="mfbrand">⬡ SAFE STEPS</div>
+    <p class="mftagline">Bringing proven military readiness into the home. Veteran-designed plans for families who believe preparation is not paranoia — it's love.</p>
+    <div class="mflinks">
+      <div class="mfcol"><h4>Services</h4><ul><li onclick="nav('services')">Plans Only</li><li onclick="nav('services')">In-Home Visit</li><li onclick="nav('services')">Training Weekend</li><li onclick="nav('services')">Packages</li></ul></div>
+      <div class="mfcol"><h4>Navigate</h4><ul><li onclick="nav('assessment')">Assessment</li><li onclick="nav('trial')">Trial Family</li><li onclick="nav('tools')">Free Tools</li><li onclick="nav('login')">Portal Login</li></ul></div>
+    </div>
+    <div class="mfbot">
+      <p class="mfcopy">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA</p>
+      <p class="mfvet">VETERAN-FOUNDED & OPERATED</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════ SERVICES ══════════ -->
+<div class="page" id="page-services">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow">1. SERVICES</div>
+      <h1>BUILD YOUR<br>OWN PLAN.</h1>
+      <div class="dw-body">Every plan is à la carte — pick the emergencies that matter to you. Add in-person training at any time. No bundles, no upsells.</div>
+    </div>
+
+    <div class="dw-sec">
+      <div class="dw-eyebrow">1. EMERGENCY PLANS</div>
+      <div class="dw-title" style="font-size:1.4rem;margin-bottom:16px">PICK YOUR SCENARIOS</div>
+      <div class="eplan-grid">
+        <div class="eplan-card"><div class="eplan-code">01</div><div><div class="eplan-name">HOUSE FIRE</div><div class="eplan-desc">Escape routes, role assignments, rally points, 911 script, smoke protocols, and rehearsal schedule — built for your floor plan.</div></div></div>
+        <div class="eplan-card"><div class="eplan-code">02</div><div><div class="eplan-name">HOME INVASION</div><div class="eplan-desc">Defensive positions, lockdown procedures, family communication protocols, and law enforcement interaction guidance.</div></div></div>
+        <div class="eplan-card"><div class="eplan-code">03</div><div><div class="eplan-name">MEDICAL EMERGENCY</div><div class="eplan-desc">First-response role assignments, 911 guidance, AED and first aid protocols, and a laminated medical info quick sheet.</div></div></div>
+        <div class="eplan-card" style="border-bottom:none"><div class="eplan-code">04</div><div><div class="eplan-name">WEATHER EVENTS</div><div class="eplan-desc">Shelter-in-place procedures, evacuation routes, supply checklists, and a family communication tree for extended outages.</div></div></div>
+      </div>
+      <div class="eplan-addon">
+        <div class="eplan-addon-label">OPTIONAL ADD-ON</div>
+        <div class="eplan-addon-title">IN-PERSON TRAINING</div>
+        <div class="eplan-addon-desc">A veteran advisor visits your home, walks every route, and runs live scenario drills with your family. Available on any plan at checkout.</div>
+      </div>
+    </div>
+
+    <div class="dw-sec darker" style="background:rgba(28,18,8,.04)">
+      <div class="dw-eyebrow">2. LIFESTYLE PACKAGES</div>
+      <div class="dw-title" style="font-size:1.4rem;margin-bottom:5px">BUILT FOR YOUR<br>MOMENT IN LIFE</div>
+      <div style="font-family:'Special Elite',monospace;font-size:.8rem;line-height:1.6;color:rgba(28,18,8,.72);margin-bottom:18px">Pre-built plan bundles matched to the risks most relevant to where you are right now. Fully customizable.</div>
+      <div class="pkg-item"><div class="pkg-tag">A</div><div><div class="pkg-name">NEW DRIVER</div><div class="pkg-scenarios">Car Accident · Medical · Weather</div></div></div>
+      <div class="pkg-item"><div class="pkg-tag">B</div><div><div class="pkg-name">NEW HOUSE</div><div class="pkg-scenarios">Fire · Invasion · Medical · Weather</div></div></div>
+      <div class="pkg-item"><div class="pkg-tag">C</div><div><div class="pkg-name">ELDERLY PARENTS</div><div class="pkg-scenarios">Medical · Fire · Weather</div></div></div>
+      <div class="pkg-item"><div class="pkg-tag">D</div><div><div class="pkg-name">FIRST-TIME PARENTS</div><div class="pkg-scenarios">Medical · Fire · Invasion</div></div></div>
+      <div class="pkg-item"><div class="pkg-tag">E</div><div><div class="pkg-name">OFF TO COLLEGE</div><div class="pkg-scenarios">Fire · Invasion · Medical</div></div></div>
+      <div class="pkg-item"><div class="pkg-tag">F</div><div><div class="pkg-name">SOLO TRAVELER</div><div class="pkg-scenarios">Medical · Weather · Invasion</div></div></div>
+      <div class="pkg-item" style="border-bottom:none"><div class="pkg-tag">G</div><div><div class="pkg-name">SOLO FEMALE RUNNER</div><div class="pkg-scenarios">Personal Safety · Medical · Communication</div></div></div>
+    </div>
+
+    <div class="dw-sec">
+      <a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a>
+      <a class="dw-btns" onclick="nav('trial')">APPLY FOR FREE TRIAL</a>
+    </div>
+
+    <div class="dw-footer">
+      <div class="dw-footer-brand">⬡ SAFE STEPS</div>
+      <div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ ASSESSMENT ══════════ -->
+<div class="page" id="page-assessment">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow">FAMILY ASSESSMENT</div>
+      <h1>KNOW YOUR<br>RISK PROFILE</h1>
+      <div class="dw-body">Six questions. Five minutes. We'll match your family to the right plan and flag your biggest gaps.</div>
+    </div>
+
+    <div class="assess-progress">
+      <div class="ap-label"><span>STEP <span id="ap-cur">1</span> OF 6</span><span id="ap-pct">17%</span></div>
+      <div class="ap-bar"><div class="ap-fill" id="ap-fill" style="width:17%"></div></div>
+    </div>
+
+    <div id="assess-steps">
+      <div class="assess-step active" data-step="1">
+        <div class="as-num">STEP 01 // HOUSEHOLD</div>
+        <div class="as-q">How many people live in your home?</div>
+        <div class="as-opts">
+          <div class="as-opt" onclick="selectOpt(this)">1–2 people</div>
+          <div class="as-opt" onclick="selectOpt(this)">3–4 people</div>
+          <div class="as-opt" onclick="selectOpt(this)">5+ people</div>
+          <div class="as-opt" onclick="selectOpt(this)">Varies / split household</div>
+        </div>
+        <div class="as-nav"><button class="as-prev" style="visibility:hidden"></button><button class="as-next" onclick="assessNext()">NEXT →</button></div>
+      </div>
+      <div class="assess-step" data-step="2">
+        <div class="as-num">STEP 02 // CHILDREN</div>
+        <div class="as-q">Do you have children under 18 at home?</div>
+        <div class="as-opts">
+          <div class="as-opt" onclick="selectOpt(this)">No children</div>
+          <div class="as-opt" onclick="selectOpt(this)">Ages 10–17</div>
+          <div class="as-opt" onclick="selectOpt(this)">Ages 5–9</div>
+          <div class="as-opt" onclick="selectOpt(this)">Under 5 / non-ambulatory</div>
+        </div>
+        <div class="as-nav"><button class="as-prev" onclick="assessPrev()">← BACK</button><button class="as-next" onclick="assessNext()">NEXT →</button></div>
+      </div>
+      <div class="assess-step" data-step="3">
+        <div class="as-num">STEP 03 // HOME TYPE</div>
+        <div class="as-q">What best describes your home?</div>
+        <div class="as-opts">
+          <div class="as-opt" onclick="selectOpt(this)">Single-family, 1 floor</div>
+          <div class="as-opt" onclick="selectOpt(this)">Single-family, 2+ floors</div>
+          <div class="as-opt" onclick="selectOpt(this)">Apartment / condo</div>
+          <div class="as-opt" onclick="selectOpt(this)">Rural / remote property</div>
+        </div>
+        <div class="as-nav"><button class="as-prev" onclick="assessPrev()">← BACK</button><button class="as-next" onclick="assessNext()">NEXT →</button></div>
+      </div>
+      <div class="assess-step" data-step="4">
+        <div class="as-num">STEP 04 // CURRENT SECURITY</div>
+        <div class="as-q">What security do you have today?</div>
+        <div class="as-opts">
+          <div class="as-opt" onclick="selectOpt(this)">None / basic locks only</div>
+          <div class="as-opt" onclick="selectOpt(this)">Alarm system (ADT, Ring, etc.)</div>
+          <div class="as-opt" onclick="selectOpt(this)">Cameras + alarm</div>
+          <div class="as-opt" onclick="selectOpt(this)">Firearms in the home</div>
+        </div>
+        <div class="as-nav"><button class="as-prev" onclick="assessPrev()">← BACK</button><button class="as-next" onclick="assessNext()">NEXT →</button></div>
+      </div>
+      <div class="assess-step" data-step="5">
+        <div class="as-num">STEP 05 // BIGGEST CONCERN</div>
+        <div class="as-q">What keeps you up at night?</div>
+        <div class="as-opts">
+          <div class="as-opt" onclick="selectOpt(this)">Home invasion / break-in</div>
+          <div class="as-opt" onclick="selectOpt(this)">House fire</div>
+          <div class="as-opt" onclick="selectOpt(this)">Medical emergency</div>
+          <div class="as-opt" onclick="selectOpt(this)">All of the above</div>
+        </div>
+        <div class="as-nav"><button class="as-prev" onclick="assessPrev()">← BACK</button><button class="as-next" onclick="assessNext()">NEXT →</button></div>
+      </div>
+      <div class="assess-step" data-step="6">
+        <div class="as-num">STEP 06 // READINESS</div>
+        <div class="as-q">Has your family ever drilled an emergency?</div>
+        <div class="as-opts">
+          <div class="as-opt" onclick="selectOpt(this)">Never — we have no plan</div>
+          <div class="as-opt" onclick="selectOpt(this)">We've talked about it loosely</div>
+          <div class="as-opt" onclick="selectOpt(this)">We have a basic plan, no drills</div>
+          <div class="as-opt" onclick="selectOpt(this)">We drill regularly</div>
+        </div>
+        <div class="as-nav"><button class="as-prev" onclick="assessPrev()">← BACK</button><button class="as-next" onclick="assessFinish()">SEE RESULTS →</button></div>
+      </div>
+    </div>
+
+    <div class="assess-result" id="assess-result">
+      <div style="font-size:2rem;margin-bottom:14px">🎯</div>
+      <div class="ar-title">ASSESSMENT<br>COMPLETE</div>
+      <div class="ar-body">Based on your answers, here's your recommended Safe Steps starting point.</div>
+      <div class="ar-rec"><div class="ar-rec-label">RECOMMENDED TIER</div><div class="ar-rec-val">TIER 2 — THE WALKTHROUGH</div></div>
+      <div class="ar-rec"><div class="ar-rec-label">PRIMARY RISK SCENARIOS</div><div class="ar-rec-val">FIRE · INVASION · MEDICAL</div></div>
+      <div class="ar-rec"><div class="ar-rec-label">READINESS SCORE</div><div class="ar-rec-val">LOW — IMMEDIATE ACTION ADVISED</div></div>
+      <a class="dw-btnp" onclick="nav('trial')" style="margin-top:22px">CLAIM FREE TRIAL PLAN</a>
+      <a class="dw-btns" onclick="nav('services')">VIEW FULL PRICING</a>
+    </div>
+
+    <div class="dw-footer">
+      <div class="dw-footer-brand">⬡ SAFE STEPS</div>
+      <div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TRIAL FAMILY ══════════ -->
+<div class="page" id="page-trial">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow">PILOT PROGRAM</div>
+      <h1>BECOME A<br>TRIAL FAMILY</h1>
+      <div class="dw-body">Receive a full Safe Steps Tier 2 plan at no cost in exchange for honest, detailed feedback. Accepting families in Charlottesville, VA now.</div>
+    </div>
+
+    <div class="trial-spots">
+      <div class="ts-num">4</div>
+      <div class="ts-txt"><strong>SPOTS REMAINING</strong><br>We are accepting 4 households in the Charlottesville metro area for our founding pilot cohort.</div>
+    </div>
+
+    <div class="dw-sec darker" style="background:rgba(28,18,8,.04)">
+      <div class="dw-eyebrow">WHAT YOU GET</div>
+      <div style="margin-top:12px">
+        <div class="tw-item"><div class="tw-icon">📋</div><div><div class="tw-name">Custom Emergency Plan</div><div class="tw-desc">A full Tier 2 Safe Steps plan covering fire, home invasion, and medical emergencies — written specifically for your home.</div></div></div>
+        <div class="tw-item"><div class="tw-icon">🏠</div><div><div class="tw-name">In-Home Walkthrough</div><div class="tw-desc">A veteran advisor visits your home, walks every room, and customizes every escape route and defensive position to your actual layout.</div></div></div>
+        <div class="tw-item"><div class="tw-icon">🗺️</div><div><div class="tw-name">Annotated Floor Plans</div><div class="tw-desc">Marked-up floor plans showing defensive positions, escape routes, and staging areas.</div></div></div>
+        <div class="tw-item"><div class="tw-icon">📄</div><div><div class="tw-name">Quick-Reference Sheets</div><div class="tw-desc">One-page cheat sheets for every scenario — fridge-ready, laminated, built for stress.</div></div></div>
+      </div>
+    </div>
+
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT WE ASK</div>
+      <div style="margin-top:12px">
+        <div class="ask-item"><div class="ask-label">TIME COMMITMENT</div><div class="ask-val">3–4 hours total across two sessions</div></div>
+        <div class="ask-item"><div class="ask-label">LOCATION</div><div class="ask-val">Charlottesville, VA metro area</div></div>
+        <div class="ask-item"><div class="ask-label">FEEDBACK</div><div class="ask-val">30-min debrief call + written survey</div></div>
+        <div class="ask-item"><div class="ask-label">COST</div><div class="ask-val">Free — $0 out of pocket</div></div>
+      </div>
+    </div>
+
+    <div class="dw-sec">
+      <div class="dw-eyebrow">APPLY NOW</div>
+      <div style="margin-top:16px;max-width:520px">
+        <div class="tf-field"><label class="tf-label">FULL NAME</label><input class="tf-input" type="text" placeholder="Jane Smith"></div>
+        <div class="tf-field"><label class="tf-label">EMAIL ADDRESS</label><input class="tf-input" type="email" placeholder="jane@email.com"></div>
+        <div class="tf-field"><label class="tf-label">ZIP CODE</label><input class="tf-input" type="text" placeholder="22902"></div>
+        <div class="tf-field"><label class="tf-label">HOUSEHOLD SIZE</label><input class="tf-input" type="text" placeholder="e.g. 2 adults, 2 kids"></div>
+        <a class="dw-btnp" style="margin-top:8px;display:block;width:100%;text-align:center">SUBMIT APPLICATION</a>
+      </div>
+    </div>
+
+    <div class="dw-footer">
+      <div class="dw-footer-brand">⬡ SAFE STEPS</div>
+      <div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FREE TOOLS ══════════ -->
+<div class="page" id="page-tools">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow">FREE RESOURCES</div>
+      <h1>FREE TOOLS.<br>NO PLAN REQUIRED.</h1>
+      <div class="dw-body">Four tools built for families who aren't ready to buy. Start here. Use them forever.</div>
+    </div>
+
+    <div class="dw-sec">
+      <div class="tool-grid">
+        <div class="tool-card">
+          <div class="tool-head"><div class="tool-icon">⏱️</div><div><div class="tool-free">FREE</div><div class="tool-label">TOOL 01 // CALCULATOR</div><div class="tool-name">Response Time Calculator</div></div></div>
+          <div class="tool-body"><div class="tool-desc">Enter your zip code to see real local response times for fire, EMS, and police — and how many minutes you're on your own before help arrives.</div><a class="tool-btn">OPEN CALCULATOR →</a></div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-head"><div class="tool-icon">🧲</div><div><div class="tool-free">FREE</div><div class="tool-label">TOOL 02 // PRINTABLE</div><div class="tool-name">Family Fridge Sheet</div></div></div>
+          <div class="tool-body"><div class="tool-desc">A printable one-page reference card for your fridge — emergency contacts, rally point, 911 script, and key family health info. Laminate it. Live by it.</div><a class="tool-btn">DOWNLOAD PDF →</a></div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-head"><div class="tool-icon">🚗</div><div><div class="tool-free">FREE</div><div class="tool-label">TOOL 03 // CARD</div><div class="tool-name">Car Accident Response Card</div></div></div>
+          <div class="tool-body"><div class="tool-desc">A wallet-sized card that walks you step by step through the first five minutes of a car accident — what to do, say, photograph, and never admit.</div><a class="tool-btn">DOWNLOAD CARD →</a></div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-head"><div class="tool-icon">🏠</div><div><div class="tool-free">FREE</div><div class="tool-label">TOOL 04 // CHECKLIST</div><div class="tool-name">Home Hardening Checklist</div></div></div>
+          <div class="tool-body"><div class="tool-desc">25-point inspection checklist covering doors, windows, locks, lighting, and alarms. Know exactly where your home is weak — before someone else does.</div><a class="tool-btn">DOWNLOAD CHECKLIST →</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dw-sec" style="background:rgba(28,18,8,.04)">
+      <div class="dw-eyebrow">READY FOR MORE?</div>
+      <div class="dw-title" style="font-size:1.4rem;margin-bottom:12px">GET A FULL PLAN</div>
+      <div class="dw-body" style="margin-bottom:0">Free tools are the start. A Safe Steps plan is the system.</div>
+      <a class="dw-btnp" onclick="nav('assessment')">TAKE ASSESSMENT</a>
+      <a class="dw-btns" onclick="nav('trial')">APPLY FOR FREE TRIAL</a>
+    </div>
+
+    <div class="dw-footer">
+      <div class="dw-footer-brand">⬡ SAFE STEPS</div>
+      <div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PORTAL LOGIN ══════════ -->
+<div class="page" id="page-login">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow">FAMILY PORTAL</div>
+      <h1>PORTAL<br>LOG IN</h1>
+      <div class="dw-body">Your plans, drills, alerts, and AAR logs — all in one place.</div>
+    </div>
+
+    <div class="login-wrap" style="max-width:480px">
+      <div class="login-avatar">🛡️</div>
+      <div class="login-field"><label class="lf-label">EMAIL ADDRESS</label><input class="lf-input" type="email" placeholder="jane@email.com"></div>
+      <div class="login-field"><label class="lf-label">PASSWORD</label><input class="lf-input" type="password" placeholder="••••••••"></div>
+      <a class="dw-btnp" style="margin-top:6px;display:block;text-align:center">SIGN IN</a>
+      <div class="login-divider"><span>OR</span></div>
+      <a class="dw-btns" style="margin-top:0;display:block;text-align:center">REQUEST ACCESS LINK</a>
+    </div>
+
+    <div class="dw-sec">
+      <div class="dw-eyebrow">PORTAL FEATURES</div>
+      <div style="margin-top:14px;max-width:640px">
+        <div class="portal-feature"><div class="pf-dot"></div><div><div class="pf-name">Emergency Plans</div><div class="pf-desc">Access all plan versions, floor plans, and quick-reference sheets for your home.</div></div></div>
+        <div class="portal-feature"><div class="pf-dot"></div><div><div class="pf-name">Rehearsal Scheduler</div><div class="pf-desc">Set drill reminders, track completion, and log notes from each run.</div></div></div>
+        <div class="portal-feature"><div class="pf-dot"></div><div><div class="pf-name">After-Action Reviews</div><div class="pf-desc">Record what worked, what didn't, and one improvement per drill — building over time.</div></div></div>
+        <div class="portal-feature"><div class="pf-dot"></div><div><div class="pf-name">Equipment Alerts</div><div class="pf-desc">Automatic reminders when smoke alarms, extinguishers, or medical gear need attention.</div></div></div>
+        <div class="portal-feature"><div class="pf-dot"></div><div><div class="pf-name">Scenario Library</div><div class="pf-desc">Curated drill variables and scenario prompts to keep rehearsals from going stale.</div></div></div>
+      </div>
+      <div style="margin-top:20px;font-family:'Special Elite',monospace;font-size:.72rem;color:rgba(28,18,8,.62)">Don't have an account?&nbsp;&nbsp;<span style="color:#1C1208;font-weight:bold;cursor:pointer" onclick="nav('trial')">Apply for the pilot program →</span></div>
+    </div>
+
+    <div class="dw-footer">
+      <div class="dw-footer-brand">⬡ SAFE STEPS</div>
+      <div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION ──
+function nav(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  window.scrollTo(0,0);
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  const nl=document.getElementById('nl-'+page);
+  if(nl)nl.classList.add('active');
+  if(page==='home')setTimeout(runAnim,80);
+}
+
+// ── MOBILE MENU ──
+function toggleMenu(){
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+// ── TYPING ANIMATION ──
+function typeEl(el,text,speed,done){
+  el.innerHTML='';let i=0;
+  const cur=document.createElement('span');cur.className='cur';el.appendChild(cur);
+  const iv=setInterval(()=>{
+    if(i<text.length){el.insertBefore(document.createTextNode(text[i++]),cur);}
+    else{clearInterval(iv);setTimeout(()=>cur.remove(),1400);if(done)done();}
+  },speed);
+}
+
+// ── COUNT UP ──
+function countUp(el,target,suffix,dur){
+  const t0=Date.now();
+  const iv=setInterval(()=>{
+    const p=Math.min((Date.now()-t0)/dur,1);
+    const e=1-Math.pow(1-p,3);
+    el.innerHTML=Math.round(e*target)+'<span class="u">'+suffix+'</span>';
+    if(p>=1)clearInterval(iv);
+  },16);
+}
+
+// ── HOME ANIMATIONS ──
+function runAnim(){
+  const h=document.getElementById('h1-type');
+  if(h)typeEl(h,"THE NIGHT YOU NEED A PLAN ISN'T THE NIGHT TO MAKE ONE",48);
+  [{id:'iv1',v:3,s:' MIN',d:150},{id:'iv2',v:10,s:' MIN',d:320},{id:'iv3',v:11,s:' MIN',d:490},{id:'iv4',v:73,s:' %',d:660}]
+  .forEach(({id,v,s,d})=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.innerHTML='0<span class="u">'+s+'</span>';
+    setTimeout(()=>countUp(el,v,s,800),d);
+  });
+}
+runAnim();
+
+// ── ASSESSMENT ──
+let assessStep=1;
+const totalSteps=6;
+function updateProgress(){
+  const pct=Math.round((assessStep/totalSteps)*100);
+  document.getElementById('ap-cur').textContent=assessStep;
+  document.getElementById('ap-pct').textContent=pct+'%';
+  document.getElementById('ap-fill').style.width=pct+'%';
+}
+function selectOpt(el){
+  el.closest('.as-opts').querySelectorAll('.as-opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function assessNext(){
+  if(assessStep<totalSteps){
+    document.querySelector('.assess-step[data-step="'+assessStep+'"]').classList.remove('active');
+    assessStep++;
+    document.querySelector('.assess-step[data-step="'+assessStep+'"]').classList.add('active');
+    updateProgress();
+  }
+}
+function assessPrev(){
+  if(assessStep>1){
+    document.querySelector('.assess-step[data-step="'+assessStep+'"]').classList.remove('active');
+    assessStep--;
+    document.querySelector('.assess-step[data-step="'+assessStep+'"]').classList.add('active');
+    updateProgress();
+  }
+}
+function assessFinish(){
+  document.getElementById('assess-steps').style.display='none';
+  document.getElementById('assess-result').style.display='block';
+  document.getElementById('ap-cur').textContent='6';
+  document.getElementById('ap-pct').textContent='100%';
+  document.getElementById('ap-fill').style.width='100%';
+}
+</script>
+</body>
+</html>
