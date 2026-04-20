@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, shrink-to-fit=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Safe Steps Plans LLC — Emergency Preparedness</title>
 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden;max-width:100vw}
+img,video,svg,table{max-width:100%;height:auto}
 
 :root{
   --tan:#C3A97D;
@@ -20,11 +22,13 @@ body{
   background:#C3A97D;
   color:#1C1208;
   overflow-x:hidden;
+  max-width:100vw;
 }
 
 /* ── PAGES ── */
-.page{display:none}
+.page{display:none;overflow-x:hidden;max-width:100vw}
 .page.active{display:block}
+.dw{overflow-x:hidden}
 
 /* ── NAV ── */
 .site-nav{
@@ -351,79 +355,43 @@ body{
 
 
 /* ══════════════════════════
-   SERVICES PAGE v3
+   SERVICES PAGE v5 — GRAPHIC
 ══════════════════════════ */
-.sv3-scenarios{border:2px solid #1C1208;margin-bottom:12px}
-.sv3-scenario{display:flex;justify-content:space-between;align-items:flex-start;padding:18px 16px;border-bottom:1px solid rgba(28,18,8,.12)}
-.sv3-scenario:last-child{border-bottom:none}
-.sv3-sc-left{flex:1;margin-right:20px}
-.sv3-sc-meta{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.sv3-sc-code{font-family:Arial,sans-serif;font-size:.48rem;letter-spacing:.14em;color:rgba(28,18,8,.38);border:1px solid rgba(28,18,8,.22);padding:2px 7px;flex-shrink:0}
-.sv3-sc-name{font-family:Arial,sans-serif;font-size:.85rem;font-weight:bold;letter-spacing:.06em;color:#1C1208}
-.sv3-sc-list{list-style:none;padding:0;margin:0}
-.sv3-sc-list li{font-family:Arial,sans-serif;font-size:.68rem;color:rgba(28,18,8,.65);padding:3px 0;border-bottom:1px solid rgba(28,18,8,.06);line-height:1.45;display:flex;gap:8px}
-.sv3-sc-list li::before{content:'--';color:rgba(28,18,8,.22);flex-shrink:0;font-size:.55rem}
-.sv3-sc-list li:last-child{border-bottom:none}
-.sv3-sc-right{flex-shrink:0;text-align:right;padding-top:2px}
-.sv3-sc-price{font-family:Arial,sans-serif;font-size:1.7rem;line-height:1;color:#1C1208}
-.sv3-bundle{border:2px solid #1C1208;margin-bottom:10px}
-.sv3-bundle-hdr{font-family:Arial,sans-serif;font-size:.55rem;font-weight:bold;letter-spacing:.14em;color:#C3A97D;background:#1C1208;padding:8px 16px}
-.sv3-bundle-row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(28,18,8,.1)}
-.sv3-bundle-row:last-child{border-bottom:none}
-.sv3-bundle-name{font-family:Arial,sans-serif;font-size:.88rem;font-weight:bold;color:#1C1208;letter-spacing:.04em;margin-bottom:2px}
-.sv3-bundle-sub{font-family:Arial,sans-serif;font-size:.62rem;color:rgba(28,18,8,.5)}
-.sv3-bundle-pricing{text-align:right}
-.sv3-bundle-was{font-family:Arial,sans-serif;font-size:.65rem;color:rgba(28,18,8,.38);text-decoration:line-through}
-.sv3-bundle-now{font-family:Arial,sans-serif;font-size:1.65rem;line-height:1;color:#1C1208}
-.sv3-addon{display:flex;justify-content:space-between;align-items:center;gap:16px;border-left:4px solid #1C1208;background:rgba(28,18,8,.22);padding:16px}
-.sv3-addon-label{font-family:Arial,sans-serif;font-size:.48rem;letter-spacing:.12em;color:rgba(28,18,8,.5);margin-bottom:4px}
-.sv3-addon-name{font-family:Arial,sans-serif;font-size:.92rem;font-weight:bold;color:#1C1208;letter-spacing:.04em;margin-bottom:4px}
-.sv3-addon-desc{font-family:Arial,sans-serif;font-size:.69rem;color:rgba(28,18,8,.62);line-height:1.5}
-.sv3-addon-price{font-family:Arial,sans-serif;font-size:2.2rem;line-height:1;color:#1C1208;white-space:nowrap;flex-shrink:0}
-.sv3-pkgs{display:flex;flex-direction:column}
-.sv3-pkg{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(28,18,8,.09)}
-.sv3-pkg:last-child{border-bottom:none;padding-bottom:0}
-.sv3-pkg-featured{background:rgba(28,18,8,.04);padding:13px 14px;margin:0 -14px;border-top:2px solid rgba(28,18,8,.18);border-bottom:2px solid rgba(28,18,8,.18)}
-.sv3-pkg-code{font-family:Arial,sans-serif;width:28px;height:28px;border:1.5px solid rgba(28,18,8,.35);color:#1C1208;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:bold;flex-shrink:0}
-.sv3-pkg-code-featured{background:#1C1208;color:#C3A97D;border-color:#1C1208}
-.sv3-pkg-name{font-family:Arial,sans-serif;font-size:.85rem;font-weight:bold;color:#1C1208;margin-bottom:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.sv3-pkg-scenarios{font-family:Arial,sans-serif;font-size:.65rem;color:rgba(28,18,8,.5)}
-.sv3-pkg-price{font-family:Arial,sans-serif;font-size:1rem;font-weight:bold;color:#1C1208;white-space:nowrap;flex-shrink:0;margin-left:auto}
-.sv3-badge{font-size:.44rem;font-weight:bold;letter-spacing:.08em;background:#6e1008;color:#C3A97D;padding:2px 6px}
+.sv5-banner{background:#1C1208;padding:20px 20px 18px}
+.sv5-banner-eyebrow{font-family:Arial,sans-serif;font-size:.5rem;letter-spacing:.2em;color:rgba(195,169,125,.45);margin-bottom:6px}
+.sv5-banner-title{font-family:Arial,sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);letter-spacing:.04em;color:#C3A97D;line-height:1;margin-bottom:4px}
+.sv5-banner-sub{font-family:Arial,sans-serif;font-size:.74rem;color:rgba(195,169,125,.5);line-height:1.5}
 
-/* OLD sv2 stubs (kept for compatibility) */
-/* Scenario cards — dark on tan */
-.sv2-cards{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:16px;border:2px solid #1C1208}
-.sv2-card{background:#1C1208;padding:16px 14px;display:flex;flex-direction:column}
-.sv2-card-header{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(195,169,125,.2)}
-.sv2-num{font-family:Arial,sans-serif;font-size:.55rem;font-weight:bold;letter-spacing:.14em;color:rgba(195,169,125,.4);flex-shrink:0}
-.sv2-label{font-family:Arial,sans-serif;font-size:.78rem;font-weight:bold;color:#C3A97D;letter-spacing:.04em;flex:1}
-.sv2-price{font-family:Arial,sans-serif;font-size:1.1rem;font-weight:bold;color:#C3A97D;white-space:nowrap}
-.sv2-list{list-style:none;padding:0;margin:0;flex:1}
-.sv2-list li{font-family:Arial,sans-serif;font-size:.7rem;color:rgba(195,169,125,.7);padding:5px 0;border-bottom:1px solid rgba(195,169,125,.08);line-height:1.4}
-.sv2-list li::before{content:'— ';color:rgba(195,169,125,.3)}
-.sv2-list li:last-child{border-bottom:none}
+.sv5-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:rgba(28,18,8,.18)}
+@media(max-width:580px){.sv5-grid{grid-template-columns:1fr}}
 
-/* Bundle */
-.sv2-bundle{background:#1C1208;margin-bottom:12px}
-.sv2-bundle-hdr{font-family:Arial,sans-serif;font-size:.58rem;font-weight:bold;letter-spacing:.14em;color:#1C1208;background:#C3A97D;padding:7px 16px}
-.sv2-bundle-row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(195,169,125,.1)}
-.sv2-bundle-name{font-family:Arial,sans-serif;font-size:.88rem;font-weight:bold;color:#C3A97D;margin-bottom:2px}
-.sv2-bundle-sub{font-family:Arial,sans-serif;font-size:.65rem;color:rgba(195,169,125,.5)}
-.sv2-bundle-price{font-family:Arial,sans-serif;font-size:1.5rem;font-weight:bold;color:#C3A97D;line-height:1}
+.sv5-card{position:relative;background:#C3A97D;padding:18px 16px 20px;overflow:hidden;display:flex;flex-direction:column;min-height:280px}
+.sv5-ghost{position:absolute;top:-8px;right:-4px;font-family:Arial,sans-serif;font-size:9rem;font-weight:bold;line-height:1;color:rgba(28,18,8,.07);pointer-events:none;user-select:none;letter-spacing:-.02em}
+.sv5-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;position:relative;z-index:1}
+.sv5-code{font-family:Arial,sans-serif;font-size:.44rem;letter-spacing:.18em;color:rgba(28,18,8,.4);border:1px solid rgba(28,18,8,.25);padding:3px 8px}
+.sv5-price-badge{background:#1C1208;color:#C3A97D;font-family:Arial,sans-serif;font-size:1.4rem;line-height:1;padding:6px 12px;white-space:nowrap}
+.sv5-name{font-family:Arial,sans-serif;font-size:1.35rem;font-weight:bold;letter-spacing:.06em;color:#1C1208;line-height:1.1;margin-bottom:14px;position:relative;z-index:1;padding-bottom:14px;border-bottom:2px solid rgba(28,18,8,.2)}
+.sv5-list{list-style:none;padding:0;margin:0;position:relative;z-index:1;flex:1}
+.sv5-list li{font-family:Arial,sans-serif;font-size:.69rem;color:rgba(28,18,8,.78);padding:5px 0;border-bottom:1px solid rgba(28,18,8,.1);line-height:1.5;display:flex;gap:8px;align-items:flex-start}
+.sv5-list li::before{content:'//';color:rgba(28,18,8,.32);flex-shrink:0;font-size:.5rem;padding-top:3px;font-weight:bold;letter-spacing:.05em}
+.sv5-list li:last-child{border-bottom:none}
 
-/* Add-on */
-.sv2-addon{background:#1C1208;border-left:3px solid #C3A97D;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sv5-addon{background:#1C1208;padding:28px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:4px solid #C3A97D;border-bottom:4px solid #C3A97D}
+.sv5-addon-left{}
+.sv5-addon-eyebrow{font-family:Arial,sans-serif;font-size:.46rem;letter-spacing:.2em;color:rgba(195,169,125,.4);margin-bottom:6px}
+.sv5-addon-name{font-family:Arial,sans-serif;font-size:1.3rem;font-weight:bold;letter-spacing:.07em;color:#C3A97D;line-height:1;margin-bottom:8px}
+.sv5-addon-desc{font-family:Arial,sans-serif;font-size:.71rem;color:rgba(195,169,125,.6);line-height:1.6;max-width:300px}
+.sv5-addon-price{font-family:Arial,sans-serif;font-size:3.2rem;line-height:1;color:#C3A97D;white-space:nowrap;flex-shrink:0;letter-spacing:-.01em}
 
-/* Packages */
-.sv2-pkgs{display:flex;flex-direction:column}
-.sv2-pkg{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid rgba(28,18,8,.12)}
-.sv2-pkg-featured{background:rgba(28,18,8,.06);margin:0 -20px;padding:12px 20px;border-top:1px solid rgba(28,18,8,.15);border-bottom:1px solid rgba(28,18,8,.15)}
-.sv2-pkg-letter{width:30px;height:30px;background:#1C1208;color:#C3A97D;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;font-size:.75rem;font-weight:bold;flex-shrink:0}
-.sv2-pkg-letter-featured{background:#1C1208;color:#C3A97D}
-.sv2-pkg-name{font-family:Arial,sans-serif;font-size:.85rem;font-weight:bold;color:#1C1208;margin-bottom:3px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.sv2-pkg-scenarios{font-family:Arial,sans-serif;font-size:.68rem;color:rgba(28,18,8,.55)}
-.sv2-badge{font-size:.46rem;font-weight:bold;letter-spacing:.08em;background:#1C1208;color:#C3A97D;padding:2px 6px}
+.sv5-pkgs{padding:0 20px 28px}
+.sv5-pkg{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid rgba(28,18,8,.12)}
+.sv5-pkg:last-child{border-bottom:none}
+.sv5-pkg-code{font-family:Arial,sans-serif;font-size:.46rem;letter-spacing:.14em;color:rgba(28,18,8,.38);background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:4px 8px;flex-shrink:0;min-width:52px;text-align:center}
+.sv5-pkg-info{flex:1}
+.sv5-pkg-name{font-family:Arial,sans-serif;font-size:.9rem;font-weight:bold;color:#1C1208;letter-spacing:.04em;margin-bottom:2px}
+.sv5-pkg-scenarios{font-family:Arial,sans-serif;font-size:.63rem;color:rgba(28,18,8,.5);line-height:1.45}
+.sv5-pkg-price{font-family:Arial,sans-serif;font-size:1.2rem;font-weight:bold;color:#1C1208;white-space:nowrap;flex-shrink:0;margin-left:auto}
+.sv5-pkg-note{font-family:Arial,sans-serif;font-size:.62rem;color:rgba(28,18,8,.4);padding-top:10px;border-top:1px solid rgba(28,18,8,.09);margin-top:4px}
 .sv2-pkg-price{font-family:Arial,sans-serif;font-size:1rem;font-weight:bold;color:#1C1208;white-space:nowrap;flex-shrink:0}
 .sv2-pkg-price-featured{color:#1C1208}
 
@@ -723,164 +691,140 @@ body{
     <div class="dw-hero">
       <div class="dw-eyebrow">SERVICES &amp; PRICING</div>
       <h1>BUILD YOUR<br>PLAN.</h1>
-      <div class="dw-body">Pick the scenarios that match your risk. Every plan is custom-built for your home — spiral-bound, laminated quick sheets included. Add in-person training any time.</div>
+      <div class="dw-body">Custom-built for your home. Every plan is scenario-specific, spiral-bound, and comes with laminated quick sheets. Add in-person training any time.</div>
     </div>
 
-    <!-- SCENARIO SELECTOR -->
-    <div class="dw-sec">
-      <div class="dw-eyebrow">01 // EMERGENCY PLANS</div>
-      <div class="dw-title" style="font-size:1.5rem;margin-bottom:4px">CHOOSE YOUR SCENARIOS</div>
-      <div style="font-family:Arial,sans-serif;font-size:.78rem;color:rgba(28,18,8,.6);margin-bottom:20px">Each scenario is $500. Add in-person training to any plan for +$149.</div>
-
-      <div class="sv3-scenarios">
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">OBJ-01</span><span class="sv3-sc-name">HOUSE FIRE</span></div>
-            <ul class="sv3-sc-list">
-              <li>Floor-plan escape routes</li>
-              <li>Role assignments per family member</li>
-              <li>Rally point + 911 script</li>
-              <li>Smoke protocol &amp; rehearsal schedule</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$500</div></div>
-        </div>
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">OBJ-02</span><span class="sv3-sc-name">HOME INVASION</span></div>
-            <ul class="sv3-sc-list">
-              <li>Defensive positions per room</li>
-              <li>Lockdown &amp; shelter procedure</li>
-              <li>Family communication protocol</li>
-              <li>Law enforcement interaction guidance</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$500</div></div>
-        </div>
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">OBJ-03</span><span class="sv3-sc-name">MEDICAL EMERGENCY</span></div>
-            <ul class="sv3-sc-list">
-              <li>First-response role assignments</li>
-              <li>911 guidance &amp; AED protocol</li>
-              <li>Laminated medical info quick sheet</li>
-              <li>Critical allergy &amp; medication log</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$500</div></div>
-        </div>
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">OBJ-04</span><span class="sv3-sc-name">WEATHER EVENTS</span></div>
-            <ul class="sv3-sc-list">
-              <li>Shelter-in-place procedures</li>
-              <li>Evacuation routes &amp; supply checklist</li>
-              <li>Family communication tree</li>
-              <li>Extended outage action plan</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$500</div></div>
-        </div>
-      </div>
-
-      <!-- ADD-ON -->
-      <div class="sv3-addon">
-        <div style="flex:1">
-          <div class="sv3-addon-label">OPTIONAL ADD-ON</div>
-          <div class="sv3-addon-name">IN-PERSON TRAINING</div>
-          <div class="sv3-addon-desc">A veteran advisor visits your home, walks every route, and runs live scenario drills with your family.</div>
-        </div>
-        <div class="sv3-addon-price">+$149</div>
-      </div>
+    <!-- SCENARIOS BANNER -->
+    <div class="sv5-banner">
+      <div class="sv5-banner-eyebrow">01 // EMERGENCY PLANS</div>
+      <div class="sv5-banner-title">CHOOSE YOUR<br>SCENARIOS</div>
+      <div class="sv5-banner-sub">Each scenario $500 — designed around your home, your layout, your family.</div>
     </div>
 
-    <!-- LIFESTYLE PACKAGES -->
-    <div class="dw-sec">
-      <div class="dw-eyebrow">02 // LIFESTYLE PACKAGES</div>
-      <div class="dw-title" style="font-size:1.5rem;margin-bottom:4px">BUILT FOR YOUR<br>MOMENT IN LIFE</div>
-      <div style="font-family:Arial,sans-serif;font-size:.78rem;color:rgba(28,18,8,.6);margin-bottom:20px">Pre-built bundles matched to your current risk profile. Fully customizable.</div>
+    <!-- 2x2 SCENARIO CARDS -->
+    <div class="sv5-grid">
 
-      <div class="sv3-scenarios">
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">PKG-A</span><span class="sv3-sc-name">NEW DRIVER</span></div>
-            <ul class="sv3-sc-list">
-              <li>Car Accident Response</li>
-              <li>Medical Emergency</li>
-              <li>Weather Events</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$175</div></div>
+      <div class="sv5-card">
+        <div class="sv5-ghost">01</div>
+        <div class="sv5-card-top">
+          <div class="sv5-code">OBJ-01</div>
+          <div class="sv5-price-badge">$500</div>
         </div>
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">PKG-B</span><span class="sv3-sc-name">NEW HOUSE</span></div>
-            <ul class="sv3-sc-list">
-              <li>House Fire</li>
-              <li>Home Invasion</li>
-              <li>Medical Emergency</li>
-              <li>Weather Events</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$297</div></div>
-        </div>
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">PKG-C</span><span class="sv3-sc-name">ELDERLY PARENTS</span></div>
-            <ul class="sv3-sc-list">
-              <li>Medical Emergency</li>
-              <li>House Fire</li>
-              <li>Weather Events</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$175</div></div>
-        </div>
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">PKG-D</span><span class="sv3-sc-name">FIRST-TIME PARENTS</span></div>
-            <ul class="sv3-sc-list">
-              <li>Medical Emergency</li>
-              <li>House Fire</li>
-              <li>Home Invasion</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$175</div></div>
-        </div>
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">PKG-E</span><span class="sv3-sc-name">OFF TO COLLEGE</span></div>
-            <ul class="sv3-sc-list">
-              <li>House Fire</li>
-              <li>Home Invasion</li>
-              <li>Medical Emergency</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$175</div></div>
-        </div>
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">PKG-F</span><span class="sv3-sc-name">SOLO TRAVELER</span></div>
-            <ul class="sv3-sc-list">
-              <li>Medical Emergency</li>
-              <li>Weather Events</li>
-              <li>Home Invasion</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$175</div></div>
-        </div>
-        <div class="sv3-scenario">
-          <div class="sv3-sc-left">
-            <div class="sv3-sc-meta"><span class="sv3-sc-code">PKG-G</span><span class="sv3-sc-name">SOLO FEMALE RUNNER</span></div>
-            <ul class="sv3-sc-list">
-              <li>Personal Safety</li>
-              <li>Medical Emergency</li>
-              <li>Communication Protocol</li>
-            </ul>
-          </div>
-          <div class="sv3-sc-right"><div class="sv3-sc-price">$175</div></div>
-        </div>
+        <div class="sv5-name">HOUSE<br>FIRE</div>
+        <ul class="sv5-list">
+          <li>Hand-drawn floor plan with color-coded escape routes for every room</li>
+          <li>Named role for every person in the home &mdash; adults and children</li>
+          <li>Laminated rally point card with phonetic 911 script</li>
+          <li>Window egress assessment and secondary exit plan</li>
+          <li>3-stage smoke response protocol with timed drill schedule</li>
+        </ul>
       </div>
-      <div style="font-family:Arial,sans-serif;font-size:.68rem;color:rgba(28,18,8,.45);margin-top:14px;padding-top:12px;border-top:1px solid rgba(28,18,8,.1)">All packages fully customizable. In-person training available as add-on for +$149.</div>
+
+      <div class="sv5-card">
+        <div class="sv5-ghost">02</div>
+        <div class="sv5-card-top">
+          <div class="sv5-code">OBJ-02</div>
+          <div class="sv5-price-badge">$500</div>
+        </div>
+        <div class="sv5-name">HOME<br>INVASION</div>
+        <ul class="sv5-list">
+          <li>Room-by-room defensive position map specific to your layout</li>
+          <li>Lockdown sequence with designated safe room and barricade protocol</li>
+          <li>Family communication plan with household code words</li>
+          <li>Entry-point vulnerability assessment &mdash; doors, windows, sight lines</li>
+          <li>Law enforcement arrival guidance: what to say, where to be, hands</li>
+        </ul>
+      </div>
+
+      <div class="sv5-card">
+        <div class="sv5-ghost">03</div>
+        <div class="sv5-card-top">
+          <div class="sv5-code">OBJ-03</div>
+          <div class="sv5-price-badge">$500</div>
+        </div>
+        <div class="sv5-name">MEDICAL<br>EMERGENCY</div>
+        <ul class="sv5-list">
+          <li>First-responder role assigned to each household member by name</li>
+          <li>Pre-written 911 script with your address, cross-street, and access notes</li>
+          <li>Laminated quick sheet: blood types, allergies, medications, physicians</li>
+          <li>AED location protocol and CPR decision guide</li>
+          <li>Nearest trauma center route card with estimated drive time</li>
+        </ul>
+      </div>
+
+      <div class="sv5-card">
+        <div class="sv5-ghost">04</div>
+        <div class="sv5-card-top">
+          <div class="sv5-code">OBJ-04</div>
+          <div class="sv5-price-badge">$500</div>
+        </div>
+        <div class="sv5-name">WEATHER<br>EVENTS</div>
+        <ul class="sv5-list">
+          <li>Shelter-in-place map with identified safe zones by storm type</li>
+          <li>Tiered evacuation plan: 15-minute, 1-hour, and overnight scenarios</li>
+          <li>Family communication tree with out-of-area contact protocol</li>
+          <li>72-hour supply checklist tailored to your home and family size</li>
+          <li>Extended power outage plan with utility shutoff instructions</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- ADD-ON STRIP -->
+    <div class="sv5-addon">
+      <div class="sv5-addon-left">
+        <div class="sv5-addon-eyebrow">OPTIONAL ADD-ON</div>
+        <div class="sv5-addon-name">IN-PERSON TRAINING</div>
+        <div class="sv5-addon-desc">A veteran advisor visits your home, walks every route, and runs live scenario drills with your family. Builds the muscle memory plans alone can't give you.</div>
+      </div>
+      <div class="sv5-addon-price">+$149</div>
+    </div>
+
+    <!-- PACKAGES BANNER -->
+    <div class="sv5-banner">
+      <div class="sv5-banner-eyebrow">02 // LIFESTYLE PACKAGES</div>
+      <div class="sv5-banner-title">BUILT FOR YOUR<br>MOMENT IN LIFE</div>
+      <div class="sv5-banner-sub">Pre-built bundles matched to your risk profile. Every package fully customizable.</div>
+    </div>
+
+    <!-- PACKAGES LIST -->
+    <div class="sv5-pkgs">
+      <div class="sv5-pkg">
+        <div class="sv5-pkg-code">PKG-A</div>
+        <div class="sv5-pkg-info"><div class="sv5-pkg-name">NEW DRIVER</div><div class="sv5-pkg-scenarios">Car Accident &middot; Medical &middot; Weather</div></div>
+        <div class="sv5-pkg-price">$175</div>
+      </div>
+      <div class="sv5-pkg">
+        <div class="sv5-pkg-code">PKG-B</div>
+        <div class="sv5-pkg-info"><div class="sv5-pkg-name">NEW HOUSE</div><div class="sv5-pkg-scenarios">Fire &middot; Invasion &middot; Medical &middot; Weather</div></div>
+        <div class="sv5-pkg-price">$297</div>
+      </div>
+      <div class="sv5-pkg">
+        <div class="sv5-pkg-code">PKG-C</div>
+        <div class="sv5-pkg-info"><div class="sv5-pkg-name">ELDERLY PARENTS</div><div class="sv5-pkg-scenarios">Medical &middot; Fire &middot; Weather</div></div>
+        <div class="sv5-pkg-price">$175</div>
+      </div>
+      <div class="sv5-pkg">
+        <div class="sv5-pkg-code">PKG-D</div>
+        <div class="sv5-pkg-info"><div class="sv5-pkg-name">FIRST-TIME PARENTS</div><div class="sv5-pkg-scenarios">Medical &middot; Fire &middot; Invasion</div></div>
+        <div class="sv5-pkg-price">$175</div>
+      </div>
+      <div class="sv5-pkg">
+        <div class="sv5-pkg-code">PKG-E</div>
+        <div class="sv5-pkg-info"><div class="sv5-pkg-name">OFF TO COLLEGE</div><div class="sv5-pkg-scenarios">Fire &middot; Invasion &middot; Medical</div></div>
+        <div class="sv5-pkg-price">$175</div>
+      </div>
+      <div class="sv5-pkg">
+        <div class="sv5-pkg-code">PKG-F</div>
+        <div class="sv5-pkg-info"><div class="sv5-pkg-name">SOLO TRAVELER</div><div class="sv5-pkg-scenarios">Medical &middot; Weather &middot; Invasion</div></div>
+        <div class="sv5-pkg-price">$175</div>
+      </div>
+      <div class="sv5-pkg">
+        <div class="sv5-pkg-code">PKG-G</div>
+        <div class="sv5-pkg-info"><div class="sv5-pkg-name">SOLO FEMALE RUNNER</div><div class="sv5-pkg-scenarios">Personal Safety &middot; Medical &middot; Communication</div></div>
+        <div class="sv5-pkg-price">$175</div>
+      </div>
+      <div class="sv5-pkg-note">All packages fully customizable. In-person training available as add-on for +$149.</div>
     </div>
 
     <!-- CTA -->
