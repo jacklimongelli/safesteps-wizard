@@ -366,11 +366,12 @@ body{
 @media(max-width:580px){.sv5-grid{grid-template-columns:1fr}}
 
 .sv5-card{position:relative;background:#C3A97D;padding:18px 16px 20px;overflow:hidden;display:flex;flex-direction:column;min-height:280px}
-.sv5-ghost{position:absolute;top:-8px;right:-4px;font-family:Arial,sans-serif;font-size:9rem;font-weight:bold;line-height:1;color:rgba(28,18,8,.07);pointer-events:none;user-select:none;letter-spacing:-.02em}
-.sv5-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;position:relative;z-index:1}
+.sv5-ghost{position:absolute;top:-8px;right:-4px;font-family:Arial,sans-serif;font-size:6.5rem;font-weight:bold;line-height:1;color:rgba(28,18,8,.07);pointer-events:none;user-select:none;letter-spacing:-.02em}
+.sv5-card-top{display:flex;justify-content:flex-start;align-items:flex-start;margin-bottom:12px;position:relative;z-index:1}
 .sv5-code{font-family:Arial,sans-serif;font-size:.44rem;letter-spacing:.18em;color:rgba(28,18,8,.4);border:1px solid rgba(28,18,8,.25);padding:3px 8px}
-.sv5-price-badge{background:#1C1208;color:#C3A97D;font-family:Arial,sans-serif;font-size:1.4rem;line-height:1;padding:6px 12px;white-space:nowrap}
-.sv5-name{font-family:Arial,sans-serif;font-size:1.35rem;font-weight:bold;letter-spacing:.06em;color:#1C1208;line-height:1.1;margin-bottom:14px;position:relative;z-index:1;padding-bottom:14px;border-bottom:2px solid rgba(28,18,8,.2)}
+.sv5-name-row{display:flex;justify-content:flex-start;align-items:flex-end;margin-bottom:14px;padding-bottom:14px;border-bottom:2px solid rgba(28,18,8,.2);position:relative;z-index:1;gap:12px}
+.sv5-price-badge{background:#1C1208;color:#C3A97D;font-family:Arial,sans-serif;font-size:1.4rem;line-height:1;padding:6px 12px;white-space:nowrap;flex-shrink:0}
+.sv5-name{font-family:Arial,sans-serif;font-size:1.35rem;font-weight:bold;letter-spacing:.06em;color:#1C1208;line-height:1.1;position:relative;z-index:1}
 .sv5-list{list-style:none;padding:0;margin:0;position:relative;z-index:1;flex:1}
 .sv5-list li{font-family:Arial,sans-serif;font-size:.69rem;color:rgba(28,18,8,.78);padding:5px 0;border-bottom:1px solid rgba(28,18,8,.1);line-height:1.5;display:flex;gap:8px;align-items:flex-start}
 .sv5-list li::before{content:'//';color:rgba(28,18,8,.32);flex-shrink:0;font-size:.5rem;padding-top:3px;font-weight:bold;letter-spacing:.05em}
@@ -392,6 +393,7 @@ body{
 .sv5-pkg-scenarios{font-family:Arial,sans-serif;font-size:.63rem;color:rgba(28,18,8,.5);line-height:1.45}
 .sv5-pkg-price{font-family:Arial,sans-serif;font-size:1.2rem;font-weight:bold;color:#1C1208;white-space:nowrap;flex-shrink:0;margin-left:auto}
 .sv5-pkg-note{font-family:Arial,sans-serif;font-size:.62rem;color:rgba(28,18,8,.4);padding-top:10px;border-top:1px solid rgba(28,18,8,.09);margin-top:4px}
+.sv5-card-wide{grid-column:1 / -1}
 .sv2-pkg-price{font-family:Arial,sans-serif;font-size:1rem;font-weight:bold;color:#1C1208;white-space:nowrap;flex-shrink:0}
 .sv2-pkg-price-featured{color:#1C1208}
 
@@ -698,7 +700,7 @@ body{
     <div class="sv5-banner">
       <div class="sv5-banner-eyebrow">01 // EMERGENCY PLANS</div>
       <div class="sv5-banner-title">CHOOSE YOUR<br>SCENARIOS</div>
-      <div class="sv5-banner-sub">Each scenario $500 — designed around your home, your layout, your family.</div>
+      <div class="sv5-banner-sub">Four scenario plans at $500 each. Add in-person training for +$149.</div>
     </div>
 
     <!-- 2x2 SCENARIO CARDS -->
@@ -707,10 +709,12 @@ body{
       <div class="sv5-card">
         <div class="sv5-ghost">01</div>
         <div class="sv5-card-top">
-          <div class="sv5-code">OBJ-01</div>
+          <div class="sv5-code">OPORD-01</div>
+        </div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">HOUSE<br>FIRE</div>
           <div class="sv5-price-badge">$500</div>
         </div>
-        <div class="sv5-name">HOUSE<br>FIRE</div>
         <ul class="sv5-list">
           <li>Hand-drawn floor plan with color-coded escape routes for every room</li>
           <li>Named role for every person in the home &mdash; adults and children</li>
@@ -723,10 +727,12 @@ body{
       <div class="sv5-card">
         <div class="sv5-ghost">02</div>
         <div class="sv5-card-top">
-          <div class="sv5-code">OBJ-02</div>
+          <div class="sv5-code">OPORD-02</div>
+        </div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">HOME<br>INVASION</div>
           <div class="sv5-price-badge">$500</div>
         </div>
-        <div class="sv5-name">HOME<br>INVASION</div>
         <ul class="sv5-list">
           <li>Room-by-room defensive position map specific to your layout</li>
           <li>Lockdown sequence with designated safe room and barricade protocol</li>
@@ -739,10 +745,12 @@ body{
       <div class="sv5-card">
         <div class="sv5-ghost">03</div>
         <div class="sv5-card-top">
-          <div class="sv5-code">OBJ-03</div>
+          <div class="sv5-code">OPORD-03</div>
+        </div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">MEDICAL<br>EMERGENCY</div>
           <div class="sv5-price-badge">$500</div>
         </div>
-        <div class="sv5-name">MEDICAL<br>EMERGENCY</div>
         <ul class="sv5-list">
           <li>First-responder role assigned to each household member by name</li>
           <li>Pre-written 911 script with your address, cross-street, and access notes</li>
@@ -755,10 +763,12 @@ body{
       <div class="sv5-card">
         <div class="sv5-ghost">04</div>
         <div class="sv5-card-top">
-          <div class="sv5-code">OBJ-04</div>
+          <div class="sv5-code">OPORD-04</div>
+        </div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">WEATHER<br>EVENTS</div>
           <div class="sv5-price-badge">$500</div>
         </div>
-        <div class="sv5-name">WEATHER<br>EVENTS</div>
         <ul class="sv5-list">
           <li>Shelter-in-place map with identified safe zones by storm type</li>
           <li>Tiered evacuation plan: 15-minute, 1-hour, and overnight scenarios</li>
@@ -770,15 +780,6 @@ body{
 
     </div>
 
-    <!-- ADD-ON STRIP -->
-    <div class="sv5-addon">
-      <div class="sv5-addon-left">
-        <div class="sv5-addon-eyebrow">OPTIONAL ADD-ON</div>
-        <div class="sv5-addon-name">IN-PERSON TRAINING</div>
-        <div class="sv5-addon-desc">A veteran advisor visits your home, walks every route, and runs live scenario drills with your family. Builds the muscle memory plans alone can't give you.</div>
-      </div>
-      <div class="sv5-addon-price">+$149</div>
-    </div>
 
     <!-- PACKAGES BANNER -->
     <div class="sv5-banner">
