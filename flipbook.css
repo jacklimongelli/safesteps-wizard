@@ -26,13 +26,13 @@
   left: 20px;
 }
 
-/* Spiral: anchored to bottom of top bar, drops 18px into white page area */
+/* Spiral: straddles the boundary between dark bar and white page */
 .flipbook-spiral {
   position: absolute;
-  bottom: -18px;
+  bottom: -6px;
   left: 0;
   right: 0;
-  height: 56px;
+  height: 40px;
   pointer-events: none;
   z-index: 10;
 }
