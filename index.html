@@ -1196,7 +1196,8 @@ body{
 
 <script>
 // ── NAVIGATION ──
-function nav(page){
+function nav(page, pushState){
+  if(pushState !== false) history.pushState({page:page}, '', '#'+page);
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   window.scrollTo(0,0);
@@ -1205,6 +1206,23 @@ function nav(page){
   if(nl)nl.classList.add('active');
   if(page==='home')setTimeout(runAnim,80);
 }
+
+// Handle browser back/forward
+window.addEventListener('popstate', function(e){
+  const page = (e.state && e.state.page) || 'home';
+  nav(page, false);
+});
+
+// On first load, restore page from hash or default to home
+(function(){
+  const hash = window.location.hash.replace('#','');
+  const validPage = hash && document.getElementById('page-'+hash);
+  if(validPage){
+    nav(hash, false);
+  } else {
+    history.replaceState({page:'home'}, '', '#home');
+  }
+})();
 
 // ── MOBILE MENU ──
 function toggleMenu(){
