@@ -1,0 +1,81 @@
+<!-- Safe Steps Plan Flipbook — paste into index.html where needed -->
+<!-- Requires: slides/slide-01.jpg ... slide-38.jpg and spiral.png in same directory -->
+<style>
+.plan-preview-section{padding:36px 20px;}
+.fp-wrap{max-width:720px;margin:0 auto;}
+.notebook{position:relative;box-shadow:0 6px 32px rgba(28,18,8,0.35);}
+.top-bar{background:#1C1208;border-radius:4px 4px 0 0;height:32px;display:flex;align-items:center;padding:0 20px;}
+.top-bar .brand{font-family:'Bebas Neue',sans-serif;font-size:.6rem;letter-spacing:.3em;color:rgba(195,169,125,0.75);}
+.page-scene{position:relative;height:440px;background:#fff;overflow:hidden;}
+.fp-page{position:absolute;inset:0;background:#fff;transform-origin:top center;overflow:hidden;}
+.fp-page img{width:100%;height:100%;object-fit:contain;display:block;background:#fff;}
+.flipping-out{animation:fpFlipOut 0.42s cubic-bezier(0.4,0,1,1) forwards;}
+.flipping-in{animation:fpFlipIn 0.42s cubic-bezier(0,0,0.6,1) forwards;}
+@keyframes fpFlipOut{0%{transform:perspective(1000px) rotateX(0deg);}100%{transform:perspective(1000px) rotateX(-88deg);opacity:0.2;}}
+@keyframes fpFlipIn{0%{transform:perspective(1000px) rotateX(88deg);opacity:0.2;}100%{transform:perspective(1000px) rotateX(0deg);}}
+.spiral-overlay{position:absolute;top:4px;left:0;right:0;height:56px;z-index:999;pointer-events:none;}
+.spiral-overlay img{width:100%;height:100%;object-fit:fill;display:block;}
+.fp-nav{height:50px;background:#1C1208;border-radius:0 0 4px 4px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+.fp-btn{width:34px;height:34px;border:1px solid rgba(195,169,125,0.7);background:transparent;color:#C3A97D;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.fp-btn:hover:not(:disabled){background:rgba(195,169,125,0.15);border-color:#C3A97D;}
+.fp-btn:active:not(:disabled){transform:scale(0.94);}
+.fp-btn:disabled{opacity:0.25;cursor:default;}
+.fp-center{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.fp-dots{display:flex;gap:3px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:520px;}
+.fp-dot{width:5px;height:5px;background:rgba(195,169,125,0.4);cursor:pointer;transition:all 0.18s;flex-shrink:0;}
+.fp-dot.active{background:#C3A97D;width:14px;}
+.fp-label{font-family:'Bebas Neue',sans-serif;font-size:.55rem;letter-spacing:.2em;color:rgba(195,169,125,0.75);}
+</style>
+
+<div class="plan-preview-section">
+  <div class="fp-wrap">
+    <div class="notebook">
+      <div class="top-bar"><span class="brand">Safe Steps Plans</span></div>
+      <div class="page-scene">
+        <div class="fp-page" id="fp-page"><img id="fp-img" src="" alt="Slide"></div>
+      </div>
+      <div class="spiral-overlay"><img src="spiral.png" alt="spiral binding"></div>
+      <div class="fp-nav">
+        <button class="fp-btn" id="fp-prev">&#8592;</button>
+        <div class="fp-center">
+          <div class="fp-dots" id="fp-dots"></div>
+          <div class="fp-label" id="fp-label">1 / 38</div>
+        </div>
+        <button class="fp-btn" id="fp-next">&#8594;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const TOTAL=38, BASE='slides/slide-';
+  const pad=n=>n<10?'0'+n:''+n;
+  let current=0, animating=false;
+  const pageEl=document.getElementById('fp-page');
+  const imgEl=document.getElementById('fp-img');
+  const prevBtn=document.getElementById('fp-prev');
+  const nextBtn=document.getElementById('fp-next');
+  const dotsEl=document.getElementById('fp-dots');
+  const labelEl=document.getElementById('fp-label');
+  for(let i=0;i<TOTAL;i++){const d=document.createElement('div');d.className='fp-dot';d.onclick=()=>goTo(i);dotsEl.appendChild(d);}
+  function updateUI(){prevBtn.disabled=current===0;nextBtn.disabled=current===TOTAL-1;dotsEl.querySelectorAll('.fp-dot').forEach((d,i)=>d.classList.toggle('active',i===current));labelEl.textContent=(current+1)+' / '+TOTAL;}
+  function src(n){return BASE+pad(n+1)+'.jpg';}
+  function goTo(next){
+    if(animating||next===current||next<0||next>=TOTAL)return;
+    animating=true;
+    const out=document.createElement('div');out.className='fp-page';
+    out.innerHTML='<img src="'+src(current)+'" style="width:100%;height:100%;object-fit:contain;">';
+    out.style.zIndex=2;pageEl.parentElement.appendChild(out);
+    imgEl.src=src(next);pageEl.style.zIndex=1;
+    requestAnimationFrame(()=>{out.classList.add('flipping-out');setTimeout(()=>pageEl.classList.add('flipping-in'),160);});
+    out.addEventListener('animationend',()=>out.remove());
+    pageEl.addEventListener('animationend',()=>{pageEl.classList.remove('flipping-in');animating=false;current=next;updateUI();},{once:true});
+  }
+  prevBtn.onclick=()=>goTo(current-1);
+  nextBtn.onclick=()=>goTo(current+1);
+  document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')goTo(current+1);if(e.key==='ArrowLeft')goTo(current-1);});
+  imgEl.onload=()=>{if(current<TOTAL-1)new Image().src=src(current+1);};
+  imgEl.src=src(0);updateUI();
+})();
+</script>
