@@ -357,9 +357,9 @@ body{
 /* ══════════════════════════
    SERVICES PAGE v5 — GRAPHIC
 ══════════════════════════ */
-.sv5-banner{background:#1C1208;padding:20px 20px 18px}
-.sv5-banner-eyebrow{font-family:Arial,sans-serif;font-size:.5rem;letter-spacing:.2em;color:rgba(195,169,125,.45);margin-bottom:6px}
-.sv5-banner-title{font-family:Arial,sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);letter-spacing:.04em;color:#C3A97D;line-height:1;margin-bottom:4px}
+.sv5-banner{background:#1C1208;padding:32px 20px 28px}
+.sv5-banner-eyebrow{font-family:Arial,sans-serif;font-size:.85rem;letter-spacing:.2em;color:rgba(195,169,125,.55);margin-bottom:10px}
+.sv5-banner-title{font-family:Arial,sans-serif;font-size:clamp(3.2rem,9vw,5.5rem);letter-spacing:.04em;color:#C3A97D;line-height:.95;margin-bottom:4px}
 .sv5-banner-sub{font-family:Arial,sans-serif;font-size:.74rem;color:rgba(195,169,125,.5);line-height:1.5}
 
 .sv5-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:rgba(28,18,8,.18)}
@@ -393,7 +393,28 @@ body{
 .sv5-pkg-scenarios{font-family:Arial,sans-serif;font-size:.63rem;color:rgba(28,18,8,.5);line-height:1.45}
 .sv5-pkg-price{font-family:Arial,sans-serif;font-size:1.2rem;font-weight:bold;color:#1C1208;white-space:nowrap;flex-shrink:0;margin-left:auto}
 .sv5-pkg-note{font-family:Arial,sans-serif;font-size:.62rem;color:rgba(28,18,8,.4);padding-top:10px;border-top:1px solid rgba(28,18,8,.09);margin-top:4px}
+
+.sv5-pkg-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;background:rgba(28,18,8,.18)}
+@media(max-width:640px){.sv5-pkg-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:380px){.sv5-pkg-grid{grid-template-columns:1fr}}
+
+.sv5-pkg-card{position:relative;background:#C3A97D;padding:16px 14px 16px;overflow:hidden;display:flex;flex-direction:column;min-height:200px}
+.sv5-pkg-card .sv5-ghost{font-size:5.5rem}
+.sv5-pkg-card .sv5-name-row{margin-bottom:9px;padding-bottom:9px}
+.sv5-pkg-card .sv5-name{font-size:1.15rem}
+.sv5-pkg-card-wide{grid-column:1 / -1}
+.sv5-pkg-desc{font-family:Arial,sans-serif;font-size:.68rem;line-height:1.55;color:rgba(28,18,8,.68);margin-bottom:8px;position:relative;z-index:1;flex:1}
+.sv5-pkg-scens{font-family:Arial,sans-serif;font-size:.6rem;color:rgba(28,18,8,.48);line-height:1.45;position:relative;z-index:1;margin-bottom:10px}
+.sv5-pkg-includes{display:flex;gap:5px;flex-wrap:wrap;position:relative;z-index:1}
+.sv5-pkg-includes span{font-family:Arial,sans-serif;font-size:.42rem;letter-spacing:.09em;color:rgba(28,18,8,.55);border:1px solid rgba(28,18,8,.28);padding:2px 6px}
+
+.sv5-pkg-grid-note{grid-column:1 / -1;background:#1C1208;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.sv5-pkg-grid-note span{font-family:Arial,sans-serif;font-size:.46rem;letter-spacing:.1em;color:rgba(195,169,125,.4)}
+.sv5-view-link{display:inline-block;margin-top:12px;font-family:Arial,sans-serif;font-size:.54rem;letter-spacing:.1em;color:rgba(28,18,8,.55);border-bottom:1px solid rgba(28,18,8,.25);padding-bottom:1px;cursor:pointer;text-decoration:none;position:relative;z-index:1}
+.sv5-view-link:hover{color:#1C1208;border-bottom-color:#1C1208}
 .sv5-card-wide{grid-column:1 / -1}
+.sv5-card-placeholder{background:rgba(28,18,8,.03)!important;border:2px dashed rgba(28,18,8,.12)!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.sv5-placeholder-inner{font-family:Arial,sans-serif;font-size:.52rem;letter-spacing:.12em;color:rgba(28,18,8,.2);text-align:center;line-height:1.8}
 .sv2-pkg-price{font-family:Arial,sans-serif;font-size:1rem;font-weight:bold;color:#1C1208;white-space:nowrap;flex-shrink:0}
 .sv2-pkg-price-featured{color:#1C1208}
 
@@ -700,7 +721,6 @@ body{
     <div class="sv5-banner">
       <div class="sv5-banner-eyebrow">01 // EMERGENCY PLANS</div>
       <div class="sv5-banner-title">CHOOSE YOUR<br>SCENARIOS</div>
-      <div class="sv5-banner-sub">Four scenario plans at $500 each. Add in-person training for +$149.</div>
     </div>
 
     <!-- 2x2 SCENARIO CARDS -->
@@ -716,12 +736,14 @@ body{
           <div class="sv5-price-badge">$500</div>
         </div>
         <ul class="sv5-list">
-          <li>Hand-drawn floor plan with color-coded escape routes for every room</li>
-          <li>Named role for every person in the home &mdash; adults and children</li>
-          <li>Laminated rally point card with phonetic 911 script</li>
-          <li>Window egress assessment and secondary exit plan</li>
-          <li>3-stage smoke response protocol with timed drill schedule</li>
+          <li>Custom floor plan with color-coded evacuation routes mapped to every room in your home</li>
+          <li>Named escape role for every person in the household &mdash; adults, children, and caregivers</li>
+          <li>Laminated rally point card with exact address, phonetic 911 script, and neighbor contact</li>
+          <li>Window egress assessment with secondary exit routes and drop-distance notes</li>
+          <li>3-stage smoke response protocol with timed family drill schedule</li>
+          <li>Equipment brief: smoke detector placement, fire extinguisher locations, and escape ladder specs for your layout</li>
         </ul>
+        <a class="sv5-view-link" onclick="nav('plan-fire')">VIEW PLAN →</a>
       </div>
 
       <div class="sv5-card">
@@ -734,12 +756,14 @@ body{
           <div class="sv5-price-badge">$500</div>
         </div>
         <ul class="sv5-list">
-          <li>Room-by-room defensive position map specific to your layout</li>
-          <li>Lockdown sequence with designated safe room and barricade protocol</li>
-          <li>Family communication plan with household code words</li>
-          <li>Entry-point vulnerability assessment &mdash; doors, windows, sight lines</li>
-          <li>Law enforcement arrival guidance: what to say, where to be, hands</li>
+          <li>Room-by-room defensive position map built to your exact floor plan and entry points</li>
+          <li>Lockdown sequence with a designated safe room, barricade method, and hold protocol</li>
+          <li>Family communication plan with household code words for threat levels</li>
+          <li>Entry-point vulnerability assessment &mdash; doors, windows, garage, sight lines</li>
+          <li>Law enforcement coordination brief: what to say, where to be, and how to signal</li>
+          <li>Equipment brief: door reinforcement hardware, personal alarm, and safe room supply list</li>
         </ul>
+        <a class="sv5-view-link" onclick="nav('plan-invasion')">VIEW PLAN →</a>
       </div>
 
       <div class="sv5-card">
@@ -752,12 +776,14 @@ body{
           <div class="sv5-price-badge">$500</div>
         </div>
         <ul class="sv5-list">
-          <li>First-responder role assigned to each household member by name</li>
-          <li>Pre-written 911 script with your address, cross-street, and access notes</li>
-          <li>Laminated quick sheet: blood types, allergies, medications, physicians</li>
-          <li>AED location protocol and CPR decision guide</li>
-          <li>Nearest trauma center route card with estimated drive time</li>
+          <li>Named first-responder role assigned to every household member with clear handoff order</li>
+          <li>Pre-written 911 script with your address, cross-street, entry notes, and gate codes</li>
+          <li>Laminated household medical sheet: blood types, allergies, medications, and physician contacts</li>
+          <li>CPR decision guide and AED location protocol with step-by-step activation instructions</li>
+          <li>Nearest trauma center route card with drive time, backup route, and after-hours notes</li>
+          <li>Equipment brief: first aid kit checklist, AED recommendation, and medication storage protocol</li>
         </ul>
+        <a class="sv5-view-link" onclick="nav('plan-medical')">VIEW PLAN →</a>
       </div>
 
       <div class="sv5-card">
@@ -770,12 +796,37 @@ body{
           <div class="sv5-price-badge">$500</div>
         </div>
         <ul class="sv5-list">
-          <li>Shelter-in-place map with identified safe zones by storm type</li>
-          <li>Tiered evacuation plan: 15-minute, 1-hour, and overnight scenarios</li>
-          <li>Family communication tree with out-of-area contact protocol</li>
-          <li>72-hour supply checklist tailored to your home and family size</li>
-          <li>Extended power outage plan with utility shutoff instructions</li>
+          <li>Shelter-in-place map with identified safe zones for each storm type relevant to your area</li>
+          <li>Tiered evacuation plan: 15-minute bug-out, 1-hour departure, and multi-day relocation</li>
+          <li>Family communication tree with primary, secondary, and out-of-area contact protocol</li>
+          <li>72-hour supply checklist built around your household size, medical needs, and pets</li>
+          <li>Power outage plan with utility shutoff instructions and generator or backup power guidance</li>
+          <li>Equipment brief: weather radio, water storage, emergency lighting, and go-bag contents</li>
         </ul>
+        <a class="sv5-view-link" onclick="nav('plan-weather')">VIEW PLAN →</a>
+      </div>
+
+      <div class="sv5-card">
+        <div class="sv5-ghost">05</div>
+        <div class="sv5-card-top">
+          <div class="sv5-code">OPORD-05</div>
+        </div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">IN-PERSON<br>TRAINING</div>
+          <div class="sv5-price-badge">$500</div>
+        </div>
+        <ul class="sv5-list">
+          <li>Full-day on-site session with a veteran Safe Steps advisor at your home</li>
+          <li>Live walkthrough of every scenario covered in your plan — room by room</li>
+          <li>Timed family drills with real-time coaching and role corrections</li>
+          <li>Hands-on equipment orientation: placement, access, and operation under stress</li>
+          <li>Debrief report with drill results, gaps identified, and a 90-day rehearsal schedule</li>
+          <li>Can be added to any scenario plan or lifestyle package at time of purchase or later</li>
+        </ul>
+      </div>
+
+      <div class="sv5-card sv5-card-placeholder">
+        <div class="sv5-placeholder-inner">MORE SCENARIOS<br>COMING SOON</div>
       </div>
 
     </div>
@@ -785,47 +836,115 @@ body{
     <div class="sv5-banner">
       <div class="sv5-banner-eyebrow">02 // LIFESTYLE PACKAGES</div>
       <div class="sv5-banner-title">BUILT FOR YOUR<br>MOMENT IN LIFE</div>
-      <div class="sv5-banner-sub">Pre-built bundles matched to your risk profile. Every package fully customizable.</div>
+      <div class="sv5-banner-sub">Pre-built bundles matched to your life stage. Each package includes scenario plans, situation briefings, and a recommended equipment list for every covered scenario.</div>
     </div>
 
-    <!-- PACKAGES LIST -->
-    <div class="sv5-pkgs">
-      <div class="sv5-pkg">
-        <div class="sv5-pkg-code">PKG-A</div>
-        <div class="sv5-pkg-info"><div class="sv5-pkg-name">NEW DRIVER</div><div class="sv5-pkg-scenarios">Car Accident &middot; Medical &middot; Weather</div></div>
-        <div class="sv5-pkg-price">$175</div>
+    <!-- PACKAGES GRID -->
+    <div class="sv5-pkg-grid">
+
+      <div class="sv5-pkg-card">
+        <div class="sv5-ghost">A</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-A</div></div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">NEW<br>DRIVER</div>
+          <div class="sv5-price-badge">$175</div>
+        </div>
+        <div class="sv5-pkg-desc">For new drivers facing high-risk situations without experience or backup. Covers the three scenarios they're statistically most likely to encounter.</div>
+        <div class="sv5-pkg-scens">Car Accident &middot; Medical &middot; Weather</div>
+        <div class="sv5-pkg-includes"><span>PLAN</span><span>BRIEFING</span><span>EQUIPMENT LIST</span></div>
+        <a class="sv5-view-link" onclick="nav('pkg-a')">VIEW PACKAGE →</a>
       </div>
-      <div class="sv5-pkg">
-        <div class="sv5-pkg-code">PKG-B</div>
-        <div class="sv5-pkg-info"><div class="sv5-pkg-name">NEW HOUSE</div><div class="sv5-pkg-scenarios">Fire &middot; Invasion &middot; Medical &middot; Weather</div></div>
-        <div class="sv5-pkg-price">$297</div>
+
+      <div class="sv5-pkg-card">
+        <div class="sv5-ghost">B</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-B</div></div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">NEW<br>HOUSE</div>
+          <div class="sv5-price-badge">$297</div>
+        </div>
+        <div class="sv5-pkg-desc">Full-coverage for a new home. All four core scenarios mapped to your specific layout, household size, and neighborhood — the most comprehensive package we offer.</div>
+        <div class="sv5-pkg-scens">Fire &middot; Invasion &middot; Medical &middot; Weather</div>
+        <div class="sv5-pkg-includes"><span>PLAN</span><span>BRIEFING</span><span>EQUIPMENT LIST</span></div>
+        <a class="sv5-view-link" onclick="nav('pkg-b')">VIEW PACKAGE →</a>
       </div>
-      <div class="sv5-pkg">
-        <div class="sv5-pkg-code">PKG-C</div>
-        <div class="sv5-pkg-info"><div class="sv5-pkg-name">ELDERLY PARENTS</div><div class="sv5-pkg-scenarios">Medical &middot; Fire &middot; Weather</div></div>
-        <div class="sv5-pkg-price">$175</div>
+
+      <div class="sv5-pkg-card">
+        <div class="sv5-ghost">C</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-C</div></div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">ELDERLY<br>PARENTS</div>
+          <div class="sv5-price-badge">$175</div>
+        </div>
+        <div class="sv5-pkg-desc">Built for aging adults living alone or with a caregiver. Plans prioritize clarity, simplicity, and fast access under stress — with caregiver coordination built in.</div>
+        <div class="sv5-pkg-scens">Medical &middot; Fire &middot; Weather</div>
+        <div class="sv5-pkg-includes"><span>PLAN</span><span>BRIEFING</span><span>EQUIPMENT LIST</span></div>
+        <a class="sv5-view-link" onclick="nav('pkg-c')">VIEW PACKAGE →</a>
       </div>
-      <div class="sv5-pkg">
-        <div class="sv5-pkg-code">PKG-D</div>
-        <div class="sv5-pkg-info"><div class="sv5-pkg-name">FIRST-TIME PARENTS</div><div class="sv5-pkg-scenarios">Medical &middot; Fire &middot; Invasion</div></div>
-        <div class="sv5-pkg-price">$175</div>
+
+      <div class="sv5-pkg-card">
+        <div class="sv5-ghost">D</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-D</div></div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">FIRST-TIME<br>PARENTS</div>
+          <div class="sv5-price-badge">$175</div>
+        </div>
+        <div class="sv5-pkg-desc">The three scenarios that hit differently when you have a newborn. Roles, routes, and responses are built around your child's specific age and needs.</div>
+        <div class="sv5-pkg-scens">Medical &middot; Fire &middot; Invasion</div>
+        <div class="sv5-pkg-includes"><span>PLAN</span><span>BRIEFING</span><span>EQUIPMENT LIST</span></div>
+        <a class="sv5-view-link" onclick="nav('pkg-d')">VIEW PACKAGE →</a>
       </div>
-      <div class="sv5-pkg">
-        <div class="sv5-pkg-code">PKG-E</div>
-        <div class="sv5-pkg-info"><div class="sv5-pkg-name">OFF TO COLLEGE</div><div class="sv5-pkg-scenarios">Fire &middot; Invasion &middot; Medical</div></div>
-        <div class="sv5-pkg-price">$175</div>
+
+      <div class="sv5-pkg-card">
+        <div class="sv5-ghost">E</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-E</div></div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">OFF TO<br>COLLEGE</div>
+          <div class="sv5-price-badge">$175</div>
+        </div>
+        <div class="sv5-pkg-desc">For students moving into dorms, apartments, or shared housing for the first time &mdash; living alone and without family as a safety net.</div>
+        <div class="sv5-pkg-scens">Fire &middot; Invasion &middot; Medical</div>
+        <div class="sv5-pkg-includes"><span>PLAN</span><span>BRIEFING</span><span>EQUIPMENT LIST</span></div>
+        <a class="sv5-view-link" onclick="nav('pkg-e')">VIEW PACKAGE →</a>
       </div>
-      <div class="sv5-pkg">
-        <div class="sv5-pkg-code">PKG-F</div>
-        <div class="sv5-pkg-info"><div class="sv5-pkg-name">SOLO TRAVELER</div><div class="sv5-pkg-scenarios">Medical &middot; Weather &middot; Invasion</div></div>
-        <div class="sv5-pkg-price">$175</div>
+
+      <div class="sv5-pkg-card">
+        <div class="sv5-ghost">F</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-F</div></div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">SOLO<br>TRAVELER</div>
+          <div class="sv5-price-badge">$175</div>
+        </div>
+        <div class="sv5-pkg-desc">Built for the person who moves through unfamiliar places alone. Portable plans that adapt to any environment &mdash; hotels, rentals, or remote terrain.</div>
+        <div class="sv5-pkg-scens">Medical &middot; Weather &middot; Invasion</div>
+        <div class="sv5-pkg-includes"><span>PLAN</span><span>BRIEFING</span><span>EQUIPMENT LIST</span></div>
+        <a class="sv5-view-link" onclick="nav('pkg-f')">VIEW PACKAGE →</a>
       </div>
-      <div class="sv5-pkg">
-        <div class="sv5-pkg-code">PKG-G</div>
-        <div class="sv5-pkg-info"><div class="sv5-pkg-name">SOLO FEMALE RUNNER</div><div class="sv5-pkg-scenarios">Personal Safety &middot; Medical &middot; Communication</div></div>
-        <div class="sv5-pkg-price">$175</div>
+
+      <div class="sv5-pkg-card">
+        <div class="sv5-ghost">G</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-G</div></div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">SOLO FEMALE<br>RUNNER</div>
+          <div class="sv5-price-badge">$175</div>
+        </div>
+        <div class="sv5-pkg-desc">Designed for women who run, walk, or train outdoors alone. Covers the specific risks of being alone, injured, or in distress away from home &mdash; with practical protocols that fit in your pocket.</div>
+        <div class="sv5-pkg-scens">Personal Safety &middot; Medical &middot; Communication</div>
+        <div class="sv5-pkg-includes"><span>PLAN</span><span>BRIEFING</span><span>EQUIPMENT LIST</span></div>
+        <a class="sv5-view-link" onclick="nav('pkg-g')">VIEW PACKAGE →</a>
       </div>
-      <div class="sv5-pkg-note">All packages fully customizable. In-person training available as add-on for +$149.</div>
+
+      <div class="sv5-pkg-card sv5-card-placeholder">
+        <div class="sv5-placeholder-inner">MORE PACKAGES<br>COMING SOON</div>
+      </div>
+
+      <div class="sv5-pkg-card sv5-card-placeholder">
+        <div class="sv5-placeholder-inner">MORE PACKAGES<br>COMING SOON</div>
+      </div>
+
+      <div class="sv5-pkg-grid-note">
+        <span>ALL PACKAGES FULLY CUSTOMIZABLE</span><span>IN-PERSON TRAINING AVAILABLE &mdash; ADD ON FOR +$149</span>
+      </div>
+
     </div>
 
     <!-- CTA -->
@@ -1182,5 +1301,302 @@ function assessFinish(){
   document.getElementById('ap-fill').style.width='100%';
 }
 </script>
+<!-- ══════════ PLAN: HOUSE FIRE ══════════ -->
+<div class="page" id="page-plan-fire">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>HOUSE FIRE<br>PLAN</h1>
+      <div class="dw-body">OPORD-01 · $500 · Custom-built to your home's exact layout.</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SAMPLE PLAN</div>
+      <div class="dw-title">PLAN DEMO</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:320px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN DEMO — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT BRIEF</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:220px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT LIST — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
+<!-- ══════════ PLAN: HOME INVASION ══════════ -->
+<div class="page" id="page-plan-invasion">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>HOME INVASION<br>PLAN</h1>
+      <div class="dw-body">OPORD-02 · $500 · Custom-built to your home's exact layout.</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SAMPLE PLAN</div>
+      <div class="dw-title">PLAN DEMO</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:320px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN DEMO — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT BRIEF</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:220px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT LIST — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
+<!-- ══════════ PLAN: MEDICAL EMERGENCY ══════════ -->
+<div class="page" id="page-plan-medical">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>MEDICAL EMERGENCY<br>PLAN</h1>
+      <div class="dw-body">OPORD-03 · $500 · Custom-built to your household's medical profile.</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SAMPLE PLAN</div>
+      <div class="dw-title">PLAN DEMO</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:320px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN DEMO — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT BRIEF</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:220px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT LIST — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
+<!-- ══════════ PLAN: WEATHER EVENTS ══════════ -->
+<div class="page" id="page-plan-weather">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>WEATHER EVENTS<br>PLAN</h1>
+      <div class="dw-body">OPORD-04 · $500 · Built around your area's specific weather threats.</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SAMPLE PLAN</div>
+      <div class="dw-title">PLAN DEMO</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:320px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN DEMO — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT BRIEF</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:220px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT LIST — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
+<!-- ══════════ PKG-A: NEW DRIVER ══════════ -->
+<div class="page" id="page-pkg-a">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>NEW DRIVER<br>PACKAGE</h1>
+      <div class="dw-body">PKG-A · $175 · Car Accident · Medical · Weather</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SCENARIO PLANS</div>
+      <div class="dw-title">INCLUDED PLANS</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN PREVIEWS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT LIST</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT PHOTOS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
+<!-- ══════════ PKG-B: NEW HOUSE ══════════ -->
+<div class="page" id="page-pkg-b">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>NEW HOUSE<br>PACKAGE</h1>
+      <div class="dw-body">PKG-B · $297 · Fire · Invasion · Medical · Weather</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SCENARIO PLANS</div>
+      <div class="dw-title">INCLUDED PLANS</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN PREVIEWS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT LIST</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT PHOTOS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
+<!-- ══════════ PKG-C: ELDERLY PARENTS ══════════ -->
+<div class="page" id="page-pkg-c">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>ELDERLY PARENTS<br>PACKAGE</h1>
+      <div class="dw-body">PKG-C · $175 · Medical · Fire · Weather</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SCENARIO PLANS</div>
+      <div class="dw-title">INCLUDED PLANS</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN PREVIEWS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT LIST</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT PHOTOS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
+<!-- ══════════ PKG-D: FIRST-TIME PARENTS ══════════ -->
+<div class="page" id="page-pkg-d">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>FIRST-TIME PARENTS<br>PACKAGE</h1>
+      <div class="dw-body">PKG-D · $175 · Medical · Fire · Invasion</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SCENARIO PLANS</div>
+      <div class="dw-title">INCLUDED PLANS</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN PREVIEWS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT LIST</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT PHOTOS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
+<!-- ══════════ PKG-E: OFF TO COLLEGE ══════════ -->
+<div class="page" id="page-pkg-e">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>OFF TO COLLEGE<br>PACKAGE</h1>
+      <div class="dw-body">PKG-E · $175 · Fire · Invasion · Medical</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SCENARIO PLANS</div>
+      <div class="dw-title">INCLUDED PLANS</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN PREVIEWS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT LIST</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT PHOTOS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
+<!-- ══════════ PKG-F: SOLO TRAVELER ══════════ -->
+<div class="page" id="page-pkg-f">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>SOLO TRAVELER<br>PACKAGE</h1>
+      <div class="dw-body">PKG-F · $175 · Medical · Weather · Invasion</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SCENARIO PLANS</div>
+      <div class="dw-title">INCLUDED PLANS</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN PREVIEWS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT LIST</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT PHOTOS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
+<!-- ══════════ PKG-G: SOLO FEMALE RUNNER ══════════ -->
+<div class="page" id="page-pkg-g">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
+      <h1>SOLO FEMALE RUNNER<br>PACKAGE</h1>
+      <div class="dw-body">PKG-G · $175 · Personal Safety · Medical · Communication</div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">SCENARIO PLANS</div>
+      <div class="dw-title">INCLUDED PLANS</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN PREVIEWS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec">
+      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
+      <div class="dw-title">EQUIPMENT LIST</div>
+      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
+        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT PHOTOS — IMAGE PLACEHOLDER</div>
+      </div>
+    </div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
+  </div>
+</div>
+
 </body>
 </html>
