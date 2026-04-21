@@ -359,14 +359,14 @@ body{
 ══════════════════════════ */
 .sv5-banner{background:#1C1208;padding:32px 20px 28px}
 .sv5-banner-eyebrow{font-family:Arial,sans-serif;font-size:.85rem;letter-spacing:.2em;color:rgba(195,169,125,.55);margin-bottom:10px}
-.sv5-banner-title{font-family:Arial,sans-serif;font-size:clamp(3.2rem,9vw,5.5rem);letter-spacing:.04em;color:#C3A97D;line-height:.95;margin-bottom:4px}
+.sv5-banner-title{font-family:Arial,sans-serif;font-size:clamp(2rem,5vw,3rem);letter-spacing:.04em;color:#C3A97D;line-height:.95;margin-bottom:4px}
 .sv5-banner-sub{font-family:Arial,sans-serif;font-size:.74rem;color:rgba(195,169,125,.5);line-height:1.5}
 
 .sv5-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:rgba(28,18,8,.18)}
 @media(max-width:580px){.sv5-grid{grid-template-columns:1fr}}
 
 .sv5-card{position:relative;background:#C3A97D;padding:18px 16px 20px;overflow:hidden;display:flex;flex-direction:column;min-height:280px}
-.sv5-ghost{position:absolute;top:-8px;right:-4px;font-family:Arial,sans-serif;font-size:6.5rem;font-weight:bold;line-height:1;color:rgba(28,18,8,.07);pointer-events:none;user-select:none;letter-spacing:-.02em}
+.sv5-ghost{position:absolute;top:-8px;right:12px;font-family:Arial,sans-serif;font-size:6.5rem;font-weight:bold;line-height:1;color:rgba(28,18,8,.07);pointer-events:none;user-select:none;letter-spacing:-.02em}
 .sv5-card-top{display:flex;justify-content:flex-start;align-items:flex-start;margin-bottom:12px;position:relative;z-index:1}
 .sv5-code{font-family:Arial,sans-serif;font-size:.44rem;letter-spacing:.18em;color:rgba(28,18,8,.4);border:1px solid rgba(28,18,8,.25);padding:3px 8px}
 .sv5-name-row{display:flex;justify-content:flex-start;align-items:flex-end;margin-bottom:14px;padding-bottom:14px;border-bottom:2px solid rgba(28,18,8,.2);position:relative;z-index:1;gap:12px}
@@ -408,13 +408,17 @@ body{
 .sv5-pkg-includes{display:flex;gap:5px;flex-wrap:wrap;position:relative;z-index:1}
 .sv5-pkg-includes span{font-family:Arial,sans-serif;font-size:.42rem;letter-spacing:.09em;color:rgba(28,18,8,.55);border:1px solid rgba(28,18,8,.28);padding:2px 6px}
 
-.sv5-pkg-grid-note{grid-column:1 / -1;background:#1C1208;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.sv5-pkg-grid-note{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#1C1208;padding:10px 16px;}
 .sv5-pkg-grid-note span{font-family:Arial,sans-serif;font-size:.46rem;letter-spacing:.1em;color:rgba(195,169,125,.4)}
 .sv5-view-link{display:inline-block;margin-top:12px;font-family:Arial,sans-serif;font-size:.54rem;letter-spacing:.1em;color:rgba(28,18,8,.55);border-bottom:1px solid rgba(28,18,8,.25);padding-bottom:1px;cursor:pointer;text-decoration:none;position:relative;z-index:1}
 .sv5-view-link:hover{color:#1C1208;border-bottom-color:#1C1208}
 .sv5-card-wide{grid-column:1 / -1}
-.sv5-card-placeholder{background:rgba(28,18,8,.03)!important;border:2px dashed rgba(28,18,8,.12)!important;display:flex!important;align-items:center!important;justify-content:center!important}
-.sv5-placeholder-inner{font-family:Arial,sans-serif;font-size:.52rem;letter-spacing:.12em;color:rgba(28,18,8,.2);text-align:center;line-height:1.8}
+.sv5-solo-row{background-color:#C3A97D;background-image:linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);background-size:60px 60px,60px 60px,15px 15px,15px 15px;border-top:3px solid rgba(28,18,8,.18);display:flex;justify-content:center}
+.sv5-solo-2col .sv5-card{width:calc(50% - 1.5px);flex-shrink:0}
+.sv5-solo-3col .sv5-pkg-card{width:calc(33.333% - 2px);flex-shrink:0}
+@media(max-width:580px){.sv5-solo-2col .sv5-card{width:100%}}
+@media(max-width:640px){.sv5-solo-3col .sv5-pkg-card{width:calc(50% - 1.5px)}}
+@media(max-width:380px){.sv5-solo-3col .sv5-pkg-card{width:100%}}
 .sv2-pkg-price{font-family:Arial,sans-serif;font-size:1rem;font-weight:bold;color:#1C1208;white-space:nowrap;flex-shrink:0}
 .sv2-pkg-price-featured{color:#1C1208}
 
@@ -806,6 +810,10 @@ body{
         <a class="sv5-view-link" onclick="nav('plan-weather')">VIEW PLAN →</a>
       </div>
 
+    </div>
+
+    <!-- OPORD-05 solo centered -->
+    <div class="sv5-solo-row sv5-solo-2col">
       <div class="sv5-card">
         <div class="sv5-ghost">05</div>
         <div class="sv5-card-top">
@@ -824,11 +832,6 @@ body{
           <li>Can be added to any scenario plan or lifestyle package at time of purchase or later</li>
         </ul>
       </div>
-
-      <div class="sv5-card sv5-card-placeholder">
-        <div class="sv5-placeholder-inner">MORE SCENARIOS<br>COMING SOON</div>
-      </div>
-
     </div>
 
 
@@ -920,6 +923,10 @@ body{
         <a class="sv5-view-link" onclick="nav('pkg-f')">VIEW PACKAGE →</a>
       </div>
 
+    </div>
+
+    <!-- PKG-G solo centered -->
+    <div class="sv5-solo-row sv5-solo-3col">
       <div class="sv5-pkg-card">
         <div class="sv5-ghost">G</div>
         <div class="sv5-card-top"><div class="sv5-code">PKG-G</div></div>
@@ -932,19 +939,10 @@ body{
         <div class="sv5-pkg-includes"><span>PLAN</span><span>BRIEFING</span><span>EQUIPMENT LIST</span></div>
         <a class="sv5-view-link" onclick="nav('pkg-g')">VIEW PACKAGE →</a>
       </div>
+    </div>
 
-      <div class="sv5-pkg-card sv5-card-placeholder">
-        <div class="sv5-placeholder-inner">MORE PACKAGES<br>COMING SOON</div>
-      </div>
-
-      <div class="sv5-pkg-card sv5-card-placeholder">
-        <div class="sv5-placeholder-inner">MORE PACKAGES<br>COMING SOON</div>
-      </div>
-
-      <div class="sv5-pkg-grid-note">
-        <span>ALL PACKAGES FULLY CUSTOMIZABLE</span><span>IN-PERSON TRAINING AVAILABLE &mdash; ADD ON FOR +$149</span>
-      </div>
-
+    <div class="sv5-pkg-grid-note">
+      <span>ALL PACKAGES FULLY CUSTOMIZABLE</span><span>IN-PERSON TRAINING AVAILABLE &mdash; ADD ON FOR +$149</span>
     </div>
 
     <!-- CTA -->
