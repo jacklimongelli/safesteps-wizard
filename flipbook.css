@@ -6,13 +6,14 @@
   box-shadow: 0 6px 32px rgba(28,18,8,0.35);
 }
 
-/* Top bar — tall enough to fully contain the spiral coils */
+/* Top bar */
 .flipbook-top {
   background: #1C1208;
   border-radius: 4px 4px 0 0;
-  height: 72px;
+  height: 60px;
   position: relative;
   overflow: visible;
+  z-index: 2;
 }
 
 .flipbook-brand {
@@ -25,13 +26,13 @@
   left: 20px;
 }
 
-/* Spiral sits inside the top bar, anchored to its bottom edge */
+/* Spiral: anchored to bottom of top bar, drops 18px into white page area */
 .flipbook-spiral {
   position: absolute;
-  bottom: 0;
+  bottom: -18px;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 56px;
   pointer-events: none;
   z-index: 10;
 }
@@ -40,14 +41,14 @@
   width: 100%;
   height: 100%;
   object-fit: fill;
-  object-position: bottom;
   display: block;
 }
 
-/* Page area — clean, spiral never touches this */
+/* Page area — 16:9 aspect ratio, no fixed height so mobile fits perfectly */
 .flipbook-scene {
   position: relative;
-  height: 440px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   background: #fff;
   overflow: hidden;
 }
@@ -63,7 +64,7 @@
 .flipbook-page img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   display: block;
   background: #fff;
 }
