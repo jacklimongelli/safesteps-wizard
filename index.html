@@ -1127,7 +1127,7 @@ body{
         </div>
         <div class="tool-card">
           <div class="tool-head"><div class="tool-icon"></div><div><div class="tool-free">FREE</div><div class="tool-label">TOOL 02 // PRINTABLE</div><div class="tool-name">Family Fridge Sheet</div></div></div>
-          <div class="tool-body"><div class="tool-desc">A printable one-page reference card for your fridge — emergency contacts, rally point, 911 script, and key family health info. Laminate it. Live by it.</div><a class="tool-btn">DOWNLOAD PDF →</a></div>
+          <div class="tool-body"><div class="tool-desc">A printable one-page reference card for your fridge — emergency contacts, rally point, 911 script, and key family health info. Laminate it. Live by it.</div><a class="tool-btn" onclick="nav('fridge')">DOWNLOAD PDF →</a></div>
         </div>
         <div class="tool-card">
           <div class="tool-head"><div class="tool-icon"></div><div><div class="tool-free">FREE</div><div class="tool-label">TOOL 03 // CARD</div><div class="tool-name">Car Accident Response Card</div></div></div>
@@ -1227,6 +1227,8 @@ window.addEventListener("message", function(e) {
   if (e.data && e.data.action === "resize" && e.data.height) {
     var frame = document.getElementById("calc-frame");
     if (frame) frame.style.minHeight = (e.data.height + 40) + "px";
+    var fframe = document.getElementById("fridge-frame");
+    if (fframe) fframe.style.minHeight = (e.data.height + 40) + "px";
   }
 });
 
@@ -1651,6 +1653,29 @@ function assessFinish(){
       <div class="dw-eyebrow">READY FOR MORE?</div>
       <div class="dw-title" style="font-size:1.4rem;margin-bottom:12px">TURN YOUR RESULTS INTO A PLAN</div>
       <div class="dw-body" style="margin-bottom:0">Now that you know your response times, a Safe Steps plan tells you exactly what to do in those critical minutes.</div>
+      <a class="dw-btnp" onclick="nav('assessment')">TAKE ASSESSMENT</a>
+      <a class="dw-btns" onclick="nav('trial')">APPLY FOR FREE TRIAL</a>
+    </div>
+    <div class="dw-footer">
+      <div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-fridge">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('tools')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO FREE TOOLS</a></div>
+      <h1>FAMILY FRIDGE<br>SHEET BUILDER</h1>
+      <div class="dw-body">Build your family's personalized emergency reference sheet — emergency contacts, rally points, medical info, and utility shutoffs. Print it, laminate it, post it.</div>
+    </div>
+    <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13)">
+      <iframe id="fridge-frame" src="https://jacklimongelli.github.io/safesteps-wizard/automated_fridge_sheet.html" style="width:100%;border:none;display:block;min-height:600px;" scrolling="no" title="Family Fridge Sheet Builder"></iframe>
+    </div>
+    <div class="dw-sec" style="background:rgba(28,18,8,.04)">
+      <div class="dw-eyebrow">READY FOR MORE?</div>
+      <div class="dw-title" style="font-size:1.4rem;margin-bottom:12px">TURN YOUR SHEET INTO A FULL PLAN</div>
+      <div class="dw-body" style="margin-bottom:0">Your fridge sheet is the start. A Safe Steps plan gives your family a full scenario-by-scenario response system.</div>
       <a class="dw-btnp" onclick="nav('assessment')">TAKE ASSESSMENT</a>
       <a class="dw-btns" onclick="nav('trial')">APPLY FOR FREE TRIAL</a>
     </div>
