@@ -1131,7 +1131,7 @@ body{
         </div>
         <div class="tool-card">
           <div class="tool-head"><div class="tool-icon"></div><div><div class="tool-free">FREE</div><div class="tool-label">TOOL 03 // CARD</div><div class="tool-name">Car Accident Response Card</div></div></div>
-          <div class="tool-body"><div class="tool-desc">A wallet-sized card that walks you step by step through the first five minutes of a car accident — what to do, say, photograph, and never admit.</div><a class="tool-btn">DOWNLOAD CARD →</a></div>
+          <div class="tool-body"><div class="tool-desc">A wallet-sized card that walks you step by step through the first five minutes of a car accident — what to do, say, photograph, and never admit.</div><a class="tool-btn" onclick="nav('accident')">DOWNLOAD CARD →</a></div>
         </div>
         <div class="tool-card">
           <div class="tool-head"><div class="tool-icon"></div><div><div class="tool-free">FREE</div><div class="tool-label">TOOL 04 // CHECKLIST</div><div class="tool-name">Home Hardening Checklist</div></div></div>
@@ -1229,6 +1229,8 @@ window.addEventListener("message", function(e) {
     if (frame) frame.style.minHeight = (e.data.height + 40) + "px";
     var fframe = document.getElementById("fridge-frame");
     if (fframe) fframe.style.minHeight = (e.data.height + 40) + "px";
+    var aframe = document.getElementById("accident-frame");
+    if (aframe) aframe.style.minHeight = (e.data.height + 40) + "px";
   }
 });
 
@@ -1676,6 +1678,29 @@ function assessFinish(){
       <div class="dw-eyebrow">READY FOR MORE?</div>
       <div class="dw-title" style="font-size:1.4rem;margin-bottom:12px">TURN YOUR SHEET INTO A FULL PLAN</div>
       <div class="dw-body" style="margin-bottom:0">Your fridge sheet is the start. A Safe Steps plan gives your family a full scenario-by-scenario response system.</div>
+      <a class="dw-btnp" onclick="nav('assessment')">TAKE ASSESSMENT</a>
+      <a class="dw-btns" onclick="nav('trial')">APPLY FOR FREE TRIAL</a>
+    </div>
+    <div class="dw-footer">
+      <div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-accident">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('tools')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO FREE TOOLS</a></div>
+      <h1>CAR ACCIDENT<br>RESPONSE CARD</h1>
+      <div class="dw-body">A two-sided card for your glovebox — what to do step by step, what info to collect, what photos to take, and what never to say. Fill it in, print it, laminate it.</div>
+    </div>
+    <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13)">
+      <iframe id="accident-frame" src="accident-card.html" style="width:100%;border:none;display:block;min-height:600px;" scrolling="no" title="Car Accident Response Card"></iframe>
+    </div>
+    <div class="dw-sec" style="background:rgba(28,18,8,.04)">
+      <div class="dw-eyebrow">READY FOR MORE?</div>
+      <div class="dw-title" style="font-size:1.4rem;margin-bottom:12px">GET A FULL EMERGENCY PLAN</div>
+      <div class="dw-body" style="margin-bottom:0">The card covers the scene. A Safe Steps plan covers everything before and after — medical, legal, and family communication.</div>
       <a class="dw-btnp" onclick="nav('assessment')">TAKE ASSESSMENT</a>
       <a class="dw-btns" onclick="nav('trial')">APPLY FOR FREE TRIAL</a>
     </div>
