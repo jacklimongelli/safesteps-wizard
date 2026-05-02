@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spotter's Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--sky:#070a12;--panel:rgba(10,18,35,0.88);--border:rgba(255,255,255,0.07);--cloud:#dde6f2;--muted:#5a7490;--accent:#f5a623;--correct:#3ddc84;--wrong:#ff4d4d;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--sky);color:var(--cloud);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 80px;}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse 80% 40% at 50% 100%,#071428 0%,transparent 60%),linear-gradient(180deg,#020508 0%,#07090f 100%);}
+.wrap{position:relative;z-index:1;width:100%;max-width:820px;animation:fadeUp .5s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;}
+.brand-tag{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(245,166,35,.3);padding:3px 8px;border-radius:2px;width:fit-content;margin-bottom:4px;}
+.brand-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,6vw,3.6rem);letter-spacing:.06em;line-height:1;color:#fff;}
+.scoreboard{display:flex;gap:20px;align-items:flex-end;}
+.sc-label{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+.sc-val{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.05em;line-height:1;color:#fff;}
+.sc-val.streak{color:var(--accent);}
+.cat-bar{display:flex;gap:8px;margin-bottom:18px;}
+.cat-btn{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;padding:7px 16px;border-radius:3px;border:1px solid var(--border);background:var(--panel);color:var(--muted);cursor:pointer;transition:all .18s ease;backdrop-filter:blur(8px);}
+.cat-btn:hover{border-color:rgba(255,255,255,.2);color:var(--cloud);}
+.cat-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(245,166,35,.08);}
+.photo-card{position:relative;width:100%;aspect-ratio:16/9;border-radius:6px;overflow:hidden;background:#0b1525;margin-bottom:18px;box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px var(--border);}
+.photo-card img{width:100%;height:100%;object-fit:cover;display:none;transition:transform .4s ease;}
+.photo-card:hover img{transform:scale(1.02);}
+.loading-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.spinner{width:36px;height:36px;border:2px solid rgba(255,255,255,.08);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.photo-badge{position:absolute;top:14px;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:2px;backdrop-filter:blur(8px);}
+.cat-badge{left:14px;}
+.cat-badge.military{background:rgba(224,82,82,.12);border:1px solid #e05252;color:#e05252;}
+.cat-badge.civilian{background:rgba(74,158,255,.12);border:1px solid #4a9eff;color:#4a9eff;}
+.q-row{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.q-num{font-family:'Bebas Neue',sans-serif;font-size:4rem;color:rgba(255,255,255,.06);line-height:1;flex-shrink:0;}
+.q-text{font-size:clamp(.95rem,2.2vw,1.15rem);font-weight:300;line-height:1.4;}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.ans-btn{background:var(--panel);border:1px solid var(--border);border-radius:5px;padding:14px 18px;color:var(--cloud);font-family:'DM Sans',sans-serif;font-size:.88rem;cursor:pointer;transition:all .18s ease;display:flex;align-items:center;gap:12px;}
+.ans-btn.correct{background:rgba(61,220,132,.1);border-color:var(--correct);}
+.ans-btn.wrong{background:rgba(255,77,77,.08);border-color:var(--wrong);}
+.ans-btn.dimmed{opacity:.3;}
+.result-panel{background:var(--panel);border:1px solid var(--border);border-radius:5px;padding:20px 24px;display:none;margin-bottom:16px;}
+.result-panel.show{display:block;}
+.specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:14px;}
+.spec-item{border-left:2px solid rgba(245,166,35,.35);padding-left:12px;}
+.spec-label{font-family:'DM Mono',monospace;font-size:.58rem;text-transform:uppercase;color:var(--muted);}
+.next-btn{margin-top:14px;background:transparent;border:1px solid var(--accent);color:var(--accent);font-family:'DM Mono',monospace;font-size:.72rem;padding:10px 22px;border-radius:3px;cursor:pointer;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div>
+      <div class="brand-tag">Spotter's Challenge</div>
+      <div class="brand-title">What's That Plane?</div>
+    </div>
+    <div class="scoreboard">
+      <div><div class="sc-label">Score</div><div class="sc-val" id="scoreVal">0</div></div>
+      <div><div class="sc-label">Streak</div><div class="sc-val streak" id="streakVal">0</div></div>
+    </div>
+  </div>
+
+  <div class="cat-bar">
+    <button class="cat-btn active" id="btn-all" onclick="setCategory('all')">All Aircraft</button>
+    <button class="cat-btn" id="btn-military" onclick="setCategory('military')">Military</button>
+    <button class="cat-btn" id="btn-civilian" onclick="setCategory('civilian')">Civilian</button>
+  </div>
+
+  <div class="photo-card" id="photoCard">
+    <div class="loading-state" id="loadingState"><div class="spinner"></div></div>
+    <img id="planeImg" />
+    <div class="photo-badge cat-badge" id="catBadge"></div>
+  </div>
+
+  <div class="q-row">
+    <div class="q-num" id="qNum">01</div>
+    <div class="q-text"><strong>Identify this aircraft.</strong></div>
+  </div>
+
+  <div class="answers" id="answers"></div>
+
+  <div class="result-panel" id="resultPanel">
+    <div id="resultVerdict" style="font-family:'Bebas Neue'; font-size:1.5rem; margin-bottom:10px;"></div>
+    <div class="specs-grid" id="specsGrid"></div>
+    <div id="tipBlock" style="font-size:0.82rem; color:var(--muted); border-top:1px solid var(--border); padding-top:10px;"></div>
+    <button class="next-btn" onclick="nextQuestion()">↻ Next Aircraft</button>
+  </div>
+</div>
+
+<script>
+// FULL FLEET DATA
+const FLEET = [{"n":"Fairchild Republic A-10C Thunderbolt II","w":"Fairchild_Republic_A-10_Thunderbolt_II","c":"military","x":["Sukhoi Su-25 Frogfoot","McDonnell Douglas AV-8B Harrier II","SEPECAT Jaguar"],"t":"Twin TF34 engines mounted HIGH on the rear fuselage above the wing. Wide straight wing. Enormous GAU-8 cannon barrel protrudes from the nose."},{"n":"Rockwell B-1B Lancer","w":"Rockwell_B-1_Lancer","c":"military","x":["Northrop Grumman B-2A Spirit","Tupolev Tu-160 Blackjack","Boeing B-52H Stratofortress"],"t":"Variable-sweep swing-wing bomber. Four engines in two paired underwing nacelles. Needle-like nose. When wings sweep back the silhouette becomes a pure arrowhead."},{"n":"Northrop Grumman B-2A Spirit","w":"Northrop_Grumman_B-2_Spirit","c":"military","x":["Northrop Grumman B-21 Raider","Rockwell B-1B Lancer","Lockheed F-117A Nighthawk"],"t":"Unique flying-wing — no fuselage, no tail, just a smooth bat-wing shape with a jagged trailing edge. Four engines buried inside the wing."},{"n":"Northrop Grumman B-21 Raider","w":"Northrop_Grumman_B-21_Raider","c":"military","x":["Northrop Grumman B-2A Spirit","Rockwell B-1B Lancer","Lockheed Martin F-22A Raptor"],"t":"Flying-wing like the B-2 but smoother and more refined. A single continuous curved leading edge with no breaks. Slightly smaller than the B-2."},{"n":"Boeing B-52H Stratofortress","w":"Boeing_B-52_Stratofortress","c":"military","x":["Rockwell B-1B Lancer","Tupolev Tu-95MS Bear","Boeing B-47 Stratojet"],"t":"EIGHT turbofan engines in FOUR paired pods under a very high-aspect swept wing. No other bomber has eight engines. Distinctive drooped nose and bicycle landing gear."},{"n":"Lockheed C-5M Super Galaxy","w":"Lockheed_C-5_Galaxy","c":"military","x":["Boeing C-17A Globemaster III","Antonov An-124 Ruslan","Airbus A400M Atlas"],"t":"Four massive engines under a very high-set T-tail wing. The upward-hinged visor nose is a key identifier. The T-tail towers 20 m above the ground."},{"n":"Boeing C-17A Globemaster III","w":"McDonnell_Douglas_C-17_Globemaster_III","c":"military","x":["Lockheed C-5M Super Galaxy","Airbus A400M Atlas","Ilyushin Il-76MD"],"t":"Four turbofans on a high-mounted wing with a T-tail. Large bulging cockpit windows. Distinctive winglets at the wingtips — unusual for a military transport."},{"n":"Boeing VC-25A","w":"Boeing_VC-25","c":"military","x":["Boeing 747-400","Boeing E-4B Nightwatch","Boeing C-32A"],"t":"Essentially a Boeing 747-200. The iconic powder blue and white 'United States of America' livery designed by Raymond Loewy is unmistakable worldwide."},{"n":"Boeing KC-46A Pegasus","w":"Boeing_KC-46_Pegasus","c":"military","x":["Boeing 767-300ER","Boeing KC-135R Stratotanker","Airbus A330 MRTT"],"t":"Looks almost identical to a Boeing 767-200ER. Military grey livery. Refueling boom visible under the rear fuselage. Wing hardpoints for external fuel pods."},{"n":"Boeing KC-135R Stratotanker","w":"Boeing_KC-135_Stratotanker","c":"military","x":["Boeing 707-320C","Boeing KC-46A Pegasus","Douglas DC-8-63"],"t":"Four CFM56 engines under a low swept wing — looks like an early 707 in military grey. The flying boom refueling system under the tail is the key distinguisher."},{"n":"Boeing RC-135V Rivet Joint","w":"Boeing_RC-135","c":"military","x":["Boeing KC-135R Stratotanker","Boeing E-3G Sentry","Boeing WC-135W Constant Phoenix"],"t":"Based on KC-135 airframe but covered in antenna blisters and fairings. The distinctive 'hog nose' cheek fairings on the forward fuselage are the giveaway."},{"n":"Boeing E-3G Sentry","w":"Boeing_E-3_Sentry","c":"military","x":["Boeing RC-135V Rivet Joint","Boeing E-4B Nightwatch","Boeing WC-135W Constant Phoenix"],"t":"A Boeing 707 airframe with an enormous rotating radar disc (rotodome) on a pylon above the rear fuselage. Nothing else carries a flying saucer on its back."},{"n":"Boeing E-4B Nightwatch","w":"Boeing_E-4","c":"military","x":["Boeing VC-25A","Boeing C-32A","Boeing KC-46A Pegasus"],"t":"Essentially a white 747-200. The distinctive SHF satellite comms dome atop the forward fuselage behind the cockpit is the clearest distinguisher."},{"n":"McDonnell Douglas F-15C Eagle","w":"McDonnell_Douglas_F-15_Eagle","c":"military","x":["McDonnell Douglas F-15E Strike Eagle","Sukhoi Su-27 Flanker","Boeing F/A-18E Super Hornet"],"t":"Twin-engine with very large square-tipped vertical stabilizers. Twin canted tails and flat engine inlets on each side of the fuselage."},{"n":"McDonnell Douglas F-15E Strike Eagle","w":"McDonnell_Douglas_F-15E_Strike_Eagle","c":"military","x":["McDonnell Douglas F-15C Eagle","Boeing F-15EX Eagle II","Sukhoi Su-34 Fullback"],"t":"Two seats under the canopy. Conformal fuel tanks hugging each engine intake — the F-15C has none. Often in two-tone grey or tan/grey desert camouflage."},{"n":"Boeing F-15EX Eagle II","w":"Boeing_F-15EX_Eagle_II","c":"military","x":["McDonnell Douglas F-15E Strike Eagle","McDonnell Douglas F-15C Eagle","Lockheed Martin F-22A Raptor"],"t":"Visually nearly identical to the F-15E. Distinguished mainly by updated avionics and EPAWSS electronic warfare system. Almost impossible to tell apart externally."},{"n":"General Dynamics F-16C Fighting Falcon","w":"General_Dynamics_F-16_Fighting_Falcon","c":"military","x":["McDonnell Douglas F/A-18C Hornet","Dassault Mirage 2000","Saab JAS 39 Gripen"],"t":"Single-engine with large bubble canopy and distinctive chin inlet under the nose. Blended wing-body design. Single nozzle exhaust at the rear."},{"n":"Lockheed Martin F-22A Raptor","w":"Lockheed_Martin_F-22_Raptor","c":"military","x":["Lockheed Martin F-35A Lightning II","Sukhoi Su-57 Felon","Eurofighter Typhoon"],"t":"Massive twin-engine stealth fighter with flat angled surfaces everywhere. Trapezoidal engine inlets. Canted twin tails. Fuselage blends seamlessly into the wing."},{"n":"Lockheed Martin F-35A Lightning II","w":"Lockheed_Martin_F-35_Lightning_II","c":"military","x":["Lockheed Martin F-22A Raptor","Boeing F/A-18E Super Hornet","Eurofighter Typhoon"],"t":"Single-engine stealth fighter. Stocky diamond-shaped wing. ONE vertical tail (unlike the twin-tail F-22). Large sensor aperture under the nose."},{"n":"Lockheed Martin F-35B Lightning II","w":"Lockheed_Martin_F-35_Lightning_II","c":"military","x":["Lockheed Martin F-35A Lightning II","McDonnell Douglas AV-8B Harrier II","Lockheed Martin F-35C Lightning II"],"t":"Similar to F-35A but slightly shorter. The large lift fan door on the upper fuselage behind the cockpit is unique to the B variant."},{"n":"Lockheed Martin F-35C Lightning II","w":"Lockheed_Martin_F-35_Lightning_II","c":"military","x":["Lockheed Martin F-35A Lightning II","Boeing F/A-18E Super Hornet","McDonnell Douglas F/A-18C Hornet"],"t":"Largest wings of the three F-35 variants — wingtips fold upward for carrier deck storage. Reinforced landing gear. Arresting hook under the tail."},{"n":"McDonnell Douglas F/A-18C Hornet","w":"McDonnell_Douglas_F/A-18_Hornet","c":"military","x":["Boeing F/A-18E Super Hornet","General Dynamics F-16C Fighting Falcon","Dassault Rafale"],"t":"Twin-engine naval fighter. Distinctive Leading Edge eXtensions (LEX) running from the wing root up toward the cockpit. Twin canted tail fins."},{"n":"Boeing F/A-18E Super Hornet","w":"Boeing_F/A-18E/F_Super_Hornet","c":"military","x":["McDonnell Douglas F/A-18C Hornet","Lockheed Martin F-35C Lightning II","Boeing EA-18G Growler"],"t":"Larger than the F/A-18C with squarer rectangular intake shape. Longer nose. Broader LEX. Cheek fairings on each intake are present."},{"n":"Boeing EA-18G Growler","w":"Boeing_EA-18G_Growler","c":"military","x":["Boeing F/A-18E Super Hornet","McDonnell Douglas F/A-18C Hornet","Boeing E-3G Sentry"],"t":"Virtually identical to the F/A-18F Super Hornet but carries bulky AN/ALQ-218 electronic warfare pods on the wingtips instead of missiles."},{"n":"Lockheed U-2S Dragon Lady","w":"Lockheed_U-2","c":"military","x":["Northrop Grumman RQ-4B Global Hawk","Lockheed SR-71 Blackbird","General Atomics MQ-9B Reaper"],"t":"Impossibly long glider-like wings on a very narrow fuselage. Single engine. Bicycle landing gear — wingtips nearly drag on the ground on landing."},{"n":"Beechcraft T-6A Texan II","w":"Beechcraft_T-6_Texan_II","c":"military","x":["North American T-6 Texan","Pilatus PC-9","Embraer Super Tucano"],"t":"Single PT6A turboprop with bubble canopy and tandem seats. Low-wing clean design. Yellow and white USAF trainer livery is very distinctive."},{"n":"Northrop T-38C Talon","w":"Northrop_T-38_Talon","c":"military","x":["BAE Systems Hawk T.1","Aermacchi MB-339","McDonnell Douglas T-45C Goshawk"],"t":"Very sleek narrow twin-engine supersonic trainer. Two small J85 turbojets side-by-side in the rear fuselage. Long pointed nose. Almost always all-white."},{"n":"Raytheon T-1A Jayhawk","w":"Raytheon_T-1_Jayhawk","c":"military","x":["Bombardier Learjet 35A","Northrop T-38C Talon","Cessna Citation CJ2+"],"t":"Small twin-engine business-jet-derived trainer in white and gold USAF livery. Based on the Beechcraft 400A. Very sleek and fast-looking."},{"n":"McDonnell Douglas T-45C Goshawk","w":"McDonnell_Douglas_T-45_Goshawk","c":"military","x":["BAE Systems Hawk T.2","Northrop T-38C Talon","Aermacchi MB-339"],"t":"Single-engine carrier-capable trainer based on the BAE Hawk. White and orange US Navy livery. Arresting hook visible under the tail. Folding wingtips."},{"n":"Sikorsky UH-60M Black Hawk","w":"Sikorsky_UH-60_Black_Hawk","c":"military","x":["Bell UH-1Y Venom","Eurocopter AS532 Cougar","AgustaWestland AW149"],"t":"Mid-size helicopter with 4-blade main rotor. Distinctive boat hull shaped fuselage. T-tail horizontal stabilizer at the end of the tail boom."},{"n":"Boeing CH-47F Chinook","w":"Boeing_CH-47_Chinook","c":"military","x":["Sikorsky CH-53E Super Stallion","Mil Mi-26 Halo","Kaman K-MAX"],"t":"Unmistakable tandem rotors — one at each end of the fuselage with no tail rotor. The fuselage is essentially a rectangular box with rotors on pylons fore and aft."},{"n":"Boeing AH-64E Apache Guardian","w":"Boeing_AH-64_Apache","c":"military","x":["Bell AH-1Z Viper","Mil Mi-28 Havoc","Kamov Ka-52 Alligator"],"t":"Tandem-seat attack helicopter with stub weapons wings. The distinctive Longbow radar dome sits ABOVE the main rotor hub — nothing else has this feature."},{"n":"Sikorsky CH-53E Super Stallion","w":"Sikorsky_CH-53E_Super_Stallion","c":"military","x":["Boeing CH-47F Chinook","Mil Mi-26 Halo","Sikorsky UH-60M Black Hawk"],"t":"Very large helicopter with THREE GE turboshaft engines. 7-blade main rotor. The tail rotor is on the starboard side of the tail boom, canted at 20 degrees."},{"n":"Bell UH-1N Twin Huey","w":"Bell_UH-1N_Twin_Huey","c":"military","x":["Sikorsky UH-60M Black Hawk","Bell AH-1Z Viper","MD Helicopters MD 500"],"t":"Classic Huey silhouette with a two-blade teeter-totter main rotor. The distinctive wop-wop sound from the semi-rigid rotor system is unmistakable."},{"n":"Bell Boeing MV-22B Osprey","w":"Bell_Boeing_V-22_Osprey","c":"military","x":["AgustaWestland AW609","Sikorsky CH-53E Super Stallion","Kamov Ka-22"],"t":"Completely unique — two massive prop-rotor assemblies on the wingtips that tilt from vertical (helicopter) to horizontal (airplane). Nothing else looks like this."},{"n":"Northrop Grumman RQ-4B Global Hawk","w":"Northrop_Grumman_RQ-4_Global_Hawk","c":"military","x":["Lockheed U-2S Dragon Lady","General Atomics MQ-9B Reaper","Boeing P-8A Poseidon"],"t":"Unmanned drone with distinctive humped forward fuselage. Very long glider-like wings. Single turbofan. Smooth rounded nose sensor dome."},{"n":"General Atomics MQ-9B Reaper","w":"General_Atomics_MQ-9_Reaper","c":"military","x":["Northrop Grumman RQ-4B Global Hawk","General Atomics MQ-1C Gray Eagle","IAI Heron TP"],"t":"UCAV with an inverted V-tail BELOW the tail boom (not above). Pusher turboprop at the rear. Bulbous multi-sensor ball under the nose. Long straight wing."},{"n":"Boeing P-8A Poseidon","w":"Boeing_P-8_Poseidon","c":"military","x":["Boeing 737-800","Kawasaki P-1","Lockheed P-3C Orion"],"t":"Almost identical to a Boeing 737-800 at first glance. Look for belly weapons bay doors, underwing hardpoints, and absence of passenger windows in the rear cabin."},{"n":"Lockheed C-130J Super Hercules","w":"Lockheed_Martin_C-130J_Super_Hercules","c":"military","x":["Boeing C-17A Globemaster III","Airbus A400M Atlas","CASA CN-235"],"t":"Four turboprops on a high-mounted straight wing with a T-tail. The classic Herk profile — squat and utilitarian with a bulbous radar nose — is instantly recognizable."},{"n":"Lockheed AC-130W Stinger II","w":"Lockheed_AC-130","c":"military","x":["Lockheed C-130J Super Hercules","Airbus A400M Atlas","Boeing C-17A Globemaster III"],"t":"A C-130 Hercules with weapons hanging out of the left side of the fuselage — 25mm Gatling gun, 40mm Bofors, and 105mm howitzer. Sensor pods under the fuselage."},{"n":"Boeing KC-135 Stratotanker","w":"Boeing_KC-135_Stratotanker","c":"military","x":["Boeing 707-320C","Boeing KC-46A Pegasus","Douglas DC-8-63"],"t":"Four CFM56 engines under a low swept wing — looks exactly like an early 707 in military grey. The refueling boom under the tail distinguishes it."},{"n":"Fairchild Dornier 328JET","w":"Fairchild_Dornier_328JET","c":"military","x":["Embraer ERJ-135","Bombardier CRJ-200","Cessna Citation XLS+"],"t":"Small regional jet used by the USAF for light transport. Circular fuselage cross-section. Two BMW/Rolls-Royce BR710 turbofans under a swept wing."},{"n":"CASA CN-235","w":"CASA_CN-235","c":"military","x":["Lockheed C-130J Super Hercules","CASA C-295","De Havilland Canada DHC-8"],"t":"Small twin turboprop military transport with a high-mounted straight wing and rear loading ramp. Much smaller than the C-130. CT7 engines visible."},{"n":"Pilatus PC-12 NG","w":"Pilatus_PC-12","c":"military","x":["Cessna 208B Grand Caravan EX","Beechcraft King Air 200","Quest Kodiak 100"],"t":"Single PT6A turboprop in a clean low-wing airframe. Very sleek for a utility turboprop. The large cargo door on the rear left side is distinctive."},{"n":"Bombardier Global Express C-37B","w":"Bombardier_Global_Express","c":"military","x":["Gulfstream G550","Bombardier Challenger 604","Dassault Falcon 7X"],"t":"Large ultra-long-range bizjet. Distinctive drooped nose, very long fuselage, high-aspect swept wing with anhedral outer panels. Two RR BR710 turbofans."},{"n":"Learjet C-21A","w":"Learjet_35","c":"military","x":["Northrop T-38C Talon","Cessna Citation CJ2+","Embraer Phenom 300E"],"t":"Classic Learjet: low swept wing with distinctive fuel tip tanks, two rear-mounted Garrett TFE731 turbofans, T-tail. Slim sleek fuselage in white and grey."},{"n":"Cirrus T-53A","w":"Cirrus_SR22","c":"military","x":["Cessna 172S Skyhawk","Beechcraft T-6A Texan II","Diamond DA40 NG"],"t":"Sleek low-wing composite single-engine aircraft. CAPS parachute housing visible on the tail. Very modern sculpted appearance compared to most trainers."},{"n":"Bombardier Challenger 604","w":"Bombardier_Challenger_600_series","c":"civilian","x":["Bombardier Challenger 300","Gulfstream G450","Dassault Falcon 900EX"],"t":"Large-cabin bizjet with rear-mounted GE CF34 engines and a T-tail. The wide almost-circular fuselage cross-section is distinctive. Winglets on the swept wing."},{"n":"Bombardier Challenger 300","w":"Bombardier_Challenger_300","c":"civilian","x":["Bombardier Challenger 604","Cessna Citation Sovereign+","Embraer Legacy 600"],"t":"Mid-size bizjet with a distinctive semi-supercritical wing. Honeywell HTF7000 engine nacelles have a unique shape. Winglets present. Slightly kinked wing."},{"n":"Gulfstream G550","w":"Gulfstream_G550","c":"civilian","x":["Gulfstream G450","Bombardier Global 6000","Dassault Falcon 900EX"],"t":"Classic Gulfstream look: very oval cabin windows, two Rolls-Royce BR710 engines, tall vertical tail. Long tapered fuselage. Large and graceful."},{"n":"Gulfstream G650ER","w":"Gulfstream_G650","c":"civilian","x":["Gulfstream G550","Bombardier Global 7500","Dassault Falcon 8X"],"t":"Longer than the G550 with larger BR725 engines. The wing has a double-curvature planform. Very large oval windows — noticeably bigger than on the G550."},{"n":"Gulfstream G450","w":"Gulfstream_G450","c":"civilian","x":["Gulfstream G550","Gulfstream G280","Dassault Falcon 900EX"],"t":"Classic Gulfstream oval windows, T-tail, Rolls-Royce Tay turbofans. Slightly smaller than the G550. The Tay nacelles are distinctly more cylindrical."},{"n":"Gulfstream GIV-SP","w":"Gulfstream_IV","c":"civilian","x":["Gulfstream G450","Gulfstream G550","Bombardier Challenger 604"],"t":"Very similar to the G450. Classic oval Gulfstream windows, Tay turbofans. Distinguished from G450 mainly by its older analog cockpit."},{"n":"Gulfstream G500","w":"Gulfstream_G500/G600","c":"civilian","x":["Gulfstream G550","Gulfstream G650ER","Bombardier Global 6000"],"t":"New-generation Gulfstream with symmetry-wing design. PW800 engines with distinctive large nacelles. Wider panoramic oval windows than prior Gulfstreams."},{"n":"Dassault Falcon 7X","w":"Dassault_Falcon_7X","c":"civilian","x":["Dassault Falcon 900EX","Dassault Falcon 8X","Bombardier Global 6000"],"t":"Three PW307A engines — two under the wing, one in the tail via S-duct. The S-duct inlet visible as a scoop between the fin and rear fuselage."},{"n":"Dassault Falcon 900EX","w":"Dassault_Falcon_900","c":"civilian","x":["Dassault Falcon 7X","Dassault Falcon 2000LXS","Bombardier Challenger 604"],"t":"Three TFE731 engines in trijet configuration. Shorter than the 7X. S-duct tail engine present. Classic French elegance with oval cabin windows."},{"n":"Dassault Falcon 2000LXS","w":"Dassault_Falcon_2000","c":"civilian","x":["Dassault Falcon 900EX","Bombardier Challenger 300","Gulfstream G450"],"t":"Twin CFE738 turbofans at the rear — unlike the 900/7X trijet, ONLY TWO engines. Same Dassault fuselage cross-section as the 900."},{"n":"Dassault Falcon 50EX","w":"Dassault_Falcon_50","c":"civilian","x":["Dassault Falcon 900EX","Dassault Falcon 7X","Cessna Citation Sovereign+"],"t":"Three TFE731 engines in trijet configuration like the 900 but notably smaller. Shorter fuselage. Third engine S-duct distinguishes all Dassault trijets."},{"n":"Embraer Phenom 300E","w":"Embraer_Phenom_300","c":"civilian","x":["Cessna Citation CJ4+","Honda HA-420 HondaJet","Bombardier Learjet 75"],"t":"Light jet with rear-mounted PW535E engines and a T-tail. The nose has a distinctive forward-raked shark-like profile. Winglets standard."},{"n":"Embraer Phenom 100EV","w":"Embraer_Phenom_100","c":"civilian","x":["Embraer Phenom 300E","Cessna Citation Mustang","Eclipse 500"],"t":"Small twin VLJ with rear-mounted PW617 engines and T-tail. Similar to the Phenom 300 but noticeably smaller — shorter fuselage and smaller windows."},{"n":"Embraer Legacy 600","w":"Embraer_Legacy_600","c":"civilian","x":["Bombardier Challenger 604","Gulfstream G450","Cessna Citation Longitude"],"t":"Large-cabin bizjet derived from the ERJ-145. The fuselage is noticeably wider and taller than most bizjets. Rolls-Royce AE3007 engines at the rear."},{"n":"Honda HA-420 HondaJet Elite II","w":"Honda_HA-420_HondaJet","c":"civilian","x":["Embraer Phenom 100EV","Cessna Citation Mustang","Cirrus Vision SF50"],"t":"Completely unique — GE Honda HF120 engines on pylons ABOVE and BEHIND the wing, not at the tail. No other production jet has this layout."},{"n":"Cessna Citation X+","w":"Cessna_Citation_X","c":"civilian","x":["Bombardier Challenger 300","Gulfstream G280","Cessna Citation Longitude"],"t":"Very sharply swept wing (37 degrees) — more sweep than most airliners. Rear-mounted Rolls-Royce AE3007 engines. T-tail. The aggressive wing sweep is the giveaway."},{"n":"Cessna Citation Sovereign+","w":"Cessna_Citation_Sovereign","c":"civilian","x":["Cessna Citation Longitude","Bombardier Challenger 300","Gulfstream G280"],"t":"Mid-size Citation with PW306C engines. Clean conventional low-wing design. The Citation family straight wing and T-tail are present."},{"n":"Cessna Citation Latitude","w":"Cessna_Citation_Latitude","c":"civilian","x":["Cessna Citation Sovereign+","Cessna Citation Longitude","Bombardier Challenger 300"],"t":"Midsize Citation with a noticeably wider fuselage than smaller Citations. PW306D engines. The flat-floor cabin creates a slightly deeper fuselage cross-section."},{"n":"Cessna Citation Longitude","w":"Cessna_Citation_Longitude","c":"civilian","x":["Cessna Citation Sovereign+","Bombardier Challenger 300","Gulfstream G280"],"t":"The largest Citation ever built with Honeywell HTF7700 engines. Longer than the Latitude. Deeper wider fuselage with a supercritical wing."},{"n":"Cessna Citation Excel XLS+","w":"Cessna_Citation_Excel","c":"civilian","x":["Cessna Citation Sovereign+","Cessna Citation Latitude","Bombardier Learjet 75"],"t":"Mid-size Citation with a more-swept wing similar to the Citation X. PW545 engines. Much shorter fuselage than the Citation X."},{"n":"Cessna Citation Mustang","w":"Cessna_Citation_Mustang","c":"civilian","x":["Embraer Phenom 100EV","Honda HA-420 HondaJet","Cirrus Vision SF50"],"t":"Very small twin VLJ with tiny rear-mounted PW615 engines and a T-tail. Much smaller than a standard Citation — almost toy-like proportions."},{"n":"Cessna Citation CJ1+","w":"Cessna_Citation_CJ1","c":"civilian","x":["Cessna Citation Mustang","Embraer Phenom 100EV","Eclipse 500"],"t":"Small light jet with Williams FJ44 engines high on the rear fuselage. T-tail. Straight wing typical of early Citations. Compact proportions."},{"n":"Cessna Citation Bravo","w":"Cessna_Citation_Bravo","c":"civilian","x":["Cessna Citation CJ1+","Cessna Citation Excel XLS+","Hawker 400XP"],"t":"Classic Citation II derivative with JT15D engines and a T-tail. Very straight wing — one of the most conventional light jet designs."},{"n":"Cessna Citation CJ2+","w":"Cessna_Citation_CJ2","c":"civilian","x":["Cessna Citation CJ1+","Cessna Citation Mustang","Embraer Phenom 100EV"],"t":"Slightly longer than the CJ1 with Williams FJ44-3A engines. Same T-tail and straight wing. The CJ series is hard to tell apart — fuselage length is the main clue."},{"n":"Eclipse 500","w":"Eclipse_500","c":"civilian","x":["Cessna Citation CJ1+","Honda HA-420 HondaJet","Embraer Phenom 100EV"],"t":"One of the smallest twin-engine jets ever certified. Tiny PW610 engines. T-tail. Very compact almost toy-like. The circular fuselage cross-section is unique."}];
+
+let currentCategory = 'all';
+let score = 0;
+let streak = 0;
+let currentAircraft = null;
+
+function setCategory(cat) {
+  currentCategory = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`btn-${cat}`).classList.add('active');
+  nextQuestion();
+}
+
+async function fetchSpecs(title) {
+  try {
+    const r = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${title}`);
+    const d = await r.json();
+    return {
+      img: d.originalimage ? d.originalimage.source : null,
+      extract: d.extract || ""
+    };
+  } catch(e) { return {}; }
+}
+
+function nextQuestion() {
+  const filtered = currentCategory === 'all' ? FLEET : FLEET.filter(a => a.c === currentCategory);
+  // ALWAYS RANDOM SELECTION
+  currentAircraft = filtered[Math.floor(Math.random() * filtered.length)];
+  
+  document.getElementById('resultPanel').classList.remove('show');
+  document.getElementById('loadingState').style.display = 'flex';
+  document.getElementById('planeImg').style.display = 'none';
+  document.getElementById('answers').innerHTML = '';
+  
+  loadAircraft(currentAircraft);
+}
+
+async function loadAircraft(plane) {
+  const data = await fetchSpecs(plane.w);
+  const img = document.getElementById('planeImg');
+  
+  if (data.img) {
+    img.src = data.img;
+    img.style.display = 'block';
+    document.getElementById('loadingState').style.display = 'none';
+  }
+
+  document.getElementById('catBadge').textContent = plane.c;
+  document.getElementById('catBadge').className = `photo-badge cat-badge ${plane.c}`;
+
+  const choices = [plane.n, ...plane.x].sort(() => Math.random() - 0.5);
+  choices.forEach(choice => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    btn.textContent = choice;
+    btn.onclick = () => checkAnswer(choice, plane.n, btn);
+    document.getElementById('answers').appendChild(btn);
+  });
+}
+
+function checkAnswer(guess, correct, btn) {
+  const allBtns = document.querySelectorAll('.ans-btn');
+  allBtns.forEach(b => b.disabled = true);
+
+  if (guess === correct) {
+    btn.classList.add('correct');
+    score += 10;
+    streak++;
+    document.getElementById('resultVerdict').textContent = "Correct! Nice spotting.";
+    document.getElementById('resultVerdict').style.color = "var(--correct)";
+  } else {
+    btn.classList.add('wrong');
+    streak = 0;
+    document.getElementById('resultVerdict').textContent = `Incorrect. That is a ${correct}.`;
+    document.getElementById('resultVerdict').style.color = "var(--wrong)";
+    allBtns.forEach(b => { if(b.textContent === correct) b.classList.add('correct'); });
+  }
+
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('streakVal').textContent = streak;
+  document.getElementById('tipBlock').innerHTML = `<strong>Spotter's Tip:</strong> ${currentAircraft.t}`;
+  document.getElementById('resultPanel').classList.add('show');
+}
+
+// Start game
+nextQuestion();
+</script>
+</body>
+</html>
