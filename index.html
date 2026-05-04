@@ -212,6 +212,10 @@ body{
 .dw-eyebrow::before{content:'';display:block;width:12px;height:1px;background:rgba(28,18,8,.55)}
 .dw-title{font-family:Arial,sans-serif;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:.04em;color:#1C1208;line-height:1.05;margin-bottom:14px}
 .dw-body{font-family:Arial,sans-serif;font-size:.84rem;line-height:1.68;color:rgba(28,18,8,.75);border-left:3px solid rgba(28,18,8,.36);padding-left:14px}
+.dw-list{list-style:none;padding:0 0 0 14px;margin:0 0 20px 0;border-left:3px solid rgba(28,18,8,.36)}
+.dw-list li{font-family:Arial,sans-serif;font-size:.84rem;line-height:1.68;color:rgba(28,18,8,.75);padding:5px 0;border-bottom:1px solid rgba(28,18,8,.1);display:flex;gap:8px;align-items:flex-start}
+.dw-list li::before{content:'//';color:rgba(28,18,8,.32);flex-shrink:0;font-size:.55rem;padding-top:3px;font-weight:bold;letter-spacing:.05em}
+.dw-list li:last-child{border-bottom:none}
 .dw-hero{padding:32px 20px 28px;border-bottom:2px solid rgba(28,18,8,.16);position:relative}
 .dw-hero::before{content:'';position:absolute;top:10px;left:10px;width:20px;height:20px;border-top:2px solid rgba(28,18,8,.33);border-left:2px solid rgba(28,18,8,.33)}
 .dw-hero::after{content:'';position:absolute;bottom:10px;right:10px;width:20px;height:20px;border-bottom:2px solid rgba(28,18,8,.33);border-right:2px solid rgba(28,18,8,.33)}
@@ -402,7 +406,7 @@ body{
 .sv5-pkg-card .sv5-name-row{margin-bottom:9px;padding-bottom:9px}
 .sv5-pkg-card .sv5-name{font-size:1.15rem}
 .sv5-pkg-card-wide{grid-column:1 / -1}
-.sv5-pkg-desc{font-family:Arial,sans-serif;font-size:.68rem;line-height:1.55;color:rgba(28,18,8,.68);margin-bottom:8px;position:relative;z-index:1;flex:1}
+.sv5-pkg-desc{font-family:Arial,sans-serif;font-size:.82rem;line-height:1.55;color:rgba(28,18,8,.68);margin-bottom:8px;position:relative;z-index:1;flex:1}
 .sv5-pkg-scens{font-family:Arial,sans-serif;font-size:.6rem;color:rgba(28,18,8,.48);line-height:1.45;position:relative;z-index:1;margin-bottom:10px}
 .sv5-pkg-includes{display:flex;gap:5px;flex-wrap:wrap;position:relative;z-index:1}
 .sv5-pkg-includes span{font-family:Arial,sans-serif;font-size:.42rem;letter-spacing:.09em;color:rgba(28,18,8,.55);border:1px solid rgba(28,18,8,.28);padding:2px 6px}
@@ -414,6 +418,7 @@ body{
 .sv5-card-wide{grid-column:1 / -1}
 .sv5-solo-row{background:rgba(28,18,8,.18);padding-top:3px;display:flex;justify-content:center}
 .sv5-solo-2col .sv5-card{width:calc(50% - 1.5px);flex-shrink:0}
+.sv5-solo-2col .sv5-pkg-card{width:calc(50% - 1.5px);flex-shrink:0}
 .sv5-solo-3col .sv5-pkg-card{width:calc(33.333% - 2px);flex-shrink:0}
 @media(max-width:580px){.sv5-solo-2col .sv5-card{width:100%}}
 @media(max-width:640px){.sv5-solo-3col .sv5-pkg-card{width:calc(50% - 1.5px)}}
@@ -727,9 +732,9 @@ body{
     </div>
 
     <!-- 2x2 SCENARIO CARDS -->
-    <div class="sv5-grid">
+    <div class="sv5-pkg-grid">
 
-      <div class="sv5-card">
+      <div class="sv5-pkg-card">
         <div class="sv5-ghost">01</div>
         <div class="sv5-card-top">
           <div class="sv5-code">OPORD-01</div>
@@ -738,18 +743,11 @@ body{
           <div class="sv5-name">HOUSE<br>FIRE</div>
           <div class="sv5-price-badge">$500</div>
         </div>
-        <ul class="sv5-list">
-          <li>Spiral-bound, laminated plan mapped to your exact floor plan</li>
-          <li>Step-by-step task assignment for every person in the household</li>
-          <li>First responder 1-pager with vital info for efficient response</li>
-          <li>Dynamic rehearsal protocol designed to build proficiency</li>
-          <li>911 script, equipment specs, post-fire insurance documentation</li>
-          <li>Categorical plan designed to cover all possible scenarios</li>
-        </ul>
+        <div class="sv5-pkg-desc">A fully customized set of sequenced tasks designed to ensure family accountability and survivability during a house fire.</div>
         <a class="sv5-view-link" onclick="nav('plan-fire')">VIEW PLAN →</a>
       </div>
 
-      <div class="sv5-card">
+      <div class="sv5-pkg-card">
         <div class="sv5-ghost">02</div>
         <div class="sv5-card-top">
           <div class="sv5-code">OPORD-02</div>
@@ -758,18 +756,11 @@ body{
           <div class="sv5-name">HOME<br>INVASION</div>
           <div class="sv5-price-badge">$500</div>
         </div>
-        <ul class="sv5-list">
-          <li>Room-by-room defensive position map built to your exact floor plan and entry points</li>
-          <li>Lockdown sequence with a designated safe room, barricade method, and hold protocol</li>
-          <li>Family communication plan with household code words for threat levels</li>
-          <li>Entry-point vulnerability assessment &mdash; doors, windows, garage, sight lines</li>
-          <li>Law enforcement coordination brief: what to say, where to be, and how to signal</li>
-          <li>Equipment brief: door reinforcement hardware, personal alarm, and safe room supply list</li>
-        </ul>
+        <div class="sv5-pkg-desc">A room-by-room defensive plan built to your home's layout and entry points — covering lockdown sequence, safe room protocol, and law enforcement coordination.</div>
         <a class="sv5-view-link" onclick="nav('plan-invasion')">VIEW PLAN →</a>
       </div>
 
-      <div class="sv5-card">
+      <div class="sv5-pkg-card">
         <div class="sv5-ghost">03</div>
         <div class="sv5-card-top">
           <div class="sv5-code">OPORD-03</div>
@@ -778,18 +769,11 @@ body{
           <div class="sv5-name">MEDICAL<br>EMERGENCY</div>
           <div class="sv5-price-badge">$500</div>
         </div>
-        <ul class="sv5-list">
-          <li>Named first-responder role assigned to every household member with clear handoff order</li>
-          <li>Pre-written 911 script with your address, cross-street, entry notes, and gate codes</li>
-          <li>Laminated household medical sheet: blood types, allergies, medications, and physician contacts</li>
-          <li>CPR decision guide and AED location protocol with step-by-step activation instructions</li>
-          <li>Nearest trauma center route card with drive time, backup route, and after-hours notes</li>
-          <li>Equipment brief: first aid kit checklist, AED recommendation, and medication storage protocol</li>
-        </ul>
+        <div class="sv5-pkg-desc">A household-specific response plan covering 911 scripts, role assignments, and documented medical information for every person under your roof.</div>
         <a class="sv5-view-link" onclick="nav('plan-medical')">VIEW PLAN →</a>
       </div>
 
-      <div class="sv5-card">
+      <div class="sv5-pkg-card">
         <div class="sv5-ghost">04</div>
         <div class="sv5-card-top">
           <div class="sv5-code">OPORD-04</div>
@@ -798,40 +782,12 @@ body{
           <div class="sv5-name">WEATHER<br>EVENTS</div>
           <div class="sv5-price-badge">$500</div>
         </div>
-        <ul class="sv5-list">
-          <li>Shelter-in-place map with identified safe zones for each storm type relevant to your area</li>
-          <li>Tiered evacuation plan: 15-minute bug-out, 1-hour departure, and multi-day relocation</li>
-          <li>Family communication tree with primary, secondary, and out-of-area contact protocol</li>
-          <li>72-hour supply checklist built around your household size, medical needs, and pets</li>
-          <li>Power outage plan with utility shutoff instructions and generator or backup power guidance</li>
-          <li>Equipment brief: weather radio, water storage, emergency lighting, and go-bag contents</li>
-        </ul>
+        <div class="sv5-pkg-desc">A tiered response plan covering shelter-in-place, evacuation, and 72-hour supply protocols built around your area's specific threats.</div>
         <a class="sv5-view-link" onclick="nav('plan-weather')">VIEW PLAN →</a>
       </div>
 
     </div>
 
-    <!-- OPORD-05 solo centered -->
-    <div class="sv5-solo-row sv5-solo-2col">
-      <div class="sv5-card">
-        <div class="sv5-ghost">05</div>
-        <div class="sv5-card-top">
-          <div class="sv5-code">OPORD-05</div>
-        </div>
-        <div class="sv5-name-row">
-          <div class="sv5-name">IN-PERSON<br>TRAINING</div>
-          <div class="sv5-price-badge">$500</div>
-        </div>
-        <ul class="sv5-list">
-          <li>Full-day on-site session with a veteran Safe Steps advisor at your home</li>
-          <li>Live walkthrough of every scenario covered in your plan — room by room</li>
-          <li>Timed family drills with real-time coaching and role corrections</li>
-          <li>Hands-on equipment orientation: placement, access, and operation under stress</li>
-          <li>Debrief report with drill results, gaps identified, and a 90-day rehearsal schedule</li>
-          <li>Can be added to any scenario plan or lifestyle package at time of purchase or later</li>
-        </ul>
-      </div>
-    </div>
 
 
     <!-- PACKAGES BANNER -->
@@ -1363,7 +1319,14 @@ function assessFinish(){
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
       <h1>HOME INVASION<br>PLAN</h1>
-      <div class="dw-body">OPORD-02 · $500 · Custom-built to your home's exact layout.</div>
+      <ul class="dw-list">
+        <li>Room-by-room defensive position map built to your exact floor plan and entry points</li>
+        <li>Lockdown sequence with designated safe room, barricade method, and hold protocol</li>
+        <li>Family communication plan with household code words for threat levels</li>
+        <li>Entry-point vulnerability assessment — doors, windows, garage, sight lines</li>
+        <li>Law enforcement coordination brief: what to say, where to be, and how to signal</li>
+        <li>Equipment brief: door reinforcement hardware, personal alarm, and safe room supply list</li>
+      </ul>
     </div>
     <div class="dw-sec">
       <div class="dw-eyebrow">SAMPLE PLAN</div>
@@ -1390,7 +1353,14 @@ function assessFinish(){
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
       <h1>MEDICAL EMERGENCY<br>PLAN</h1>
-      <div class="dw-body">OPORD-03 · $500 · Custom-built to your household's medical profile.</div>
+      <ul class="dw-list">
+        <li>Named first-responder role assigned to every person in the household with clear handoff order</li>
+        <li>Pre-written 911 script with your address, cross-street, entry notes, and gate codes</li>
+        <li>Laminated household medical sheet: blood types, allergies, medications, and physician contacts</li>
+        <li>CPR decision guide and AED location protocol with step-by-step activation instructions</li>
+        <li>Nearest trauma center route card with drive time, backup route, and after-hours notes</li>
+        <li>Equipment brief: first aid kit checklist, AED recommendation, and medication storage protocol</li>
+      </ul>
     </div>
     <div class="dw-sec">
       <div class="dw-eyebrow">SAMPLE PLAN</div>
@@ -1417,7 +1387,14 @@ function assessFinish(){
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
       <h1>WEATHER EVENTS<br>PLAN</h1>
-      <div class="dw-body">OPORD-04 · $500 · Built around your area's specific weather threats.</div>
+      <ul class="dw-list">
+        <li>Shelter-in-place map with identified safe zones for each storm type relevant to your area</li>
+        <li>Tiered evacuation plan: 15-minute bug-out, 1-hour departure, and multi-day relocation</li>
+        <li>Family communication tree with primary, secondary, and out-of-area contact protocol</li>
+        <li>72-hour supply checklist built around your household size, medical needs, and pets</li>
+        <li>Power outage plan with utility shutoff instructions and generator or backup power guidance</li>
+        <li>Equipment brief: weather radio, water storage, emergency lighting, and go-bag contents</li>
+      </ul>
     </div>
     <div class="dw-sec">
       <div class="dw-eyebrow">SAMPLE PLAN</div>
