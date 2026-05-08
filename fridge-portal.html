@@ -105,6 +105,30 @@ async function searchNearby(address,placeType,keyword,keywords){
   return detailed.slice(0,5).map(({_mins,...rest})=>rest);
 }
 
+async function searchByName(facilityName,searchCity,originAddress){
+  const geo=await placesCall({type:"geocode",address:searchCity});
+  if(geo.error) throw new Error(geo.error+(geo.status?" ("+geo.status+")":""));
+  const {lat,lng}=geo;
+  const nearby=await placesCall({type:"nearby",lat,lng,placeType:null,keyword:facilityName,keywords:null});
+  if(nearby.error) throw new Error(nearby.error+(nearby.status?" ("+nearby.status+")":""));
+  const places=nearby.results||[];
+  const detailed=await Promise.all(
+    places.slice(0,5).map(async p=>{
+      try{
+        const[det,drive]=await Promise.all([
+          placesCall({type:"details",place_id:p.place_id}),
+          getDriving(originAddress,p.lat,p.lng),
+        ]);
+        const distLabel=drive?drive.distance+" ("+drive.duration+")":"";
+        const _mins=drive?parseDurationMins(drive.duration):9999;
+        return{name:det.name||p.name,address:det.address||p.address,phone:det.phone||"",distance:distLabel,_mins};
+      }catch{return{name:p.name,address:p.address,phone:"",distance:"",_mins:9999};}
+    })
+  );
+  detailed.sort((a,b)=>a._mins-b._mins);
+  return detailed.slice(0,3).map(({_mins,...rest})=>rest);
+}
+
 const UTILS={
   AL:{gas:[{n:"Spire Alabama",p:"800-292-4008"}],elec:[{n:"Alabama Power",p:"800-888-2726"}],water:[]},
   AK:{gas:[{n:"Enstar Natural Gas",p:"907-334-7760"}],elec:[{n:"Golden Valley Electric",p:"907-452-1151"}],water:[]},
@@ -286,8 +310,72 @@ function FamilyStep({members,setMembers}){
   );
 }
 
-function FacilityStep({title,subtitle,options,loading,errorMsg,selected,onSelect,multiMax,onToggle,onRunSearch}){
+function FacilityStep({title,subtitle,options,loading,errorMsg,selected,onSelect,multiMax,onToggle,onRunSearch,homeCity,homeAddress,onAddOption}){
   const multi=!!onToggle;
+  const[mOpen,setMOpen]=useState(false);
+  const[mName,setMName]=useState("");
+  const[mCity,setMCity]=useState(homeCity||"");
+  const[mLoading,setMLoading]=useState(false);
+  const[mResults,setMResults]=useState(null);
+  const[mError,setMError]=useState("");
+  const runManual=async()=>{
+    if(!mName.trim())return;
+    setMLoading(true);setMError("");setMResults(null);
+    try{
+      const r=await searchByName(mName.trim(),mCity||homeCity,homeAddress);
+      if(!r.length)setMError("No results found. Try a different name or city.");
+      else setMResults(r);
+    }catch(e){setMError(e.message||"Search failed.");}
+    setMLoading(false);
+  };
+  const pickManual=r=>{
+    onAddOption(r);
+    setMOpen(false);setMResults(null);setMName("");setMError("");
+  };
+  const manualPanel=(
+    <div style={{border:"1.5px dashed rgba(28,18,8,0.4)",borderRadius:4,padding:"11px 13px",background:"rgba(195,169,125,0.08)",marginTop:4}}>
+      {!mOpen
+        ?<button onClick={()=>setMOpen(true)} style={{background:"transparent",border:"none",padding:0,cursor:"pointer",display:"flex",alignItems:"center",gap:7,color:"rgba(28,18,8,0.6)",fontSize:"0.8rem",fontFamily:"Arial,sans-serif"}}>
+          <span style={{fontSize:"1rem"}}>🔍</span> Don't see it? Search by name…
+        </button>
+        :<div>
+          <div style={{fontWeight:700,fontSize:"0.76rem",color:"#1C1208",marginBottom:9,letterSpacing:"0.04em"}}>Search by facility name</div>
+          <div className="step-grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9,marginBottom:9}}>
+            <Inp label="Facility Name" value={mName} onChange={setMName} placeholder="e.g. UVA Medical Center"/>
+            <Inp label="City" value={mCity} onChange={setMCity} placeholder="e.g. Charlottesville"/>
+          </div>
+          <div style={{display:"flex",gap:9,alignItems:"center"}}>
+            <button style={{...BP,fontSize:"0.78rem",padding:"8px 18px",opacity:mName.trim()?1:0.4,cursor:mName.trim()?"pointer":"not-allowed"}} onClick={runManual} disabled={mLoading||!mName.trim()}>
+              {mLoading?"Searching…":"Search"}
+            </button>
+            <button onClick={()=>{setMOpen(false);setMResults(null);setMName("");setMError("");}} style={{...BS,fontSize:"0.76rem",padding:"7px 14px"}}>Cancel</button>
+          </div>
+          {mLoading&&<Spinner msg="Searching Google Maps…"/>}
+          {mError&&<div style={{color:"#6e1008",fontSize:"0.74rem",marginTop:9,fontWeight:600}}>{mError}</div>}
+          {mResults&&mResults.length>0&&(
+            <div style={{marginTop:12}}>
+              <div style={{fontSize:"0.58rem",fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",color:LABEL,marginBottom:7}}>Select a result to add it</div>
+              <div style={{display:"flex",flexDirection:"column",gap:7}}>
+                {mResults.map((r,i)=>(
+                  <div key={i} onClick={()=>pickManual(r)}
+                    style={{border:"1.5px solid rgba(28,18,8,0.25)",borderRadius:4,padding:"9px 11px",background:FILL,cursor:"pointer"}}
+                    onMouseEnter={e=>e.currentTarget.style.background="rgba(195,169,125,0.45)"}
+                    onMouseLeave={e=>e.currentTarget.style.background=FILL}>
+                    <div style={{fontWeight:700,fontSize:"0.82rem",color:"#1C1208"}}>{r.name}</div>
+                    <div style={{fontSize:"0.70rem",color:LABEL,marginTop:2}}>{r.address}</div>
+                    <div style={{display:"flex",gap:14,marginTop:3}}>
+                      {r.phone&&<div style={{fontSize:"0.70rem",color:LABEL}}>{r.phone}</div>}
+                      {r.distance&&<div style={{fontSize:"0.68rem",fontWeight:700,color:"#000000"}}>📍 {r.distance}</div>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      }
+    </div>
+  );
   return(
     <div>
       <div style={cH} className="card-header"><h2 style={cT}>{title}</h2><p style={cS}>{subtitle}</p></div>
@@ -296,7 +384,6 @@ function FacilityStep({title,subtitle,options,loading,errorMsg,selected,onSelect
           <button style={{...BA,background:"rgba(28,18,8,0.08)",borderStyle:"solid",fontWeight:700,color:"#1C1208"}} onClick={onRunSearch}>
             🔍 Run Search
           </button>
-
         </div>
         {loading
           ?<Spinner msg={"Searching Google Maps for nearby "+title.toLowerCase().replace(/[^a-z ]/gi,"")+"."}/>
@@ -316,6 +403,7 @@ function FacilityStep({title,subtitle,options,loading,errorMsg,selected,onSelect
                   </OptCard>
                 );
               })}
+              {onAddOption&&manualPanel}
             </div>
             :<div style={{background:"rgba(110,16,8,0.08)",border:"1.5px solid rgba(110,16,8,0.3)",borderRadius:0,padding:"16px 18px"}}>
               <div style={{fontWeight:700,fontSize:"0.8rem",color:"#6e1008",marginBottom:6}}>No results yet</div>
@@ -706,10 +794,14 @@ function App(){
     <AddressStep data={address} setData={setAddress}/>,
     <FamilyStep members={members} setMembers={setMembers}/>,
     <FacilityStep title="🚑 Emergency Room" subtitle="Select the nearest emergency room to your home."
-      options={erOptions} loading={erLoading} errorMsg={erError} selected={erSelected} onSelect={setErSelected} onRunSearch={runERSearch}/>,
+      options={erOptions} loading={erLoading} errorMsg={erError} selected={erSelected} onSelect={setErSelected} onRunSearch={runERSearch}
+      homeCity={address.city} homeAddress={addr}
+      onAddOption={r=>{const n=[...(erOptions||[]),r];setErOptions(n);setErSelected(n.length-1);}}/>,
     <FacilityStep title="➕ Urgent Care" subtitle="Select up to 2 urgent care centers near your home."
       options={ucOptions} loading={ucLoading} errorMsg={ucError} selected={ucSelected} multiMax={2}
-      onToggle={i=>setUcSelected(s=>s.includes(i)?s.filter(x=>x!==i):[...s,i])} onRunSearch={runUCSearch}/>,
+      onToggle={i=>setUcSelected(s=>s.includes(i)?s.filter(x=>x!==i):[...s,i])} onRunSearch={runUCSearch}
+      homeCity={address.city} homeAddress={addr}
+      onAddOption={r=>{const n=[...(ucOptions||[]),r];setUcOptions(n);setUcSelected(s=>[...s,n.length-1]);}}/>,
     <ContactsStep contacts={contacts} setContacts={setContacts}/>,
     <PetsStep pets={pets} setPets={setPets}/>,
     <UtilitiesStep utilData={utilData} selected={selectedUtils}
