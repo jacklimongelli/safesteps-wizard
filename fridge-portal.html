@@ -51,10 +51,19 @@ const NAV="#1C1208",RED="#6e1008",BLUE="#1C1208",STEEL="rgba(28,18,8,0.5)";
 const ICE="rgba(195,169,125,0.22)",RULE="rgba(28,18,8,0.22)",LABEL="#000000",TEXT="#000000";
 const FILL="rgba(195,169,125,0.18)",WHITE="#ffffff";
 
-async function placesCall(body){
-  const res=await fetch(PROXY,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
-  if(!res.ok) throw new Error("HTTP "+res.status);
-  return res.json();
+function placesCall(body){
+  return new Promise((resolve,reject)=>{
+    const id=Math.random().toString(36).slice(2);
+    function handler(e){
+      if(!e.data||e.data.action!=="placesResult"||e.data.id!==id) return;
+      window.removeEventListener("message",handler);
+      if(e.data.error) reject(new Error(e.data.error));
+      else resolve(e.data.result);
+    }
+    window.addEventListener("message",handler);
+    window.parent.postMessage({action:"placesRequest",id,body},"*");
+    setTimeout(()=>{window.removeEventListener("message",handler);reject(new Error("timeout"));},10000);
+  });
 }
 
 async function getDriving(origin,destLat,destLng){
@@ -570,7 +579,6 @@ function App(){
   const[saveStatus,setSaveStatus]=useState("idle");
   const onManual=(t,field,val)=>setManualUtils(u=>({...u,[t]:{...u[t],[field]:val}}));
 
-  // ── Load saved data from Wix parent ────────────────────────────────────────
   useEffect(()=>{
     function handleMessage(e){
       if(!e.data||e.data.action!=="loadData") return;
@@ -591,7 +599,6 @@ function App(){
     return()=>window.removeEventListener("message",handleMessage);
   },[]);
 
-  // ── Save to Portal ──────────────────────────────────────────────────────────
   const onSaveToPortal=()=>{
     setSaveStatus("saving");
     window.parent.postMessage({action:"saveData",data:{address,members,er:{options:erOptions,selected:erSelected},uc:{options:ucOptions,selected:ucSelected},contacts,pets,shutoffs,selUtils:selectedUtils,utilData,manUtils:manualUtils}},"*");
@@ -678,7 +685,7 @@ function App(){
       shutoffs={shutoffs} onShutoff={(t,v)=>setShutoffs(u=>({...u,[t]:v}))}
       manualUtils={manualUtils} onManual={onManual}/>,
     <PreviewStep address={address} members={members} er={er} urgentCares={urgentCares}
-      contacts={contacts} pets={pets} utilData={utilData} selectedUtils={selectedUtils} shutoffs={shutoffs} manualUtils={manualUtils} openPrint={openPrint} onSaveToPortal={onSaveToPortal} saveStatus={saveStatus}/>
+      contacts={contacts} pets={pets} utilData={utilData} selectedUtils={selectedUtils} shutoffs={shutoffs} manualUtils={manualUtils} openPrint={openPrint} onSaveToPortal={onSaveToPortal} saveStatus={saveStatus}/>,
   ];
 
   return(
