@@ -81,13 +81,13 @@ async function getDriving(origin,destLat,destLng){
   }catch{return null;}
 }
 
-async function searchNearby(address,placeType,keyword,keywords){
+async function searchNearby(address,placeType,keyword,keywords,excludeTerms=[]){
   const geo=await placesCall({type:"geocode",address});
   if(geo.error) throw new Error(geo.error+(geo.status?" ("+geo.status+")":""));
   const {lat,lng}=geo;
   const nearby=await placesCall({type:"nearby",lat,lng,placeType,keyword,keywords});
   if(nearby.error) throw new Error(nearby.error+(nearby.status?" ("+nearby.status+")":""));
-  const places=nearby.results||[];
+  const places=(nearby.results||[]).filter(p=>!excludeTerms.some(t=>p.name.toLowerCase().includes(t.toLowerCase())));
   const detailed=await Promise.all(
     places.slice(0,8).map(async p=>{
       try{
@@ -712,7 +712,7 @@ function App(){
   const runERSearch=useCallback(()=>{
     setErOptions(null);setErSelected(null);setErLoading(true);setErError("");
     const a=[address.street,address.city,address.state,address.zip].filter(Boolean).join(", ");
-    searchNearby(a,"hospital","emergency room")
+    searchNearby(a,"hospital","emergency room",null,["urgent care","walk-in","walk in","minuteclinic","medexpress","concentra","quick care","med express"])
       .then(results=>{setErOptions(results.length>0?results.slice(0,5):null);if(!results.length)setErError("No hospitals found near this address.");})
       .catch(e=>{setErOptions(null);setErError(e.message||"Unknown error");})
       .finally(()=>setErLoading(false));
@@ -733,7 +733,7 @@ function App(){
     if(erLoading||erOptions)return;
     setErLoading(true);setErError("");
     try{
-      const results=await searchNearby(addr,"hospital","emergency room");
+      const results=await searchNearby(addr,"hospital","emergency room",null,["urgent care","walk-in","walk in","minuteclinic","medexpress","concentra","quick care","med express"]);
       setErOptions(results.length>0?results.slice(0,5):null);
       if(!results.length)setErError("Google Maps returned no hospitals near this address.");
     }catch(e){
