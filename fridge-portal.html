@@ -277,12 +277,18 @@ function FamilyStep({members,setMembers}){
   );
 }
 
-function FacilityStep({title,subtitle,options,loading,errorMsg,selected,onSelect,multiMax,onToggle}){
+function FacilityStep({title,subtitle,options,loading,errorMsg,selected,onSelect,multiMax,onToggle,onRunSearch}){
   const multi=!!onToggle;
   return(
     <div>
       <div style={cH} className="card-header"><h2 style={cT}>{title}</h2><p style={cS}>{subtitle}</p></div>
       <div style={cB} className="card-body">
+        <div style={{marginBottom:12}}>
+          <button style={{...BA,background:"rgba(28,18,8,0.08)",borderStyle:"solid",fontWeight:700,color:"#1C1208"}} onClick={onRunSearch}>
+            🔍 Run Search
+          </button>
+          <span style={{fontSize:"0.68rem",color:LABEL,marginLeft:10}}>Search based on your address. Updates results below.</span>
+        </div>
         {loading
           ?<Spinner msg={"Searching Google Maps for nearby "+title.toLowerCase().replace(/[^a-z ]/gi,"")+"."}/>
           :options&&options.length>0
@@ -303,9 +309,8 @@ function FacilityStep({title,subtitle,options,loading,errorMsg,selected,onSelect
               })}
             </div>
             :<div style={{background:"rgba(110,16,8,0.08)",border:"1.5px solid rgba(110,16,8,0.3)",borderRadius:0,padding:"16px 18px"}}>
-              <div style={{fontWeight:700,fontSize:"0.8rem",color:"#6e1008",marginBottom:6}}>Search failed</div>
-              <div style={{fontSize:"0.76rem",color:LABEL,marginBottom:4}}>{errorMsg||"No results found."}</div>
-              <div style={{fontSize:"0.72rem",color:LABEL}}>You can continue and fill in details manually on the preview step.</div>
+              <div style={{fontWeight:700,fontSize:"0.8rem",color:"#6e1008",marginBottom:6}}>No results yet</div>
+              <div style={{fontSize:"0.76rem",color:LABEL,marginBottom:4}}>{errorMsg||"Click Run Search to find nearby facilities."}</div>
             </div>
         }
       </div>
@@ -607,6 +612,24 @@ function App(){
     setTimeout(()=>{setSaveStatus(s=>s==="saving"?"saved":s);window.removeEventListener("message",onConfirm);},4000);
   };
 
+  const runERSearch=useCallback(()=>{
+    setErOptions(null);setErSelected(null);setErLoading(true);setErError("");
+    const a=[address.street,address.city,address.state,address.zip].filter(Boolean).join(", ");
+    searchNearby(a,"hospital","emergency room")
+      .then(results=>{setErOptions(results.length>0?results.slice(0,3):null);if(!results.length)setErError("No hospitals found near this address.");})
+      .catch(e=>{setErOptions(null);setErError(e.message||"Unknown error");})
+      .finally(()=>setErLoading(false));
+  },[address]);
+
+  const runUCSearch=useCallback(()=>{
+    setUcOptions(null);setUcSelected([]);setUcLoading(true);setUcError("");
+    const a=[address.street,address.city,address.state,address.zip].filter(Boolean).join(", ");
+    searchNearby(a,null,null,["urgent care","walk-in clinic","urgent care center","MedExpress","MinuteClinic"])
+      .then(results=>{setUcOptions(results.length>0?results.slice(0,4):null);if(!results.length)setUcError("No urgent care found near this address.");})
+      .catch(e=>{setUcOptions(null);setUcError(e.message||"Unknown error");})
+      .finally(()=>setUcLoading(false));
+  },[address]);
+
   const addr=[address.street,address.city,address.state,address.zip].filter(Boolean).join(", ");
 
   const loadER=useCallback(async()=>{
@@ -674,10 +697,10 @@ function App(){
     <AddressStep data={address} setData={setAddress}/>,
     <FamilyStep members={members} setMembers={setMembers}/>,
     <FacilityStep title="🚑 Emergency Room" subtitle="Select the nearest emergency room to your home."
-      options={erOptions} loading={erLoading} errorMsg={erError} selected={erSelected} onSelect={setErSelected}/>,
+      options={erOptions} loading={erLoading} errorMsg={erError} selected={erSelected} onSelect={setErSelected} onRunSearch={runERSearch}/>,
     <FacilityStep title="➕ Urgent Care" subtitle="Select up to 2 urgent care centers near your home."
       options={ucOptions} loading={ucLoading} errorMsg={ucError} selected={ucSelected} multiMax={2}
-      onToggle={i=>setUcSelected(s=>s.includes(i)?s.filter(x=>x!==i):[...s,i])}/>,
+      onToggle={i=>setUcSelected(s=>s.includes(i)?s.filter(x=>x!==i):[...s,i])} onRunSearch={runUCSearch}/>,
     <ContactsStep contacts={contacts} setContacts={setContacts}/>,
     <PetsStep pets={pets} setPets={setPets}/>,
     <UtilitiesStep utilData={utilData} selected={selectedUtils}
