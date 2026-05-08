@@ -57,6 +57,13 @@ async function placesCall(body){
   return res.json();
 }
 
+function parseDurationMins(d){
+  if(!d) return 9999;
+  const h=d.match(/(\d+)\s*hour/);
+  const m=d.match(/(\d+)\s*min/);
+  return(h?parseInt(h[1])*60:0)+(m?parseInt(m[1]):0)||9999;
+}
+
 async function getDriving(origin,destLat,destLng){
   try{
     const res=await placesCall({type:"directions",origin,dest:destLat+","+destLng});
@@ -73,18 +80,20 @@ async function searchNearby(address,placeType,keyword,keywords){
   if(nearby.error) throw new Error(nearby.error+(nearby.status?" ("+nearby.status+")":""));
   const places=nearby.results||[];
   const detailed=await Promise.all(
-    places.slice(0,4).map(async p=>{
+    places.slice(0,8).map(async p=>{
       try{
         const[det,drive]=await Promise.all([
           placesCall({type:"details",place_id:p.place_id}),
           getDriving(address,p.lat,p.lng),
         ]);
         const distLabel=drive?drive.distance+" ("+drive.duration+")":"";
-        return{name:det.name||p.name,address:det.address||p.address,phone:det.phone||"",distance:distLabel};
-      }catch{return{name:p.name,address:p.address,phone:"",distance:""};}
+        const _mins=drive?parseDurationMins(drive.duration):9999;
+        return{name:det.name||p.name,address:det.address||p.address,phone:det.phone||"",distance:distLabel,_mins};
+      }catch{return{name:p.name,address:p.address,phone:"",distance:"",_mins:9999};}
     })
   );
-  return detailed;
+  detailed.sort((a,b)=>a._mins-b._mins);
+  return detailed.slice(0,5).map(({_mins,...rest})=>rest);
 }
 
 const UTILS={
@@ -565,7 +574,7 @@ function App(){
     setErLoading(true);setErError("");
     try{
       const results=await searchNearby(addr,"hospital","emergency room");
-      setErOptions(results.length>0?results.slice(0,3):null);
+      setErOptions(results.length>0?results.slice(0,5):null);
       if(!results.length)setErError("Google Maps returned no hospitals near this address.");
     }catch(e){
       setErOptions(null);
@@ -579,7 +588,7 @@ function App(){
     setUcLoading(true);setUcError("");
     try{
       const results=await searchNearby(addr,null,null,["urgent care","walk-in clinic","urgent care center","MedExpress","MinuteClinic"]);
-      setUcOptions(results.length>0?results.slice(0,4):null);
+      setUcOptions(results.length>0?results.slice(0,5):null);
       if(!results.length)setUcError("Google Maps returned no urgent care near this address.");
     }catch(e){
       setUcOptions(null);
