@@ -49,9 +49,33 @@ $w.onReady(async () => {
         const res = await wixData.query('Plans')
           .eq('customerId', familyId)
           .find();
-        $w('#htmlPortal').postMessage({ type: 'DOCUMENTS_DATA', documents: res.items });
+
+        // Build fridge sheet URL from FridgeSheets CMS — not from a file
+        let fridgeUrl = null;
+        try {
+          const fridgeRes = await wixData.query('FridgeSheets')
+            .eq('customerId', familyId)
+            .find({ suppressAuth: true });
+          if (fridgeRes.items.length > 0) {
+            const d = fridgeRes.items[0];
+            const enc = v => encodeURIComponent(JSON.stringify(v));
+            fridgeUrl = 'https://jacklimongelli.github.io/safesteps-wizard/safesteps-sheet.html?'
+              + 'address='   + enc(d.address)
+              + '&members='  + enc(d.members)
+              + '&er='       + enc(d.er?.options?.[d.er?.selected] ?? null)
+              + '&uc='       + enc((d.uc?.selected ?? []).map(i => d.uc?.options?.[i]))
+              + '&contacts=' + enc(d.contacts)
+              + '&pets='     + enc(d.pets)
+              + '&shutoffs=' + enc(d.shutoffs)
+              + '&selUtils=' + enc(d.selUtils)
+              + '&utilData=' + enc(d.utilData)
+              + '&manUtils=' + enc(d.manUtils);
+          }
+        } catch(fe) { console.error('FridgeSheets fetch error:', fe); }
+
+        $w('#htmlPortal').postMessage({ type: 'DOCUMENTS_DATA', documents: res.items, fridgeUrl });
       } catch(e) {
-        $w('#htmlPortal').postMessage({ type: 'DOCUMENTS_DATA', documents: [] });
+        $w('#htmlPortal').postMessage({ type: 'DOCUMENTS_DATA', documents: [], fridgeUrl: null });
       }
     }
 
@@ -328,9 +352,9 @@ body{
 .doc-td-type{
   padding:12px 14px;
   font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.05em;
-  color:var(--dark);white-space:nowrap;
+  color:var(--dark);white-space:normal;word-break:break-word;
   border-right:1px solid var(--border);
-  width:160px;
+  width:140px;
 }
 .doc-td-name{
   padding:12px 14px;
@@ -747,7 +771,7 @@ window.addEventListener('message',function(event){
     window.parent.postMessage({type:'GET_DOCUMENTS'},'*');
     window.parent.postMessage({type:'GET_HISTORY'},'*');
   }
-  if(msg.type==='DOCUMENTS_DATA'){renderDocuments(msg.documents||[]);}
+  if(msg.type==='DOCUMENTS_DATA'){renderDocuments(msg.documents||[], msg.fridgeUrl||null);}
   if(msg.type==='EQUIPMENT_DATA'){renderEquipment(msg.equipment||[]);}
   if(msg.type==='HISTORY_DATA'){allHistoryRecords=msg.records||[];updateReadinessBox();if(document.getElementById('sc-tab-history').style.display!=='none')buildHistoryView();}
   if(msg.type==='SAVE_SUCCESS'){showToast('Drill saved — '+msg.score+'/'+msg.max+' ('+msg.pct+'%)');resetForm();document.getElementById('submitBtn').disabled=false;document.getElementById('submitBtn').textContent='Save Drill Score';window.parent.postMessage({type:'GET_HISTORY'},'*');}
@@ -783,14 +807,15 @@ function getFileUrl(fileField){
   return null;
 }
 
-function renderDocuments(docs){
+function renderDocuments(docs, fridgeUrl){
   const wrap=document.getElementById('docTableWrap');
   if(!docs.length){wrap.innerHTML='<div class="doc-empty">No documents found for your family.<br>Contact Safe Steps if you believe this is an error.</div>';return;}
   const rows=docs.map(doc=>{
     const title=doc.title_fld||'Untitled Document';
     const type=doc.planType||'—';
-    const url=getFileUrl(doc.file);
     const isFridge=type==='Fridge Sheet';
+    // Fridge sheet uses dynamically built URL, all others use CMS file
+    const url=isFridge ? fridgeUrl : getFileUrl(doc.file);
     const downloadBtn=url
       ?`<a class="btn-download" href="${url}" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</a>`
       :`<span class="btn-download-disabled">No File</span>`;
