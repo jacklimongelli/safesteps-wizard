@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safe Steps — Family Portal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!--
+════════════════════════════════════════════════════════════════
+  WIX VELO PAGE CODE
+  Paste into your Wix page's Velo editor.
+  Name the HTML embed element: #htmlPortal
+════════════════════════════════════════════════════════════════
+
+import wixData from 'wix-data';
+import { currentMember } from 'wix-members';
+
+$w.onReady(async () => {
+  const member = await currentMember.getMember({ fieldsets: ['FULL'] });
+  if (!member) return;
+
+  const memberId = member._id;
+
+  // Get full member data including custom FamilyID field and last name
+  const memberData = await wixData.get('Members/FullData', memberId);
+  const familyId   = memberData['custom_familyid-grvwyaxvxzybymvurxvdgmrvwo'] || null;
+  const familyLastName = memberData.lastName || '';
+
+  $w('#htmlPortal').onMessage(async (event) => {
+    const msg = event.data;
+    if (!msg || !msg.type) return;
+
+    // ── Boot ──
+    if (msg.type === 'PORTAL_READY') {
+      $w('#htmlPortal').postMessage({
+        type: 'MEMBER_INFO',
+        memberId,
+        familyId,
+        familyLastName
+      });
+    }
+
+    // ── Documents: Plans collection ──
+    // Fields: customerId (FamilyID), title_fld (Title), file (DOCUMENT), planType
+    if (msg.type === 'GET_DOCUMENTS') {
+      try {
+        const res = await wixData.query('Plans')
+          .eq('customerId', familyId)
+          .find();
+        $w('#htmlPortal').postMessage({ type: 'DOCUMENTS_DATA', documents: res.items });
+      } catch(e) {
+        $w('#htmlPortal').postMessage({ type: 'DOCUMENTS_DATA', documents: [] });
+      }
+    }
+
+    // ── Equipment: join FamilyEquipmentMapping + MasterEquipment ──
+    // FamilyEquipmentMapping fields: familyId, equipmentTitle (TEXT)
+    // MasterEquipment fields: title_fld (name), videoUrl, image
+    if (msg.type === 'GET_EQUIPMENT') {
+      try {
+        // Get this family's equipment titles
+        const mapRes = await wixData.query('FamilyEquipmentMapping')
+          .eq('familyId', familyId)
+          .find();
+
+        // Get all master equipment records
+        const masterRes = await wixData.query('MasterEquipment')
+          .find();
+
+        // Build a lookup map: title → master record
+        const masterMap = {};
+        masterRes.items.forEach(item => {
+          if (item.title_fld) masterMap[item.title_fld.toLowerCase().trim()] = item;
+        });
+
+        // Join: each family equipment item gets its master record details
+        const equipment = mapRes.items.map(item => {
+          const master = masterMap[item.equipmentTitle?.toLowerCase().trim()] || null;
+          return {
+            equipmentTitle: item.equipmentTitle,
+            videoUrl: master?.videoUrl || null,
+            image: master?.image || null,
+            masterId: master?._id || null
+          };
+        });
+
+        $w('#htmlPortal').postMessage({ type: 'EQUIPMENT_DATA', equipment });
+      } catch(e) {
+        $w('#htmlPortal').postMessage({ type: 'EQUIPMENT_DATA', equipment: [] });
+      }
+    }
+
+    // ── Drill History: DrillScores collection ──
+    // Fields: familyId, drillDate, planType, totalScore, maxScore, notes,
+    //         ybr_q1..13 (BOOLEAN), alamo_q1..17 (BOOLEAN)
+    // Note: no memberId, no pct, no planKey in schema — calculated client-side
+    if (msg.type === 'GET_HISTORY') {
+      try {
+        const res = await wixData.query('DrillScores')
+          .eq('familyId', familyId)
+          .descending('_createdDate')
+          .find();
+        $w('#htmlPortal').postMessage({ type: 'HISTORY_DATA', records: res.items });
+      } catch(e) {
+        $w('#htmlPortal').postMessage({ type: 'HISTORY_DATA', records: [] });
+      }
+    }
+
+    // ── Save Drill ──
+    if (msg.type === 'SAVE_DRILL') {
+      try {
+        await wixData.insert('DrillScores', msg.record);
+        $w('#htmlPortal').postMessage({
+          type: 'SAVE_SUCCESS',
+          score: msg.score,
+          max: msg.max,
+          pct: msg.pct
+        });
+      } catch(e) {
+        $w('#htmlPortal').postMessage({ type: 'SAVE_ERROR' });
+      }
+    }
+
+    // ── Delete Drill ──
+    if (msg.type === 'DELETE_DRILL') {
+      try {
+        await wixData.remove('DrillScores', msg.recordId);
+        $w('#htmlPortal').postMessage({ type: 'DELETE_SUCCESS' });
+      } catch(e) {
+        $w('#htmlPortal').postMessage({ type: 'DELETE_ERROR' });
+      }
+    }
+
+    // ── Scenario Generator: First Responder Sheet from Plans ──
+    if (msg.type === 'RANDOMIZER_READY') {
+      try {
+        const res = await wixData.query('Plans')
+          .eq('customerId', familyId)
+          .eq('planType', 'First Responder Sheet')
+          .find();
+        const fileField = res.items[0]?.file || null;
+        // Wix DOCUMENT fields may be an object or string — normalize to URL
+        let url = null;
+        if (fileField) {
+          if (typeof fileField === 'string') url = fileField;
+          else if (fileField.url) url = fileField.url;
+          else if (fileField.src) url = fileField.src;
+        }
+        $w('#htmlPortal').postMessage({ type: 'FLOOR_PLAN_URL', url });
+      } catch(e) {
+        $w('#htmlPortal').postMessage({ type: 'FLOOR_PLAN_URL', url: null });
+      }
+    }
+  });
+});
+
+════════════════════════════════════════════════════════════════
+  VERIFIED CMS FIELD NAMES (from actual Wix collections):
+
+  Plans (id: "Plans"):
+    customerId   — FamilyID (TEXT)
+    title_fld    — Title (TEXT)
+    file         — File (DOCUMENT)
+    planType     — PlanType (TEXT)
+
+  FamilyEquipmentMapping (id: "FamilyEquipmentMapping"):
+    familyId       — FamilyID (TEXT)
+    equipmentTitle — EquipmentName (TEXT)
+
+  MasterEquipment (id: "MasterEquipment"):
+    title_fld  — EquipmentName (TEXT)
+    videoUrl   — videoURL (URL)
+    image      — Image (IMAGE)
+
+  DrillScores (id: "DrillScores"):
+    familyId   — Family ID (TEXT)
+    drillDate  — Drill Date (DATE)
+    planType   — Plan Type (TEXT) — "Yellow Brick Road" or "Alamo"
+    totalScore — Total Score (NUMBER)
+    maxScore   — Max Possible Score (NUMBER)
+    notes      — Notes (TEXT)
+    ybr_q1..ybr_q13    — BOOLEAN
+    alamo_q1..alamo_q17 — BOOLEAN
+    _id, _createdDate, _updatedDate, _owner (system fields)
+    NOTE: no memberId, no pct, no planKey — these are derived client-side
+
+  Members/FullData:
+    custom_familyid-grvwyaxvxzybymvurxvdgmrvwo — FamilyID (TEXT)
+    lastName   — Last Name (TEXT)
+    firstName  — First Name (TEXT)
+════════════════════════════════════════════════════════════════
+-->
+
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:rgba(28,18,8,.06);}
+::-webkit-scrollbar-thumb{background:rgba(28,18,8,.25);}
+:root{
+  --tan:#C3A97D;--dark:#1C1208;--dark-bg:#0e0b05;--red:#6e1008;
+  --text:rgba(28,18,8,.82);--text-dim:rgba(28,18,8,.55);
+  --border:rgba(28,18,8,.13);--border-strong:rgba(28,18,8,.28);
+  --card:rgba(28,18,8,.05);--success:#2d6a2d;--fail:#7a1a1a;
+}
+/* GRAPH PAPER — identical to main site .dw class */
+body{
+  font-family:'Special Elite',monospace;
+  background-color:#C3A97D;
+  background-image:
+    linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),
+    linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);
+  background-size:60px 60px,60px 60px,15px 15px,15px 15px;
+  color:var(--dark);min-height:100vh;
+}
+/* LOADING */
+.loading{display:flex;position:fixed;inset:0;z-index:300;background-color:#C3A97D;background-image:linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);background-size:60px 60px,60px 60px,15px 15px,15px 15px;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+.loading.hidden{display:none;}
+.loading-logo{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.25em;color:var(--dark);}
+.loading-sub{font-family:'Special Elite',monospace;font-size:.62rem;letter-spacing:.14em;color:var(--text-dim);}
+.loading-bar{width:160px;height:2px;background:rgba(28,18,8,.15);overflow:hidden;margin-top:8px;}
+.loading-fill{height:100%;background:var(--dark);animation:loadPulse 1.4s ease-in-out infinite;}
+@keyframes loadPulse{0%{width:0;margin-left:0}50%{width:60%;margin-left:15%}100%{width:0;margin-left:100%}}
+/* NAV */
+.site-nav{position:sticky;top:0;z-index:200;background:var(--dark);border-bottom:2px solid rgba(195,169,125,.3);display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:58px;}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.2em;color:var(--tan);}
+.nav-tagline{font-family:'Special Elite',monospace;font-size:.52rem;letter-spacing:.1em;color:rgba(195,169,125,.45);}
+.nav-right{display:flex;flex-direction:column;align-items:flex-end;gap:1px;}
+.nav-welcome-label{font-family:'Bebas Neue',sans-serif;font-size:.5rem;letter-spacing:.22em;color:rgba(195,169,125,.5);}
+.nav-welcome-name{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;color:var(--tan);line-height:1;}
+/* DOCBAR — bigger, more prominent */
+.docbar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 20px;border-bottom:2px solid var(--border-strong);
+  background:rgba(28,18,8,.06);
+}
+.docid{
+  font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.18em;
+  color:var(--dark);border:1.5px solid var(--border-strong);
+  padding:6px 16px;background:rgba(28,18,8,.04);
+}
+.dtg{
+  font-family:'Special Elite',monospace;font-size:.75rem;
+  letter-spacing:.08em;color:var(--text-dim);text-align:right;
+  line-height:1.6;
+}
+.dtg-time{
+  display:block;font-family:'Bebas Neue',sans-serif;
+  font-size:1.4rem;letter-spacing:.1em;color:var(--dark);line-height:1;
+}
+.dtg-label{
+  display:block;font-family:'Special Elite',monospace;
+  font-size:.62rem;letter-spacing:.14em;color:var(--text-dim);margin-top:2px;
+}
+
+/* ══ EQUIPMENT VIDEO CARDS ══ */
+.equip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+.equip-card{background:rgba(28,18,8,.04);border:1px solid var(--border);border-top:3px solid var(--border-strong);display:flex;flex-direction:column;overflow:hidden;}
+.equip-card-header{padding:12px 15px 10px;border-bottom:1px solid var(--border);}
+.equip-card-label{font-family:'Bebas Neue',sans-serif;font-size:.52rem;letter-spacing:.22em;color:var(--text-dim);}
+.equip-card-name{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.05em;color:var(--dark);line-height:1.15;margin-top:2px;}
+.equip-video-wrap{position:relative;width:100%;padding-bottom:56.25%;background:var(--dark);flex-shrink:0;}
+.equip-video-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.equip-no-video{display:flex;align-items:center;justify-content:center;padding:32px 20px;font-family:'Special Elite',monospace;font-size:.72rem;letter-spacing:.07em;color:rgba(28,18,8,.35);background:rgba(28,18,8,.04);border-top:1px solid var(--border);}
+.equip-empty{text-align:center;padding:60px 20px;font-family:'Special Elite',monospace;font-size:.78rem;letter-spacing:.06em;color:var(--text-dim);line-height:2;}
+
+/* Fridge Sheet update button */
+.btn-update{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--dark);color:var(--tan);
+  border:none;padding:7px 14px;
+  font-family:'Bebas Neue',sans-serif;font-size:.68rem;letter-spacing:.16em;
+  cursor:pointer;text-decoration:none;transition:background .15s;white-space:nowrap;
+}
+.btn-update:hover{background:#2d1e0a;}
+.doc-td-action-wrap{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;}
+/* MAIN TABS — redesigned */
+.main-tabs{display:flex;background:var(--dark);border-bottom:none;}
+.main-tab{
+  flex:1;padding:0;height:64px;
+  font-family:'Bebas Neue',sans-serif;font-size:.78rem;letter-spacing:.2em;
+  color:rgba(195,169,125,.45);cursor:pointer;border:none;
+  background:transparent;
+  border-right:1px solid rgba(195,169,125,.12);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  transition:all .2s;position:relative;
+}
+.main-tab:last-child{border-right:none;}
+.main-tab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:transparent;transition:background .2s;}
+.main-tab-num{font-family:'Bebas Neue',sans-serif;font-size:.55rem;letter-spacing:.3em;color:rgba(195,169,125,.25);transition:color .2s;}
+.main-tab-label{transition:color .2s;}
+.main-tab:hover:not(.active){color:rgba(195,169,125,.75);background:rgba(195,169,125,.06);}
+.main-tab:hover:not(.active) .main-tab-num{color:rgba(195,169,125,.45);}
+.main-tab.active{color:var(--tan);background:rgba(195,169,125,.08);}
+.main-tab.active::after{background:var(--tan);}
+.main-tab.active .main-tab-num{color:rgba(195,169,125,.55);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+/* DW-SEC */
+.dw-sec{padding:26px 20px;border-bottom:2px solid var(--border);}
+.dw-eyebrow{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.25em;color:var(--text-dim);display:flex;align-items:center;gap:7px;margin-bottom:5px;}
+.dw-eyebrow::before{content:'';display:block;width:12px;height:1px;background:rgba(28,18,8,.55);}
+.dw-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:.04em;color:var(--dark);line-height:1.05;margin-bottom:18px;}
+
+/* ══ DOCUMENTS TABLE ══ */
+.doc-table{width:100%;border-collapse:collapse;border:1.5px solid var(--border-strong);}
+.doc-table-head{background:var(--dark);}
+.doc-table-head th{
+  padding:10px 14px;
+  font-family:'Bebas Neue',sans-serif;font-size:.68rem;letter-spacing:.22em;
+  color:rgba(195,169,125,.7);text-align:left;font-weight:400;
+  border-right:1px solid rgba(195,169,125,.12);
+}
+.doc-table-head th:last-child{border-right:none;text-align:center;}
+.doc-table tbody tr{border-bottom:1.5px solid var(--border-strong);transition:background .15s;}
+.doc-table tbody tr:last-child{border-bottom:none;}
+.doc-table tbody tr:hover{background:rgba(28,18,8,.06);}
+.doc-table tbody tr:nth-child(even){background:rgba(28,18,8,.03);}
+.doc-table tbody tr:nth-child(even):hover{background:rgba(28,18,8,.07);}
+.doc-td-type{
+  padding:12px 14px;
+  font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.05em;
+  color:var(--dark);white-space:nowrap;
+  border-right:1px solid var(--border);
+  width:160px;
+}
+.doc-td-name{
+  padding:12px 14px;
+  font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.05em;
+  color:var(--dark);
+  border-right:1px solid var(--border);
+}
+.doc-td-action{padding:8px 14px;text-align:center;width:120px;}
+.btn-download{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--dark);color:var(--tan);
+  border:none;padding:7px 14px;
+  font-family:'Bebas Neue',sans-serif;font-size:.68rem;letter-spacing:.16em;
+  cursor:pointer;text-decoration:none;transition:background .15s;white-space:nowrap;
+}
+.btn-download:hover{background:#2d1e0a;}
+.btn-download svg{width:10px;height:10px;flex-shrink:0;}
+.btn-download-disabled{background:rgba(28,18,8,.1);color:var(--text-dim);cursor:default;font-family:'Bebas Neue',sans-serif;font-size:.68rem;letter-spacing:.16em;padding:7px 14px;border:none;display:inline-block;}
+.doc-empty{text-align:center;padding:60px 20px;font-family:'Special Elite',monospace;font-size:.78rem;letter-spacing:.06em;color:var(--text-dim);line-height:2;}
+
+/* ══ EQUIPMENT (video library) ══ */
+.equip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.equip-card{background:var(--card);border:1px solid var(--border);border-left:3px solid var(--border-strong);padding:16px 15px;display:flex;flex-direction:column;gap:12px;transition:background .15s;}
+.equip-card:hover{background:rgba(28,18,8,.09);}
+.equip-card-name{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.05em;color:var(--dark);line-height:1.15;}
+.equip-card-label{font-family:'Bebas Neue',sans-serif;font-size:.52rem;letter-spacing:.22em;color:var(--text-dim);}
+.btn-watch{display:inline-flex;align-items:center;gap:7px;background:var(--dark);color:var(--tan);border:none;padding:9px 16px;font-family:'Bebas Neue',sans-serif;font-size:.76rem;letter-spacing:.18em;cursor:pointer;text-decoration:none;transition:background .15s;width:fit-content;margin-top:auto;}
+.btn-watch:hover{background:#2d1e0a;}
+.btn-watch svg{width:11px;height:11px;flex-shrink:0;}
+.btn-watch-disabled{background:rgba(28,18,8,.15);color:var(--text-dim);cursor:default;}
+.btn-watch-disabled:hover{background:rgba(28,18,8,.15);}
+.equip-empty{text-align:center;padding:60px 20px;font-family:'Special Elite',monospace;font-size:.78rem;letter-spacing:.06em;color:var(--text-dim);line-height:2;}
+
+/* ══ SCORECARD SUB-TABS ══ */
+.sc-tabs{display:flex;gap:8px;padding:12px 16px;background:var(--dark);border-bottom:3px solid rgba(195,169,125,.4);}
+.sc-tab{flex:1;padding:10px 14px;font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.15em;color:rgba(195,169,125,.7);cursor:pointer;border:1.5px solid rgba(195,169,125,.3);background:transparent;transition:all .2s;}
+.sc-tab.active{background:var(--tan);color:var(--dark);border-color:var(--tan);}
+.sc-tab:hover:not(.active){background:rgba(195,169,125,.12);color:var(--tan);}
+.sc-main{padding:22px 20px;max-width:900px;margin:0 auto;}
+/* Plan select + readiness */
+.plan-control-row{display:flex;gap:12px;align-items:stretch;margin-bottom:16px;flex-wrap:wrap;}
+.plan-dropdown-wrap{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.plan-dropdown-label{font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.18em;color:var(--text-dim);}
+.plan-select{background:white;border:1.5px solid var(--border-strong);padding:10px 36px 10px 14px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.15em;color:var(--dark);outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231C1208' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;min-width:230px;}
+.plan-select:focus{border-color:var(--red);}
+.plan-select option{background:white;color:var(--dark);}
+.readiness-box{flex:1;background:rgba(28,18,8,.06);border:1.5px solid var(--border-strong);border-left:4px solid var(--border-strong);padding:10px 16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;min-width:0;transition:border-left-color .3s;}
+.readiness-box.plan-ybr{border-left-color:var(--red);}
+.readiness-box.plan-alamo{border-left-color:#2563a8;}
+.readiness-stat{display:flex;flex-direction:column;gap:3px;padding:0 12px;border-right:1px solid var(--border);}
+.readiness-stat:first-child{padding-left:4px;}
+.readiness-stat:last-child{border-right:none;}
+.rs-label{font-family:'Bebas Neue',sans-serif;font-size:.75rem;letter-spacing:.14em;color:var(--text-dim);text-transform:uppercase;line-height:1.3;}
+.rs-value{font-family:'Bebas Neue',sans-serif;font-size:1.45rem;color:var(--dark);line-height:1;white-space:nowrap;}
+.rs-value.rs-dim{color:var(--text-dim);font-size:1rem;}
+.rs-freq{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1;white-space:nowrap;}
+.rs-freq.freq-daily{color:#c0200a;}.rs-freq.freq-weekly{color:#8a5200;}.rs-freq.freq-monthly{color:#2d6a2d;}.rs-freq.freq-quarterly{color:#2563a8;}.rs-freq.freq-none{color:var(--text-dim);font-size:.9rem;}
+/* Scorecard tables */
+.scorecard{display:none;}.scorecard.active{display:block;}
+.card-title{text-align:center;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:1.3rem;letter-spacing:.12em;padding:12px;border:1.5px solid var(--border-strong);border-bottom:none;background:var(--dark);color:var(--tan);}
+.drill-table{border:1.5px solid var(--border-strong);}
+.drill-row{display:grid;grid-template-columns:88px 1fr 78px;border-bottom:1px solid var(--border);}
+.drill-row:last-child{border-bottom:none;}
+.drill-row.header{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:1rem;letter-spacing:.12em;border-bottom:1.5px solid var(--border-strong);background:var(--dark);}
+.dc-step{padding:9px 8px;font-size:.76rem;font-weight:500;color:var(--dark);border-right:1px solid var(--border);line-height:1.35;display:flex;align-items:center;background:white;}
+.dc-q{padding:9px 10px;font-size:.8rem;line-height:1.45;display:flex;align-items:center;color:var(--dark);background:white;}
+.dc-yn{padding:6px 4px;border-left:1px solid var(--border);display:flex;align-items:center;justify-content:center;background:white;}
+.drill-row.header .dc-step,.drill-row.header .dc-q{color:var(--tan);border-color:rgba(195,169,125,.15);background:transparent;}
+.drill-row.header .dc-yn{font-size:.82rem;color:var(--tan);border-color:rgba(195,169,125,.15);background:transparent;}
+.yn-wrap{display:flex;flex-direction:column;gap:3px;align-items:center;}
+.yn-btn{width:48px;height:26px;border:1.5px solid;font-family:'Bebas Neue',sans-serif;font-size:.7rem;letter-spacing:.08em;cursor:pointer;transition:all .15s;background:transparent;}
+.yn-yes{border-color:rgba(45,106,45,.4);color:rgba(45,106,45,.65);}
+.yn-yes.active{background:var(--success);border-color:var(--success);color:#fff;}
+.yn-no{border-color:rgba(122,26,26,.35);color:rgba(122,26,26,.55);}
+.yn-no.active{background:var(--fail);border-color:var(--fail);color:#fff;}
+.score-row{display:grid;grid-template-columns:88px 1fr 78px;background:var(--dark);border-top:2px solid rgba(195,169,125,.3);}
+.score-row .dc-step{border-right:1px solid rgba(195,169,125,.18);padding:10px 8px;background:transparent;}
+.score-row .dc-q{padding:10px 12px;display:flex;align-items:center;background:transparent;}
+.score-row .dc-yn{border-left:1px solid rgba(195,169,125,.18);display:flex;align-items:center;justify-content:center;padding:6px 4px;background:transparent;}
+.score-label-txt{font-family:'Special Elite',monospace;font-size:.58rem;letter-spacing:.1em;color:rgba(195,169,125,.7);text-transform:uppercase;display:block;}
+.score-num{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--tan);line-height:1;display:block;}
+.score-of{font-family:'Bebas Neue',sans-serif;font-size:.72rem;letter-spacing:.08em;color:rgba(195,169,125,.7);display:block;}
+.score-track-inner{flex:1;height:5px;background:rgba(195,169,125,.2);}
+.score-track-fill{height:100%;background:var(--tan);width:0%;transition:width .35s ease;}
+.score-pct-txt{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;color:var(--tan);}
+.notes-section{margin-top:14px;padding:13px;background:var(--card);border:1px solid var(--border-strong);}
+.notes-label{font-family:'Bebas Neue',sans-serif;font-size:.83rem;letter-spacing:.15em;color:var(--dark);margin-bottom:6px;}
+.notes-input{width:100%;background:white;border:1.5px solid var(--border-strong);padding:8px 12px;font-family:'Special Elite',monospace;font-size:.8rem;color:var(--dark);resize:vertical;min-height:62px;outline:none;}
+.notes-input::placeholder{color:rgba(28,18,8,.3);}
+.notes-input:focus{border-color:var(--red);}
+.submit-row{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:2px solid var(--border-strong);}
+.btn-submit{background:var(--red);color:#f5edd8;border:none;padding:12px 26px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.2em;cursor:pointer;transition:background .2s;}
+.btn-submit:hover{background:#8a1a0f;}
+.btn-submit:disabled{background:rgba(110,16,8,.3);cursor:not-allowed;}
+.submit-note{font-family:'Special Elite',monospace;font-size:.63rem;letter-spacing:.05em;color:var(--text-dim);max-width:230px;text-align:right;line-height:1.5;}
+/* History */
+.history-filter{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.filter-btn{padding:7px 16px;font-family:'Bebas Neue',sans-serif;font-size:.8rem;letter-spacing:.12em;border:1.5px solid var(--border-strong);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .2s;}
+.filter-btn.active{background:var(--dark);color:var(--tan);border-color:var(--dark);}
+.filter-btn:hover:not(.active){color:var(--dark);border-color:var(--dark);}
+.history-empty{text-align:center;padding:55px 20px;font-family:'Special Elite',monospace;font-size:.8rem;letter-spacing:.06em;color:var(--text-dim);}
+.chart-section{background:rgba(28,18,8,.04);border:1.5px solid var(--border-strong);padding:16px;margin-bottom:16px;}
+.chart-title{font-family:'Bebas Neue',sans-serif;font-size:.88rem;letter-spacing:.15em;color:var(--dark);margin-bottom:12px;}
+.chart-svg{display:block;width:100%;height:auto;}
+.chart-axis-label{font-family:'DM Sans',sans-serif;font-size:27px;fill:rgba(28,18,8,.65);font-weight:600;}
+.chart-grid-line{stroke:rgba(28,18,8,.1);stroke-width:1;}
+.history-list{display:flex;flex-direction:column;gap:6px;}
+.history-card{background:white;border:1.5px solid var(--border);border-left:4px solid var(--border-strong);overflow:hidden;}
+.history-card.ybr{border-left-color:var(--red);}
+.history-card.alamo{border-left-color:#2563a8;}
+.history-date{font-family:'Bebas Neue',sans-serif;font-size:.83rem;letter-spacing:.1em;color:rgba(28,18,8,.75);}
+.history-plan{font-family:'Special Elite',monospace;font-size:.66rem;letter-spacing:.05em;color:var(--text-dim);}
+.history-score{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--dark);line-height:1;}
+.history-pct{font-family:'Bebas Neue',sans-serif;font-size:.88rem;color:rgba(28,18,8,.55);min-width:42px;text-align:right;}
+.btn-delete{background:none;border:none;cursor:pointer;padding:4px;color:rgba(28,18,8,.2);transition:color .15s;display:flex;align-items:center;}
+.btn-delete:hover{color:var(--fail);}
+.card-default{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:12px;padding:11px 15px;}
+.card-confirm{display:none;align-items:center;justify-content:space-between;padding:11px 15px;gap:12px;}
+.history-card.confirming .card-default{display:none;}
+.history-card.confirming .card-confirm{display:flex;}
+.confirm-msg{font-family:'Special Elite',monospace;font-size:.73rem;letter-spacing:.06em;color:var(--dark);}
+.confirm-btns{display:flex;gap:8px;flex-shrink:0;}
+.btn-confirm-yes{background:var(--fail);color:#fff;border:none;padding:7px 16px;font-family:'Bebas Neue',sans-serif;font-size:.8rem;letter-spacing:.12em;cursor:pointer;}
+.btn-confirm-no{background:transparent;color:var(--dark);border:1.5px solid var(--border-strong);padding:7px 14px;font-family:'Bebas Neue',sans-serif;font-size:.8rem;letter-spacing:.12em;cursor:pointer;}
+/* Scenario */
+.rand-controls{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.btn-randomize{background:var(--dark);color:var(--tan);border:none;padding:12px 26px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.2em;cursor:pointer;transition:background .2s;white-space:nowrap;}
+.btn-randomize:hover{background:#2d1e0a;}
+.btn-randomize:disabled{background:rgba(28,18,8,.25);cursor:not-allowed;}
+.people-select-wrap{display:flex;align-items:center;gap:8px;}
+.people-label{font-family:'Special Elite',monospace;font-size:.72rem;letter-spacing:.08em;color:var(--text-dim);white-space:nowrap;}
+.people-select{background:white;border:1.5px solid var(--border-strong);padding:7px 10px;font-family:'Special Elite',monospace;font-size:.8rem;color:var(--dark);outline:none;cursor:pointer;}
+.person-marker{position:absolute;transform:translate(-50%,-50%);pointer-events:none;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.75rem;color:white;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.4);}
+.canvas-wrap{position:relative;border:1.5px solid var(--border-strong);background:white;overflow:hidden;line-height:0;}
+#floorCanvas{display:block;width:100%;height:auto;}
+.flame-marker{position:absolute;font-size:2.2rem;transform:translate(-50%,-100%);pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5));animation:flicker .55s ease-in-out infinite alternate;}
+@keyframes flicker{from{transform:translate(-50%,-100%) scale(1);}to{transform:translate(-50%,-100%) scale(1.15) rotate(4deg);}}
+.rand-status{margin-top:10px;font-family:'Special Elite',monospace;font-size:.68rem;letter-spacing:.06em;color:var(--text-dim);text-align:center;}
+.rand-waiting{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:55px 20px;text-align:center;gap:14px;}
+.rand-waiting-icon{font-size:2.8rem;opacity:.25;}
+.rand-waiting-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.2em;color:var(--dark);opacity:.45;}
+.rand-waiting-msg{font-family:'Special Elite',monospace;font-size:.72rem;letter-spacing:.06em;color:var(--text-dim);max-width:280px;line-height:1.6;}
+.pdf-overlay{display:none;position:absolute;inset:0;background:rgba(195,169,125,.92);align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+.pdf-overlay.show{display:flex;}
+.pdf-overlay-text{font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.2em;color:var(--dark);}
+.pdf-bar{width:140px;height:2px;background:rgba(28,18,8,.15);overflow:hidden;}
+.pdf-fill{height:100%;background:var(--dark);animation:pdfAnim 1.4s ease-in-out infinite;}
+@keyframes pdfAnim{0%{width:0;margin-left:0}50%{width:55%;margin-left:20%}100%{width:0;margin-left:100%}}
+.rand-error{background:rgba(110,16,8,.08);border:1.5px solid rgba(110,16,8,.4);padding:13px 16px;font-family:'Special Elite',monospace;font-size:.73rem;letter-spacing:.06em;color:var(--red);line-height:1.6;margin-top:12px;display:none;}
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--dark);color:var(--tan);padding:10px 16px;font-family:'Special Elite',monospace;font-size:.73rem;letter-spacing:.07em;border-left:3px solid var(--success);transform:translateY(70px);opacity:0;transition:all .3s;pointer-events:none;z-index:999;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.error{border-left-color:var(--red);}
+/* Responsive */
+@media(max-width:600px){
+  .site-nav{padding:0 14px;}
+  .dw-sec{padding:18px 14px;}
+  .doc-grid,.equip-grid{grid-template-columns:1fr;}
+  .plan-control-row{flex-direction:column;}
+  .plan-select{min-width:100%;}
+  .readiness-box{grid-template-columns:1fr 1fr;}
+  .readiness-stat:nth-child(3){grid-column:1/-1;border-top:1px solid var(--border);padding-top:8px;margin-top:4px;border-right:none;}
+  .sc-main{padding:12px 14px;}
+  .submit-row{flex-direction:column;align-items:flex-start;gap:10px;}
+  .submit-note{text-align:left;max-width:100%;}
+}
+</style>
+</head>
+<body>
+
+<div class="loading" id="loadingOverlay">
+  <div class="loading-logo">⬡ SAFE STEPS</div>
+  <div class="loading-sub">Loading your family portal...</div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+</div>
+
+<nav class="site-nav">
+  <div>
+    <div class="nav-logo">⬡ SAFE STEPS</div>
+    <div class="nav-tagline">Your Trusted Partner in Family Protection</div>
+  </div>
+  <div class="nav-right">
+    <span class="nav-welcome-label">Family Portal</span>
+    <span class="nav-welcome-name" id="familyNameDisplay">Loading...</span>
+  </div>
+</nav>
+
+<div class="docbar">
+  <div class="docid" id="portalDocId">Safe Steps Portal</div>
+  <div class="dtg">
+    <span class="dtg-time" id="liveDtgTime">--:-- --</span>
+    <span class="dtg-label" id="liveDtgDate">--- -- // CLASSIFIED</span>
+  </div>
+</div>
+
+<div class="main-tabs">
+  <button class="main-tab active" onclick="switchMainTab('documents')" id="mtab-documents">
+    <span class="main-tab-num">01</span>
+    <span class="main-tab-label">Documents</span>
+  </button>
+  <button class="main-tab" onclick="switchMainTab('equipment')" id="mtab-equipment">
+    <span class="main-tab-num">02</span>
+    <span class="main-tab-label">Equipment</span>
+  </button>
+  <button class="main-tab" onclick="switchMainTab('rehearsal')" id="mtab-rehearsal">
+    <span class="main-tab-num">03</span>
+    <span class="main-tab-label">Rehearsal Aids</span>
+  </button>
+</div>
+
+<!-- DOCUMENTS -->
+<div class="tab-content active" id="tab-documents">
+  <div class="dw-sec">
+    <div class="dw-eyebrow">Your Plans</div>
+    <div class="dw-title">Family Documents</div>
+    <div id="docTableWrap"><div class="doc-empty">Loading your documents...</div></div>
+  </div>
+</div>
+
+<!-- EQUIPMENT -->
+<div class="tab-content" id="tab-equipment">
+  <div class="dw-sec">
+    <div class="dw-eyebrow">How-To Video Library</div>
+    <div class="dw-title">Your Equipment</div>
+    <div class="equip-grid" id="equipGrid"><div class="equip-empty">Loading equipment...</div></div>
+  </div>
+</div>
+
+<!-- REHEARSAL AIDS -->
+<div class="tab-content" id="tab-rehearsal">
+  <div class="sc-tabs">
+    <button class="sc-tab active" onclick="switchScTab('scorecard')">New Drill</button>
+    <button class="sc-tab" onclick="switchScTab('history')">Score History</button>
+    <button class="sc-tab" onclick="switchScTab('scenario')">Scenario Generator</button>
+  </div>
+  <div class="sc-main">
+
+    <!-- NEW DRILL -->
+    <div id="sc-tab-scorecard">
+      <div class="plan-control-row">
+        <div class="plan-dropdown-wrap">
+          <span class="plan-dropdown-label">Select Plan</span>
+          <select class="plan-select" id="planSelect" onchange="selectPlan(this.value)">
+            <option value="ybr">Yellow Brick Road — 13 Questions</option>
+            <option value="alamo">The Alamo — 17 Questions</option>
+          </select>
+        </div>
+        <div class="readiness-box plan-ybr" id="readinessBox">
+          <div class="readiness-stat"><span class="rs-label">Most Recent Score</span><span class="rs-value rs-dim" id="rs-recent">—</span></div>
+          <div class="readiness-stat"><span class="rs-label">Avg. Last 3 Drills</span><span class="rs-value rs-dim" id="rs-avg">—</span></div>
+          <div class="readiness-stat"><span class="rs-label">Recommended Frequency</span><span class="rs-freq freq-none" id="rs-freq">No data yet</span></div>
+        </div>
+      </div>
+
+      <!-- YBR SCORECARD -->
+      <div class="scorecard active" id="sc-ybr">
+        <div class="card-title">Yellow Brick Road Score Card</div>
+        <div class="drill-table">
+          <div class="drill-row header"><div class="dc-step">Step</div><div class="dc-q">Question</div><div class="dc-yn">Success?</div></div>
+          <div class="drill-row"><div class="dc-step">1 — Alert</div><div class="dc-q">1) The cue "Yellow Brick Road" was called immediately by whoever first spotted smoke or flame</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',0,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',0,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">1 — Alert</div><div class="dc-q">2) Every occupant relayed the cue without waiting to be told</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',1,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',1,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">2 — Assess</div><div class="dc-q">3) Adults evaluated whether the fire could safely be fought before escalating</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',2,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',2,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">2 — Assess</div><div class="dc-q">4) Any doubt resulted in an immediate move to step 3</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',3,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',3,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">2 — Assess</div><div class="dc-q">5) Children moved to the nearest green dot on their floor without adult direction</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',4,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',4,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">3 — Accountability</div><div class="dc-q">6) Dad ran the full Yellow Brick Road and confirmed the location of every person</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',5,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',5,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">3 — Accountability</div><div class="dc-q">7) Dad directed each person to their nearest exit before moving on</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',6,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',6,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">4 — Movement</div><div class="dc-q">8) Every occupant exited through the door Dad directed them to</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',7,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',7,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">4 — Movement</div><div class="dc-q">9) No one stopped to grab belongings or deviated from the directed route</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',8,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',8,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">5 — Rally point</div><div class="dc-q">10) All occupants went directly to the mailbox after exiting</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',9,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',9,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">5 — Rally point</div><div class="dc-q">11) No one re-entered the house once at the rally point</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',10,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',10,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">6 — First responder</div><div class="dc-q">12) 911 was called within 3 minutes of the trigger</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',11,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',11,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">6 — First responder</div><div class="dc-q">13) The emergency response sheet was located and ready to hand to firefighters</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'ybr',12,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'ybr',12,'no')">NO</button></div></div></div>
+          <div class="score-row"><div class="dc-step"><span class="score-label-txt">Score</span><span class="score-num sv">0</span><span class="score-of sf">of 13</span></div><div class="dc-q"><div class="score-track-inner"><div class="score-track-fill stf"></div></div></div><div class="dc-yn"><span class="score-pct-txt sp">0%</span></div></div>
+        </div>
+      </div>
+
+      <!-- ALAMO SCORECARD -->
+      <div class="scorecard" id="sc-alamo">
+        <div class="card-title">Alamo Score Card</div>
+        <div class="drill-table">
+          <div class="drill-row header"><div class="dc-step">Step</div><div class="dc-q">Question</div><div class="dc-yn">Success?</div></div>
+          <div class="drill-row"><div class="dc-step">1 — Alert</div><div class="dc-q">1) "Alamo" was called immediately when smoke or flame was identified as blocking movement</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',0,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',0,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">1 — Alert</div><div class="dc-q">2) All occupants stopped and assessed their own situation rather than moving automatically</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',1,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',1,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">2 — Assess</div><div class="dc-q">3) Every occupant checked their door with the back of their hand before opening it</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',2,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',2,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">2 — Assess</div><div class="dc-q">4) Every occupant checked for smoke along the door seam</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',3,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',3,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">2 — Assess</div><div class="dc-q">5) Each occupant correctly identified their branch based on their door check result alone</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',4,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',4,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">3 — Movement (Exit)</div><div class="dc-q">6) Anyone whose door check was clear moved to their closest exit and went directly to the mailbox</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',5,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',5,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">3 — Movement (Collapse)</div><div class="dc-q">7) Children moved to designated collapse room; adults stayed in their own rooms</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',6,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',6,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">3 — Movement (Shelter)</div><div class="dc-q">8) Anyone whose door showed heat or smoke stayed in their room and did not attempt to move through the hazard</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',7,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',7,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">4 — Shelter actions</div><div class="dc-q">9) Every sheltering occupant shut their door and opened their window</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',8,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',8,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">4 — Shelter actions</div><div class="dc-q">10) Every sheltering occupant grabbed their whistle</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',9,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',9,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">4 — Shelter actions</div><div class="dc-q">11) The correct number of green dots was placed on the window — one per person, visible from outside</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',10,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',10,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">5 — Rally point</div><div class="dc-q">12) Anyone who exited reached the mailbox and established accountability</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',11,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',11,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">5 — Rally point</div><div class="dc-q">13) No one who got out re-entered the building</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',12,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',12,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">5 — Rally point</div><div class="dc-q">14) Someone walked the exterior and noted the location and count of all green dots in windows</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',13,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',13,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">6 — First responder</div><div class="dc-q">15) 911 was called within 3 minutes</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',14,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',14,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">6 — First responder</div><div class="dc-q">16) Green dot locations — floor, room, and count — were relayed to the dispatcher</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',15,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',15,'no')">NO</button></div></div></div>
+          <div class="drill-row"><div class="dc-step">6 — First responder</div><div class="dc-q">17) Firefighters were met at the rally point and briefed on dot locations before entry</div><div class="dc-yn"><div class="yn-wrap"><button class="yn-btn yn-yes" onclick="toggle(this,'alamo',16,'yes')">YES</button><button class="yn-btn yn-no" onclick="toggle(this,'alamo',16,'no')">NO</button></div></div></div>
+          <div class="score-row"><div class="dc-step"><span class="score-label-txt">Score</span><span class="score-num sv">0</span><span class="score-of sf">of 17</span></div><div class="dc-q"><div class="score-track-inner"><div class="score-track-fill stf"></div></div></div><div class="dc-yn"><span class="score-pct-txt sp">0%</span></div></div>
+        </div>
+      </div>
+
+      <div class="notes-section">
+        <div class="notes-label">Drill Notes (Optional)</div>
+        <textarea class="notes-input" id="drillNotes" placeholder="Observations, issues, or coaching notes from this drill..."></textarea>
+      </div>
+      <div class="submit-row">
+        <button class="btn-submit" id="submitBtn" onclick="submitDrill()">Save Drill Score</button>
+        <div class="submit-note">All answers and scores are saved to your family history</div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div id="sc-tab-history" style="display:none;"><div id="historyContent"></div></div>
+
+    <!-- SCENARIO -->
+    <div id="sc-tab-scenario" style="display:none;">
+      <div class="rand-waiting" id="randWaiting">
+        <div class="rand-waiting-icon">🏠</div>
+        <div class="rand-waiting-title">Loading Floor Plan</div>
+        <div class="rand-waiting-msg">Your First Responder Sheet is being retrieved. This only happens once.</div>
+      </div>
+      <div id="randApp" style="display:none;">
+        <div class="rand-controls">
+          <div class="people-select-wrap">
+            <span class="people-label">People in house</span>
+            <select class="people-select" id="peopleCount">
+              <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+              <option value="4">4</option><option value="5" selected>5</option>
+              <option value="6">6</option><option value="7">7</option><option value="8">8</option>
+            </select>
+          </div>
+          <button class="btn-randomize" id="randomizeBtn" onclick="generateScenario()" disabled>Generate Scenario</button>
+        </div>
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="floorCanvas"></canvas>
+          <div class="flame-marker" id="flameMarker" style="display:none;">🔥</div>
+          <div class="pdf-overlay" id="pdfOverlay"><span class="pdf-overlay-text" id="pdfOverlayText">Rendering PDF</span><div class="pdf-bar"><div class="pdf-fill"></div></div></div>
+        </div>
+        <div class="rand-status" id="randStatus"></div>
+        <div class="rand-error" id="randError"></div>
+      </div>
+    </div>
+
+  </div><!-- /sc-main -->
+</div><!-- /tab-rehearsal -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Live clock
+(function(){
+  const elTime=document.getElementById('liveDtgTime');
+  const elDate=document.getElementById('liveDtgDate');
+  const M=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  function fmt(){
+    const d=new Date();
+    let h=d.getHours(),min=d.getMinutes(),s=d.getSeconds();
+    const ampm=h>=12?'PM':'AM';
+    h=h%12||12;
+    elTime.textContent=h+':'+String(min).padStart(2,'0')+':'+String(s).padStart(2,'0')+' '+ampm;
+    elDate.textContent=M[d.getMonth()]+' '+String(d.getDate()).padStart(2,'0')+' // CLASSIFIED';
+  }
+  fmt();setInterval(fmt,1000);
+})();
+
+// STATE
+let currentFamilyId=null;
+let currentPlan='ybr';
+let allHistoryRecords=[],historyFilter='all';
+const answers={ybr:new Array(13).fill(null),alamo:new Array(17).fill(null)};
+const MAX={ybr:13,alamo:17};
+
+window.parent.postMessage({type:'PORTAL_READY'},'*');
+
+function notifyHeight(){const h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);window.parent.postMessage({type:'IFRAME_HEIGHT',height:h},'*');}
+const ro=new ResizeObserver(notifyHeight);ro.observe(document.body);
+window.addEventListener('load',notifyHeight);setTimeout(notifyHeight,800);setTimeout(notifyHeight,2000);
+
+window.addEventListener('message',function(event){
+  const msg=event.data;if(!msg||!msg.type)return;
+  if(msg.type==='MEMBER_INFO'){
+    currentFamilyId=msg.familyId;
+    const name=msg.familyLastName?msg.familyLastName+' Family':'Family Portal';
+    document.getElementById('familyNameDisplay').textContent=name;
+    document.getElementById('portalDocId').textContent='Safe Steps Portal';
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    window.parent.postMessage({type:'GET_DOCUMENTS'},'*');
+    window.parent.postMessage({type:'GET_HISTORY'},'*');
+  }
+  if(msg.type==='DOCUMENTS_DATA'){renderDocuments(msg.documents||[]);}
+  if(msg.type==='EQUIPMENT_DATA'){renderEquipment(msg.equipment||[]);}
+  if(msg.type==='HISTORY_DATA'){allHistoryRecords=msg.records||[];updateReadinessBox();if(document.getElementById('sc-tab-history').style.display!=='none')buildHistoryView();}
+  if(msg.type==='SAVE_SUCCESS'){showToast('Drill saved — '+msg.score+'/'+msg.max+' ('+msg.pct+'%)');resetForm();document.getElementById('submitBtn').disabled=false;document.getElementById('submitBtn').textContent='Save Drill Score';window.parent.postMessage({type:'GET_HISTORY'},'*');}
+  if(msg.type==='SAVE_ERROR'){showToast('Save failed. Please try again.',true);document.getElementById('submitBtn').disabled=false;document.getElementById('submitBtn').textContent='Save Drill Score';}
+  if(msg.type==='FLOOR_PLAN_URL'){loadFloorPlan(msg.url);}
+  if(msg.type==='DELETE_SUCCESS'){showToast('Drill removed from history');window.parent.postMessage({type:'GET_HISTORY'},'*');}
+  if(msg.type==='DELETE_ERROR'){showToast('Could not delete. Please try again.',true);}
+});
+
+// ── MAIN TABS ──
+function switchMainTab(tab){
+  ['documents','equipment','rehearsal'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('mtab-'+t).classList.toggle('active',t===tab);
+  });
+  if(tab==='equipment')window.parent.postMessage({type:'GET_EQUIPMENT'},'*');
+  notifyHeight();
+}
+
+// ── DOCUMENTS ──
+// Plans fields: title_fld, file (DOCUMENT), planType, customerId
+function getFileUrl(fileField){
+  if(!fileField)return null;
+  if(typeof fileField==='string'){
+    if(fileField.startsWith('wix:document://')){
+      const m=fileField.match(/wix:document:\/\/v1\/ugd\/([^/]+)/);
+      if(m)return'https://docs.wixstatic.com/ugd/'+m[1];
+    }
+    return fileField;
+  }
+  if(fileField.url)return fileField.url;
+  if(fileField.src)return getFileUrl(fileField.src);
+  return null;
+}
+
+function renderDocuments(docs){
+  const wrap=document.getElementById('docTableWrap');
+  if(!docs.length){wrap.innerHTML='<div class="doc-empty">No documents found for your family.<br>Contact Safe Steps if you believe this is an error.</div>';return;}
+  const rows=docs.map(doc=>{
+    const title=doc.title_fld||'Untitled Document';
+    const type=doc.planType||'—';
+    const url=getFileUrl(doc.file);
+    const isFridge=type==='Fridge Sheet';
+    const downloadBtn=url
+      ?`<a class="btn-download" href="${url}" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</a>`
+      :`<span class="btn-download-disabled">No File</span>`;
+    const updateBtn=isFridge?`<button class="btn-update" onclick="openFridgeSheetPopup()">Update</button>`:'';
+    return`<tr><td class="doc-td-type">${type}</td><td class="doc-td-name">${title}</td><td class="doc-td-action"><div class="doc-td-action-wrap">${downloadBtn}${updateBtn}</div></td></tr>`;
+  }).join('');
+  wrap.innerHTML=`<table class="doc-table">
+    <thead class="doc-table-head">
+      <tr><th>Plan Type</th><th>Document</th><th>Action</th></tr>
+    </thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+  notifyHeight();
+}
+
+// Stub — replace with your popup code when ready
+function openFridgeSheetPopup(){
+  alert('Fridge Sheet popup — paste your popup code into openFridgeSheetPopup() to wire this up.');
+}
+
+// ── EQUIPMENT (inline video embeds) ──
+function getYouTubeEmbedUrl(url){
+  if(!url)return null;
+  // youtube.com/watch?v=ID
+  let m=url.match(/[?&]v=([^&]+)/);
+  if(m)return'https://www.youtube.com/embed/'+m[1]+'?rel=0&modestbranding=1';
+  // youtu.be/ID
+  m=url.match(/youtu\.be\/([^?&]+)/);
+  if(m)return'https://www.youtube.com/embed/'+m[1]+'?rel=0&modestbranding=1';
+  // already an embed or other URL — return as-is for a generic iframe
+  return url;
+}
+
+function renderEquipment(items){
+  const grid=document.getElementById('equipGrid');
+  if(!items.length){grid.innerHTML='<div class="equip-empty">No equipment found for your family.<br>Contact Safe Steps if you believe this is an error.</div>';return;}
+  grid.innerHTML=items.map(item=>{
+    const name=item.equipmentTitle||'Unknown Equipment';
+    const embedUrl=getYouTubeEmbedUrl(item.videoUrl);
+    const videoBlock=embedUrl
+      ?`<div class="equip-video-wrap"><iframe src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>`
+      :`<div class="equip-no-video">No video available for this equipment</div>`;
+    return`<div class="equip-card"><div class="equip-card-header"><div class="equip-card-name">${name}</div></div>${videoBlock}</div>`;
+  }).join('');
+  notifyHeight();
+}
+
+// ── SCORECARD TABS ──
+let randLoaded=false;
+function switchScTab(tab){
+  ['scorecard','history','scenario'].forEach((t,i)=>{
+    document.getElementById('sc-tab-'+t).style.display=(t===tab)?'':'none';
+    document.querySelectorAll('.sc-tab')[i].classList.toggle('active',t===tab);
+  });
+  if(tab==='history'){document.getElementById('historyContent').innerHTML='<div class="history-empty">Loading...</div>';window.parent.postMessage({type:'GET_HISTORY'},'*');}
+  if(tab==='scenario'&&!randLoaded){randLoaded=true;window.parent.postMessage({type:'RANDOMIZER_READY'},'*');}
+  notifyHeight();
+}
+
+// ── DRILL LOGIC ──
+function selectPlan(plan){currentPlan=plan;document.getElementById('sc-ybr').classList.toggle('active',plan==='ybr');document.getElementById('sc-alamo').classList.toggle('active',plan==='alamo');document.getElementById('planSelect').value=plan;updateScore();updateReadinessBox();}
+function toggle(btn,plan,idx,val){btn.closest('.yn-wrap').querySelectorAll('.yn-btn').forEach(b=>b.classList.remove('active'));if(answers[plan][idx]===val){answers[plan][idx]=null;}else{answers[plan][idx]=val;btn.classList.add('active');}updateScore();}
+function updateScore(){const yes=answers[currentPlan].filter(a=>a==='yes').length;const max=MAX[currentPlan];const pct=Math.round((yes/max)*100);const sc=document.getElementById('sc-'+currentPlan);if(!sc)return;sc.querySelector('.sv').textContent=yes;sc.querySelector('.sf').textContent='of '+max;sc.querySelector('.stf').style.width=pct+'%';sc.querySelector('.sp').textContent=pct+'%';}
+
+function submitDrill(){
+  const drillDate=new Date().toISOString().split('T')[0];
+  const notes=document.getElementById('drillNotes').value.trim();
+  const plan=currentPlan;
+  const yes=answers[plan].filter(a=>a==='yes').length;
+  const max=MAX[plan];
+  const pct=Math.round((yes/max)*100);
+  // DrillScores fields: familyId, drillDate, planType, totalScore, maxScore, notes, ybr_q1..13, alamo_q1..17
+  // NOTE: no memberId, no pct, no planKey in the actual CMS schema
+  const record={
+    familyId:currentFamilyId,
+    drillDate,
+    planType:plan==='ybr'?'Yellow Brick Road':'Alamo',
+    totalScore:yes,
+    maxScore:max,
+    notes,
+    ybr_q1:answers.ybr[0]==='yes',ybr_q2:answers.ybr[1]==='yes',ybr_q3:answers.ybr[2]==='yes',
+    ybr_q4:answers.ybr[3]==='yes',ybr_q5:answers.ybr[4]==='yes',ybr_q6:answers.ybr[5]==='yes',
+    ybr_q7:answers.ybr[6]==='yes',ybr_q8:answers.ybr[7]==='yes',ybr_q9:answers.ybr[8]==='yes',
+    ybr_q10:answers.ybr[9]==='yes',ybr_q11:answers.ybr[10]==='yes',ybr_q12:answers.ybr[11]==='yes',
+    ybr_q13:answers.ybr[12]==='yes',
+    alamo_q1:answers.alamo[0]==='yes',alamo_q2:answers.alamo[1]==='yes',alamo_q3:answers.alamo[2]==='yes',
+    alamo_q4:answers.alamo[3]==='yes',alamo_q5:answers.alamo[4]==='yes',alamo_q6:answers.alamo[5]==='yes',
+    alamo_q7:answers.alamo[6]==='yes',alamo_q8:answers.alamo[7]==='yes',alamo_q9:answers.alamo[8]==='yes',
+    alamo_q10:answers.alamo[9]==='yes',alamo_q11:answers.alamo[10]==='yes',alamo_q12:answers.alamo[11]==='yes',
+    alamo_q13:answers.alamo[12]==='yes',alamo_q14:answers.alamo[13]==='yes',alamo_q15:answers.alamo[14]==='yes',
+    alamo_q16:answers.alamo[15]==='yes',alamo_q17:answers.alamo[16]==='yes'
+  };
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.textContent='Saving...';
+  window.parent.postMessage({type:'SAVE_DRILL',record,score:yes,max,pct},'*');
+}
+function resetForm(){answers.ybr.fill(null);answers.alamo.fill(null);document.querySelectorAll('.yn-btn').forEach(b=>b.classList.remove('active'));document.getElementById('drillNotes').value='';updateScore();}
+
+// ── READINESS BOX ──
+// DrillScores has no planKey — derive from planType. Has no pct — calculate from totalScore/maxScore.
+function getPlanKey(r){if(r.planKey)return r.planKey;return(r.planType==='Alamo'||r.planType==='alamo')?'alamo':'ybr';}
+function parseRecordDate(r){function pd(v){if(!v)return 0;if(typeof v==='object'&&v.$date)return new Date(v.$date).getTime();return new Date(v).getTime();}return pd(r._createdDate)||pd(r.savedAt)||pd(r.drillDate)||0;}
+function getRecordPct(r){if(r.pct!=null)return r.pct;if(r.totalScore!=null&&r.maxScore)return Math.round((r.totalScore/r.maxScore)*100);return 0;}
+function getRecommendedFrequency(plan,avg){if(avg===null)return{label:'No data yet',cls:'freq-none'};if(plan==='ybr'){if(avg===13)return{label:'Quarterly',cls:'freq-quarterly'};if(avg>=9)return{label:'Monthly',cls:'freq-monthly'};if(avg>=5)return{label:'Weekly',cls:'freq-weekly'};return{label:'Daily',cls:'freq-daily'};}else{if(avg===17)return{label:'Quarterly',cls:'freq-quarterly'};if(avg>=13)return{label:'Monthly',cls:'freq-monthly'};if(avg>=7)return{label:'Weekly',cls:'freq-weekly'};return{label:'Daily',cls:'freq-daily'};}}
+function updateReadinessBox(){
+  const plan=currentPlan;const box=document.getElementById('readinessBox');const max=MAX[plan];
+  box.className='readiness-box '+(plan==='ybr'?'plan-ybr':'plan-alamo');
+  const planRecords=allHistoryRecords.filter(r=>getPlanKey(r)===plan).sort((a,b)=>parseRecordDate(b)-parseRecordDate(a));
+  if(!planRecords.length){document.getElementById('rs-recent').textContent='—';document.getElementById('rs-recent').className='rs-value rs-dim';document.getElementById('rs-avg').textContent='—';document.getElementById('rs-avg').className='rs-value rs-dim';document.getElementById('rs-freq').textContent='No data yet';document.getElementById('rs-freq').className='rs-freq freq-none';return;}
+  document.getElementById('rs-recent').textContent=planRecords[0].totalScore+'/'+max;document.getElementById('rs-recent').className='rs-value';
+  const last3=planRecords.slice(0,3);const avg=last3.reduce((s,r)=>s+r.totalScore,0)/last3.length;
+  document.getElementById('rs-avg').textContent=Math.round(avg*10)/10+(last3.length<3?' ('+last3.length+' drill'+(last3.length>1?'s':'')+')'  :'');document.getElementById('rs-avg').className='rs-value';
+  const freq=getRecommendedFrequency(plan,avg);document.getElementById('rs-freq').textContent=freq.label;document.getElementById('rs-freq').className='rs-freq '+freq.cls;
+}
+
+// ── HISTORY ──
+function filterHistory(plan){historyFilter=plan;buildHistoryView();}
+function buildHistoryView(){
+  const container=document.getElementById('historyContent');const all=allHistoryRecords;
+  if(!all.length){container.innerHTML='<div class="history-empty">No drills recorded yet.<br>Complete your first drill to see history here.</div>';return;}
+  const filtered=historyFilter==='all'?all:all.filter(r=>getPlanKey(r)===historyFilter);
+  const filterHTML=`<div class="history-filter"><button class="filter-btn ${historyFilter==='all'?'active':''}" onclick="filterHistory('all')">All Drills</button><button class="filter-btn ${historyFilter==='ybr'?'active':''}" onclick="filterHistory('ybr')">Yellow Brick Road</button><button class="filter-btn ${historyFilter==='alamo'?'active':''}" onclick="filterHistory('alamo')">Alamo</button></div>`;
+  if(!filtered.length){container.innerHTML=filterHTML+'<div class="history-empty">No drills for this plan yet.</div>';return;}
+  function parseDate(val){if(!val)return 0;if(val&&typeof val==='object'&&val.$date)return new Date(val.$date).getTime();return new Date(val).getTime();}
+  function recordTime(r){return parseDate(r._createdDate)||parseDate(r.savedAt)||parseDate(r.drillDate);}
+  const sorted=[...filtered].sort((a,b)=>recordTime(a)-recordTime(b));
+  const listSorted=[...filtered].sort((a,b)=>recordTime(b)-recordTime(a));
+  const PAD={top:20,right:44,bottom:20,left:48},W=820,H=480;
+  const chartW=W-PAD.left-PAD.right,chartH=H-PAD.top-PAD.bottom,n=sorted.length,H_INSET=30;
+  function xPos(i){return n===1?PAD.left+chartW/2:PAD.left+H_INSET+i*(chartW-H_INSET*2)/(n-1);}
+  function yPos(pct){return PAD.top+chartH-(pct/100)*chartH;}
+  const gridLines=[0,25,50,75,100].map(v=>{const y=yPos(v);return`<line class="chart-grid-line" x1="${PAD.left}" y1="${y}" x2="${W-PAD.right}" y2="${y}"/><text class="chart-axis-label" x="${PAD.left-4}" y="${y+3}" text-anchor="end">${v}</text>`;}).join('');
+  const allPts=sorted.map((r,i)=>({x:xPos(i),y:yPos(getRecordPct(r)),pk:getPlanKey(r),r}));
+  const ybrPts=allPts.filter(p=>p.pk==='ybr'),alamoPts=allPts.filter(p=>p.pk==='alamo');
+  function buildLine(pts,color){if(pts.length<2)return '';return'<path fill="none" stroke="'+color+'" stroke-width="2.5" d="'+pts.map((p,i)=>(i===0?'M':'L')+p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')+'"/>';}
+  const dots=allPts.map(p=>'<circle cx="'+p.x.toFixed(1)+'" cy="'+p.y.toFixed(1)+'" r="7" fill="'+(p.pk==='alamo'?'#2563a8':'#6e1008')+'" stroke="white" stroke-width="2"/>').join('');
+  const svg=`<svg class="chart-svg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${gridLines}<line stroke="rgba(28,18,8,.25)" stroke-width="1" x1="${PAD.left}" y1="${PAD.top}" x2="${PAD.left}" y2="${PAD.top+chartH}"/><line stroke="rgba(28,18,8,.25)" stroke-width="1" x1="${PAD.left}" y1="${PAD.top+chartH}" x2="${W-PAD.right}" y2="${PAD.top+chartH}"/>${buildLine(ybrPts,'#6e1008')}${buildLine(alamoPts,'#2563a8')}${dots}</svg>`;
+  const list=listSorted.map(r=>{
+    const pct=getRecordPct(r);const timeStr=formatTime(r._createdDate);
+    return`<div class="history-card ${getPlanKey(r)}" id="card-${r._id}"><div class="card-default"><div><div class="history-date">${formatDate(r.drillDate)}${timeStr?'<span style="font-size:.72rem;color:rgba(28,18,8,.4);font-family:Special Elite,monospace;margin-left:6px;">'+timeStr+'</span>':''}</div><div class="history-plan">${r.planType}${r.notes?'<br><em>'+r.notes+'</em>':''}</div></div><div class="history-score">${r.totalScore}<span style="font-size:.8rem;color:rgba(28,18,8,.5);">/${r.maxScore}</span></div><div class="history-pct">${pct}%</div><button class="btn-delete" onclick="deleteDrill('${r._id}')" title="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button></div><div class="card-confirm"><span class="confirm-msg">Delete this drill?</span><div class="confirm-btns"><button class="btn-confirm-no" onclick="cancelDelete('${r._id}')">Cancel</button><button class="btn-confirm-yes" onclick="confirmDelete('${r._id}')">Delete</button></div></div></div>`;
+  }).join('');
+  container.innerHTML=filterHTML+`<div class="chart-section"><div class="chart-title">${historyFilter==='all'?'Score Trend':historyFilter==='ybr'?'Yellow Brick Road — Score Trend':'Alamo — Score Trend'}</div><div>${svg}</div></div><div style="font-family:'Bebas Neue',sans-serif;font-size:.85rem;letter-spacing:.15em;color:var(--dark);margin-bottom:10px;">${filtered.length} Drill${filtered.length!==1?'s':''} Recorded</div><div class="history-list">${list}</div>`;
+  notifyHeight();
+}
+function formatDate(d){if(!d)return '';try{return new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}catch(e){return d||'';}}
+function formatTime(iso){if(!iso)return '';try{return new Date(iso).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});}catch(e){return '';}}
+function deleteDrill(id){const card=document.getElementById('card-'+id);if(card)card.classList.add('confirming');}
+function cancelDelete(id){const card=document.getElementById('card-'+id);if(card)card.classList.remove('confirming');}
+function confirmDelete(id){const card=document.getElementById('card-'+id);if(card)card.classList.remove('confirming');window.parent.postMessage({type:'DELETE_DRILL',recordId:id},'*');}
+
+// ── SCENARIO GENERATOR ──
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let validPixels=[],randIsAnalyzed=false;
+function wixDocToUrl(wixDoc){const m=wixDoc.match(/wix:document:\/\/v1\/ugd\/([^/]+)/);if(m)return'https://docs.wixstatic.com/ugd/'+m[1];if(wixDoc.startsWith('http'))return wixDoc;return null;}
+async function loadFloorPlan(rawUrl){
+  if(!rawUrl){showRandError('No First Responder Sheet found for your family.');return;}
+  const url=(typeof rawUrl==='string'&&rawUrl.startsWith('wix:'))?wixDocToUrl(rawUrl):rawUrl;
+  if(!url){showRandError('Could not parse the floor plan URL.');return;}
+  document.getElementById('randWaiting').style.display='none';document.getElementById('randApp').style.display='block';setPdfOverlay('Rendering PDF',true);
+  try{
+    const pdf=await pdfjsLib.getDocument({url,withCredentials:false}).promise;
+    const page=await pdf.getPage(1);const viewport=page.getViewport({scale:2.0});
+    const canvas=document.getElementById('floorCanvas');canvas.width=viewport.width;canvas.height=viewport.height;
+    const ctx=canvas.getContext('2d');await page.render({canvasContext:ctx,viewport}).promise;
+    setPdfOverlay('Analyzing Floor Plan',true);await new Promise(r=>setTimeout(r,80));
+    const cropStartY=Math.floor(canvas.height*0.10),cropEndY=Math.floor(canvas.height*0.72),cropH=cropEndY-cropStartY;
+    const cropData=ctx.getImageData(0,cropStartY,canvas.width,cropH);canvas.height=cropH;ctx.putImageData(cropData,0,0);
+    analyzeFloorPlan(canvas,ctx);setPdfOverlay('',false);
+    document.getElementById('randomizeBtn').disabled=false;
+    document.getElementById('randStatus').textContent='Floor plan ready — '+validPixels.length.toLocaleString()+' valid fire positions identified.';
+    randIsAnalyzed=true;
+  }catch(err){setPdfOverlay('',false);showRandError('Could not load the floor plan PDF. '+(err.message||''));}
+}
+function analyzeFloorPlan(canvas,ctx){const W=canvas.width,H=canvas.height;const data=ctx.getImageData(0,0,W,H).data;function isWhitish(i){return data[i]>215&&data[i+1]>215&&data[i+2]>215;}const exterior=new Uint8Array(W*H);const queue=new Int32Array(Math.ceil(W*H*0.6));let qHead=0,qTail=0;function seed(x,y){const p=y*W+x;if(!exterior[p]&&isWhitish(p*4)){exterior[p]=1;queue[qTail++]=p;}}for(let x=0;x<W;x++){seed(x,0);seed(x,H-1);}for(let y=0;y<H;y++){seed(0,y);seed(W-1,y);}while(qHead<qTail){const pos=queue[qHead++],x=pos%W,y=(pos-x)/W;if(x>0){const n=pos-1;if(!exterior[n]&&isWhitish(n*4)){exterior[n]=1;queue[qTail++]=n;}}if(x<W-1){const n=pos+1;if(!exterior[n]&&isWhitish(n*4)){exterior[n]=1;queue[qTail++]=n;}}if(y>0){const n=pos-W;if(!exterior[n]&&isWhitish(n*4)){exterior[n]=1;queue[qTail++]=n;}}if(y<H-1){const n=pos+W;if(!exterior[n]&&isWhitish(n*4)){exterior[n]=1;queue[qTail++]=n;}}}const EDGE=40,RADIUS=25,THRESHOLD=160,OFFSETS=[[-RADIUS,0],[RADIUS,0],[0,-RADIUS],[0,RADIUS],[-RADIUS,-RADIUS],[RADIUS,-RADIUS],[-RADIUS,RADIUS],[RADIUS,RADIUS]];function neighborBrightness(x,y){let sum=0,count=0;for(const[dx,dy]of OFFSETS){const nx=x+dx,ny=y+dy;if(nx<0||nx>=W||ny<0||ny>=H)continue;const ni=(ny*W+nx)*4;sum+=(data[ni]+data[ni+1]+data[ni+2])/3;count++;}return count>0?sum/count:0;}validPixels=[];for(let pos=0;pos<W*H;pos+=4){if(exterior[pos])continue;const x=pos%W,y=(pos-x)/W;if(x<EDGE||x>W-EDGE||y<EDGE||y>H-EDGE)continue;if(neighborBrightness(x,y)<THRESHOLD)continue;validPixels.push(pos);}}
+const PERSON_COLORS=['#2563a8','#16804a','#9333a0','#c47d0e','#0e7c7c','#b03060','#5b4fcf','#c0580a'];
+function generateScenario(){if(!randIsAnalyzed||!validPixels.length)return;const canvas=document.getElementById('floorCanvas');const wrap=document.getElementById('canvasWrap');const scale=(canvas.offsetWidth||wrap.offsetWidth)/canvas.width;const flame=document.getElementById('flameMarker');const fPos=validPixels[Math.floor(Math.random()*validPixels.length)];flame.style.display='block';flame.style.left=(fPos%canvas.width)*scale+'px';flame.style.top=Math.floor(fPos/canvas.width)*scale+'px';wrap.querySelectorAll('.person-marker').forEach(el=>el.remove());const count=parseInt(document.getElementById('peopleCount').value)||5;for(let i=0;i<count;i++){const pPos=validPixels[Math.floor(Math.random()*validPixels.length)];const marker=document.createElement('div');marker.className='person-marker';marker.style.left=(pPos%canvas.width)*scale+'px';marker.style.top=Math.floor(pPos/canvas.width)*scale+'px';marker.style.background=PERSON_COLORS[i%PERSON_COLORS.length];marker.textContent=i+1;wrap.appendChild(marker);}document.getElementById('randStatus').textContent='Scenario generated. Press Generate again for a new scenario.';}
+function setPdfOverlay(text,show){document.getElementById('pdfOverlayText').textContent=text;document.getElementById('pdfOverlay').classList.toggle('show',show);}
+function showRandError(msg){document.getElementById('randWaiting').style.display='none';document.getElementById('randApp').style.display='block';const el=document.getElementById('randError');el.textContent=msg;el.style.display='block';}
+window.addEventListener('resize',function(){if(!randIsAnalyzed)return;document.getElementById('flameMarker').style.display='none';});
+
+function showToast(msg,isError=false){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(isError?' error':'');setTimeout(()=>t.className='toast',3500);}
+</script>
+</body>
+</html>
