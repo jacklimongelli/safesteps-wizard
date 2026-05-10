@@ -700,7 +700,10 @@ let allHistoryRecords=[],historyFilter='all';
 const answers={ybr:new Array(13).fill(null),alamo:new Array(17).fill(null)};
 const MAX={ybr:13,alamo:17};
 
-window.parent.postMessage({type:'PORTAL_READY'},'*');
+// Retry PORTAL_READY every 300ms until Wix responds with MEMBER_INFO
+let _readyInterval = setInterval(() => {
+  window.parent.postMessage({ type: 'PORTAL_READY' }, '*');
+}, 300);
 
 function notifyHeight(){const h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);window.parent.postMessage({type:'IFRAME_HEIGHT',height:h},'*');}
 const ro=new ResizeObserver(notifyHeight);ro.observe(document.body);
@@ -709,6 +712,7 @@ window.addEventListener('load',notifyHeight);setTimeout(notifyHeight,800);setTim
 window.addEventListener('message',function(event){
   const msg=event.data;if(!msg||!msg.type)return;
   if(msg.type==='MEMBER_INFO'){
+    clearInterval(_readyInterval);
     currentFamilyId=msg.familyId;
     const name=msg.familyLastName?msg.familyLastName+' Family':'Family Portal';
     document.getElementById('familyNameDisplay').textContent=name;
