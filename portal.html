@@ -332,7 +332,7 @@ body{
 .dw-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:.04em;color:var(--dark);line-height:1.05;margin-bottom:18px;}
 
 /* ══ DOCUMENTS TABLE ══ */
-.doc-table-wrap{max-width:700px;margin:0 auto;}
+.doc-table-wrap{max-width:420px;margin:0 auto;}
 .doc-table{width:100%;border-collapse:collapse;border:1.5px solid var(--border-strong);}
 .doc-table-head{background:var(--dark);}
 .doc-table-head th{
@@ -395,7 +395,7 @@ body{
 .sc-tab:hover:not(.active){background:rgba(195,169,125,.12);color:var(--tan);}
 .sc-main{padding:22px 20px;max-width:900px;margin:0 auto;}
 /* Plan select + readiness */
-.plan-control-row{display:flex;gap:12px;align-items:stretch;margin-bottom:16px;flex-wrap:wrap;}
+.plan-control-row{display:flex;gap:12px;align-items:stretch;margin-bottom:16px;flex-wrap:wrap;justify-content:center;}
 .plan-dropdown-wrap{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
 .plan-dropdown-label{font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.18em;color:var(--text-dim);}
 .plan-select{background:white;border:1.5px solid var(--border-strong);padding:10px 36px 10px 14px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.15em;color:var(--dark);outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231C1208' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;min-width:230px;}
@@ -526,18 +526,16 @@ body{
   .main-tab-num{font-size:.6rem;}
   .main-tab-label{font-size:.82rem;letter-spacing:.1em;text-align:center;}
 
-  /* DOCUMENTS TABLE — scrollable, don't overflow */
+  /* DOCUMENTS TABLE — two columns now, constrain properly */
   .doc-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  .doc-table{min-width:320px;}
-  .doc-td-type{font-size:.78rem;width:100px;}
-  .doc-td-name{font-size:.78rem;}
+  .doc-table{width:100%;min-width:0;}
+  .doc-td-type{font-size:.82rem;width:auto;}
 
-  /* GENERAL */
-  .dw-sec{padding:18px 14px;}
-  .equip-grid{grid-template-columns:1fr;}
-  .plan-control-row{flex-direction:column;}
-  .plan-select{min-width:100%;}
-  .readiness-box{grid-template-columns:1fr 1fr;}
+  /* PLAN DROPDOWN + READINESS — center and constrain */
+  .plan-control-row{flex-direction:column;align-items:center;}
+  .plan-dropdown-wrap{width:100%;align-items:center;}
+  .plan-select{min-width:100%;width:100%;}
+  .readiness-box{width:100%;grid-template-columns:1fr 1fr;}
   .readiness-stat:nth-child(3){grid-column:1/-1;border-top:1px solid var(--border);padding-top:8px;margin-top:4px;border-right:none;}
   .sc-main{padding:12px 14px;}
   .submit-row{flex-direction:column;align-items:flex-start;gap:10px;}
@@ -820,11 +818,11 @@ function renderDocuments(docs, fridgeUrl){
       ?`<a class="btn-download" href="${url}" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</a>`
       :`<span class="btn-download-disabled">No File</span>`;
     const updateBtn=isFridge?`<button class="btn-update" onclick="openFridgeSheetPopup()">Update</button>`:'';
-    return`<tr><td class="doc-td-type">${type}</td><td class="doc-td-name">${title}</td><td class="doc-td-action"><div class="doc-td-action-wrap">${downloadBtn}${updateBtn}</div></td></tr>`;
+    return`<tr><td class="doc-td-type">${type}</td><td class="doc-td-action"><div class="doc-td-action-wrap">${downloadBtn}${updateBtn}</div></td></tr>`;
   }).join('');
   wrap.innerHTML=`<div class="doc-table-wrap"><table class="doc-table">
     <thead class="doc-table-head">
-      <tr><th>Plan Type</th><th>Document</th><th>Action</th></tr>
+      <tr><th>Plan Type</th><th>Action</th></tr>
     </thead>
     <tbody>${rows}</tbody>
   </table></div>`;
