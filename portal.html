@@ -486,9 +486,31 @@ body{
 .toast.error{border-left-color:var(--red);}
 /* Responsive */
 @media(max-width:600px){
-  .site-nav{padding:0 14px;}
+  /* NAV — tighter, family name right-aligned on 2 lines */
+  .site-nav{padding:0 12px;height:auto;min-height:56px;padding-top:10px;padding-bottom:10px;}
+  .nav-welcome-label{font-size:.52rem;}
+  .nav-welcome-name{font-size:1.1rem;text-align:right;word-break:break-word;max-width:160px;}
+
+  /* DOCBAR — box shrinks to content, clock smaller */
+  .docbar{padding:10px 12px;flex-wrap:wrap;gap:8px;}
+  .docid{font-size:.8rem;letter-spacing:.1em;padding:5px 10px;white-space:normal;word-break:break-word;display:inline-block;}
+  .dtg-time{font-size:1rem;}
+  .dtg-label{font-size:.55rem;}
+
+  /* MAIN TABS — top aligned so wrapped text doesn't misalign */
+  .main-tab{height:auto;min-height:52px;padding:10px 4px;justify-content:flex-start;padding-top:10px;}
+  .main-tab-num{font-size:.6rem;}
+  .main-tab-label{font-size:.82rem;letter-spacing:.1em;text-align:center;}
+
+  /* DOCUMENTS TABLE — scrollable, don't overflow */
+  .doc-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .doc-table{min-width:320px;}
+  .doc-td-type{font-size:.78rem;width:100px;}
+  .doc-td-name{font-size:.78rem;}
+
+  /* GENERAL */
   .dw-sec{padding:18px 14px;}
-  .doc-grid,.equip-grid{grid-template-columns:1fr;}
+  .equip-grid{grid-template-columns:1fr;}
   .plan-control-row{flex-direction:column;}
   .plan-select{min-width:100%;}
   .readiness-box{grid-template-columns:1fr 1fr;}
