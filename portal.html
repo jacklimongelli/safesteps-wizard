@@ -258,7 +258,7 @@ body{
 }
 
 /* ══ EQUIPMENT VIDEO CARDS ══ */
-.equip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;}
+.equip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;max-width:960px;margin:0 auto;}
 .equip-card{background:rgba(28,18,8,.04);border:1px solid var(--border);border-top:3px solid var(--border-strong);display:flex;flex-direction:column;overflow:hidden;}
 .equip-card-header{padding:12px 15px 10px;border-bottom:1px solid var(--border);}
 .equip-card-label{font-family:'Bebas Neue',sans-serif;font-size:.52rem;letter-spacing:.22em;color:var(--text-dim);}
@@ -307,6 +307,7 @@ body{
 .dw-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:.04em;color:var(--dark);line-height:1.05;margin-bottom:18px;}
 
 /* ══ DOCUMENTS TABLE ══ */
+.doc-table-wrap{max-width:700px;margin:0 auto;}
 .doc-table{width:100%;border-collapse:collapse;border:1.5px solid var(--border-strong);}
 .doc-table-head{background:var(--dark);}
 .doc-table-head th{
@@ -773,12 +774,12 @@ function renderDocuments(docs){
     const updateBtn=isFridge?`<button class="btn-update" onclick="openFridgeSheetPopup()">Update</button>`:'';
     return`<tr><td class="doc-td-type">${type}</td><td class="doc-td-name">${title}</td><td class="doc-td-action"><div class="doc-td-action-wrap">${downloadBtn}${updateBtn}</div></td></tr>`;
   }).join('');
-  wrap.innerHTML=`<table class="doc-table">
+  wrap.innerHTML=`<div class="doc-table-wrap"><table class="doc-table">
     <thead class="doc-table-head">
       <tr><th>Plan Type</th><th>Document</th><th>Action</th></tr>
     </thead>
     <tbody>${rows}</tbody>
-  </table>`;
+  </table></div>`;
   notifyHeight();
 }
 
