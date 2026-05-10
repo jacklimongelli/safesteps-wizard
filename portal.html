@@ -833,7 +833,7 @@ function renderDocuments(docs, fridgeUrl){
 
 // Stub — replace with your popup code when ready
 function openFridgeSheetPopup(){
-  alert('Fridge Sheet popup — paste your popup code into openFridgeSheetPopup() to wire this up.');
+  window.parent.postMessage({ type: 'OPEN_FRIDGE_POPUP' }, '*');
 }
 
 // ── EQUIPMENT (inline video embeds) ──
