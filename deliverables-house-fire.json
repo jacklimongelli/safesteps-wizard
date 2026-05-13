@@ -1,0 +1,47 @@
+[
+  {
+    "productName": "The Binder",
+    "text": "Your plan arrives in a durable tactical binder built to live on your shelf and survive real use.",
+    "image": "https://static.wixstatic.com/media/0c3bc8_f885fd7948b4442092ed97dc3d6a9431~mv2.png"
+  },
+  {
+    "productName": "What's Inside",
+    "text": "Every component organized and ready — pull it out, hand it to a first responder, and they have everything they need.",
+    "image": "https://static.wixstatic.com/media/0c3bc8_5505c6c364d0483c8b186f01bdfe42c5~mv2.png"
+  },
+  {
+    "productName": "Response Plan",
+    "text": "The master document. Scenario-by-scenario instructions personalized to your home, your layout, and your family.",
+    "image": "https://static.wixstatic.com/media/0c3bc8_79a01ef358c942c9bb02463d2e828823~mv2.png"
+  },
+  {
+    "productName": "Graphical Cheat Sheet",
+    "text": "Visual escape matrix for when movement isn't blocked. One glance, everyone knows their role.",
+    "image": "https://static.wixstatic.com/media/0c3bc8_1a8a7a9eed454eefb21980efb49b4e77~mv2.png"
+  },
+  {
+    "productName": "Text Cheat Sheet",
+    "text": "Detailed role assignments for every family member, every step of the Yellow Brick Road scenario.",
+    "image": "https://static.wixstatic.com/media/0c3bc8_18c2fbdcda564e6eb7417abfd45ed7f1~mv2.png"
+  },
+  {
+    "productName": "Graphical Cheat Sheet",
+    "text": "Visual shelter-in-place matrix for when smoke or fire is blocking movement.",
+    "image": "https://static.wixstatic.com/media/0c3bc8_527e817513f54caab8d53623d6677ff0~mv2.png"
+  },
+  {
+    "productName": "Text Cheat Sheet",
+    "text": "Detailed step-by-step Alamo instructions when movement out of the home is not possible.",
+    "image": "https://static.wixstatic.com/media/0c3bc8_8c43ec8ee25b45f8a9d45591771d09d9~mv2.png"
+  },
+  {
+    "productName": "First Responder 1 Pager",
+    "text": "Floor plan, occupant details, rally points, and hazard notes — everything a firefighter needs in the first 60 seconds.",
+    "image": "https://static.wixstatic.com/media/0c3bc8_b6e255e0dd044ef5a5815e79b13f244c~mv2.png"
+  },
+  {
+    "productName": "Family Fridge Sheet",
+    "text": "Emergency contacts, medical info, rally points, and utility shutoffs. Laminated and posted where your family finds it fast.",
+    "image": "https://static.wixstatic.com/media/0c3bc8_7e5b1a668be9491fb456f7fbe88cd45b~mv2.png"
+  }
+]

@@ -1702,39 +1702,15 @@ function assessFinish(){
 <script src="pdf-viewer.js"></script>
 <script>
 (function(){
-  var WIX_API_KEY = 'IST.eyJraWQiOiJQb3pIX2FDMiIsImFsZyI6IlJTMjU2In0.eyJkYXRhIjoie1wiaWRcIjpcIjg1YzkxMzhhLTM3N2ItNGZiNi1hNWQ0LTIyMTBkMjhjZjRhYlwiLFwiaWRlbnRpdHlcIjp7XCJ0eXBlXCI6XCJhcHBsaWNhdGlvblwiLFwiaWRcIjpcImI4ZDRmNGQ2LThhMDQtNGI1OS1iMTYyLTIxNTk0Y2FjOTRlOVwifSxcInRlbmFudFwiOntcInR5cGVcIjpcImFjY291bnRcIixcImlkXCI6XCIwYzNiYzg2Mi0yNzRmLTRhM2MtYjI4Zi1lZjQzZDk5Zjc3MzBcIn19IiwiaWF0IjoxNzc4Njk2NzAwfQ.BDUe3EYLCsat6Q6NwGY87FsefhLFmdvwBo64-Iz9LuLvMU7KJf8RwARbk60ezXSNnlDtV_4cyK8EI3q9jMOrewkeQIIQIEyJVxLJAR98dcWfEo3vljRhLy3ID-Ya2B2dDUTBGPowqb9BbSWTQqBpriiEUidwAIUzgST2sETzAzUCiFNUxfN-l6jdG3X5T8eUon-ZahV744nTsoVC0IIcPBIBElGRH4jLHkylqqgtiF8_diFwRpla97qO2QpvECWGJkukekxGK9fxqLyWN4OLSkDE8lk1dFNWxuc3EITPwaEEAW5oXrmeq4vEatwgIzd5YVIlD-NF_y_9-vHnmdMlYw';
-  var WIX_SITE_ID = '56510dd2-71d2-40bc-a871-7b7f9f69084a';
   var delivItems = [];
   var delivCur = -1;
 
-  function wixImageUrl(wixUri) {
-    if (!wixUri) return '';
-    var m = wixUri.match(/wix:image:\/\/v1\/([^/]+)\//);
-    if (!m) return '';
-    var fileId = m[1];
-    return 'https://static.wixstatic.com/media/' + fileId;
-  }
+  function wixImageUrl(img) { return img || ''; }
 
   function loadDeliverables() {
-    fetch('https://www.wixapis.com/wix-data/v2/items/query', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': WIX_API_KEY,
-        'wix-site-id': WIX_SITE_ID
-      },
-      body: JSON.stringify({
-        dataCollectionId: 'ProductPageDemos',
-        query: {
-          filter: { title: 'House Fire' },
-          sort: [{ fieldName: '_createdDate', order: 'ASC' }],
-          paging: { limit: 50 }
-        }
-      })
-    })
+    fetch('https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/deliverables-house-fire.json')
     .then(function(r){ return r.json(); })
-    .then(function(data){
-      var items = (data.dataItems || []).map(function(d){ return d.data; });
+    .then(function(items){
       if (!items.length) { document.getElementById('deliverables-loading').textContent = 'NO CONTENT FOUND'; return; }
       delivItems = items;
       buildStrip();
@@ -1754,7 +1730,7 @@ function assessFinish(){
       var imgUrl = wixImageUrl(item.image);
       thumb.innerHTML =
         '<div id="dthumb-img-' + i + '" style="height:64px;background:#1C1208;border:2px solid transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .15s">' +
-          (imgUrl ? '<img src="' + imgUrl + '/v1/fill/w_192,h_128,al_c,q_85,usm_0.66_1.00_0.01/img.png" style="width:100%;height:100%;object-fit:cover" alt="">' : '<span style="font-size:.38rem;letter-spacing:.06em;color:rgba(195,169,125,.3);text-align:center;padding:3px">' + (item.productName||'') + '</span>') +
+          (imgUrl ? '<img src="' + imgUrl + '" style="width:100%;height:100%;object-fit:cover" alt="">' : '<span style="font-size:.38rem;letter-spacing:.06em;color:rgba(195,169,125,.3);text-align:center;padding:3px">' + (item.productName||'') + '</span>') +
         '</div>' +
         '<div id="dthumb-lbl-' + i + '" style="padding:5px 2px 0;font-family:Arial,sans-serif;font-size:.48rem;letter-spacing:.05em;color:rgba(28,18,8,.55);line-height:1.3;text-align:center">' + (item.productName||'') + '</div>';
       thumb.onclick = function(){ delivOpen(i); };
@@ -1778,7 +1754,7 @@ function assessFinish(){
     var imgUrl = wixImageUrl(item.image);
     var imgEl = document.getElementById('deliv-img');
     if (imgUrl) {
-      imgEl.src = imgUrl + '/v1/fill/w_800,q_85,usm_0.66_1.00_0.01/img.png';
+      imgEl.src = imgUrl;
       imgEl.style.display = 'block';
     } else {
       imgEl.style.display = 'none';
