@@ -31,6 +31,10 @@
   var style = document.createElement('style');
   style.textContent = [
     '.pdf-slideshow{position:relative;background:rgba(28,18,8,.06);border:1px solid rgba(28,18,8,.18);overflow:hidden;user-select:none}',
+    '.pdf-ss-topbar{background:#C3A97D;padding:14px 16px 12px;border-bottom:2px solid rgba(28,18,8,.16)}',
+    '.pdf-ss-topbar-eyebrow{font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.08em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:4px}',
+    '.pdf-ss-topbar-eyebrow::before{content:"";display:block;width:12px;height:1px;background:rgba(28,18,8,.55)}',
+    '.pdf-ss-topbar-title{font-family:Arial,sans-serif;font-size:1.6rem;letter-spacing:.04em;color:#1C1208;line-height:1}',
     '.pdf-ss-stage{position:relative;width:100%;overflow:hidden;background:#1C1208;min-height:240px;display:flex;align-items:center;justify-content:center}',
     '.pdf-ss-canvas{display:block;max-width:100%;height:auto;position:absolute;top:0;left:0;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .3s ease}',
     '.pdf-ss-canvas.enter-right{transform:translateX(100%);opacity:0}',
@@ -59,8 +63,11 @@
 
   // ── Scaffold placeholder UI immediately ───────────────────────────────────
   function scaffoldViewer(container) {
-    var label = container.getAttribute('data-label') || '';
     container.innerHTML = [
+      '<div class="pdf-ss-topbar">',
+        '<div class="pdf-ss-topbar-eyebrow">SAMPLE PLAN</div>',
+        '<div class="pdf-ss-topbar-title">PLAN DEMO</div>',
+      '</div>',
       '<div class="pdf-ss-stage">',
         '<div class="pdf-ss-loading">',
           '<div class="pdf-ss-loading-inner">',
@@ -72,13 +79,9 @@
       '<div class="pdf-ss-dots" style="display:none"></div>',
       '<div class="pdf-ss-bar">',
         '<button class="pdf-ss-btn" disabled>← PREV</button>',
-        '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">',
-          '<div class="pdf-ss-counter">— / —</div>',
-          label ? '<div class="pdf-ss-label">' + label + '</div>' : '',
-        '</div>',
+        '<div class="pdf-ss-counter" style="flex:1;text-align:center">— / —</div>',
         '<button class="pdf-ss-btn" disabled>NEXT →</button>',
-      '</div>',
-      '<div class="pdf-ss-hint">SWIPE OR USE ARROW KEYS TO NAVIGATE</div>'
+      '</div>'
     ].join('');
   }
 
@@ -116,11 +119,15 @@
 
     function renderPageToCanvas(num, canvas, callback) {
       pdfDoc.getPage(num).then(function (page) {
-        var w = stage.clientWidth || container.clientWidth || 360;
-        var vp = page.getViewport({ scale: 1 });
-        var scaled = page.getViewport({ scale: w / vp.width });
+        var dpr = window.devicePixelRatio || 1;
+        var w   = stage.clientWidth || container.clientWidth || 360;
+        var vp  = page.getViewport({ scale: 1 });
+        var scale  = (w / vp.width) * dpr;
+        var scaled = page.getViewport({ scale: scale });
         canvas.width  = scaled.width;
         canvas.height = scaled.height;
+        canvas.style.width  = (scaled.width  / dpr) + 'px';
+        canvas.style.height = (scaled.height / dpr) + 'px';
         page.render({ canvasContext: canvas.getContext('2d'), viewport: scaled })
           .promise.then(callback);
       });
