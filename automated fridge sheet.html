@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=1024"/>
 <title>Safe Steps — Family Emergency Sheet Builder</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -14,22 +14,6 @@
   input:focus{outline:none} button{font-family:inherit}
   .step-label{display:none}
   @media(min-width:900px){.step-label{display:block}}
-  @media(max-width:768px){
-    .step-grid-3{grid-template-columns:1fr!important}
-    .step-grid-2{grid-template-columns:1fr!important}
-    .fam-table{font-size:0.65rem}
-    .fam-table th,.fam-table td{padding:3px 4px!important;font-size:0.55rem!important}
-    .contact-grid{grid-template-columns:1fr!important}
-    .step-indicator{padding:8px 6px 0!important;overflow:hidden!important}
-    .step-indicator .step-label{display:none!important}
-    .step-indicator .step-dot{width:18px!important;height:18px!important;font-size:7px!important;flex-shrink:0}
-    .step-indicator>div{padding-bottom:10px!important}
-    .step-connector{min-width:4px!important;flex:1}
-    .nav-row{padding:12px 14px!important}
-    .card-body{padding:16px 14px 14px!important}
-    .card-header{padding:14px 14px 12px!important}
-    .step-dot-wrap{width:28px!important;flex-shrink:0!important}
-  }
   @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
   .tbl-input{border:none;background:transparent;font-family:Arial,sans-serif;font-size:0.78rem;color:#1C1208;padding:5px 7px;width:100%;outline:none}
