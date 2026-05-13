@@ -16,6 +16,8 @@
 
 import wixData from 'wix-data';
 import { currentMember } from 'wix-members';
+import { authentication } from 'wix-members-frontend';
+import wixLocation from 'wix-location';
 
 $w.onReady(async () => {
   const member = await currentMember.getMember({ fieldsets: ['FULL'] });
@@ -176,6 +178,12 @@ $w.onReady(async () => {
       } catch(e) {
         $w('#htmlPortal').postMessage({ type: 'FLOOR_PLAN_URL', url: null });
       }
+    }
+
+    // ── Auto-logout after inactivity (triggered from portal HTML) ──
+    if (msg.type === 'LOGOUT') {
+      await authentication.logout();
+      wixLocation.to('/');
     }
   });
 });
@@ -757,6 +765,41 @@ function notifyHeight(){const h=Math.max(document.body.scrollHeight,document.doc
 const ro=new ResizeObserver(notifyHeight);ro.observe(document.body);
 window.addEventListener('load',notifyHeight);setTimeout(notifyHeight,800);setTimeout(notifyHeight,2000);
 
+// ── Inactivity auto-logout (1 hour) ──────────────────────────────────────────
+(function(){
+  const IDLE_MS = 60 * 60 * 1000;
+  const TS_KEY  = 'ss_last_activity';
+  let idleTimer;
+
+  function touch(){ localStorage.setItem(TS_KEY, Date.now()); }
+  function logout(){ clearTimeout(idleTimer); window.parent.postMessage({type:'LOGOUT'},'*'); }
+
+  function reset(){
+    touch();
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(logout, IDLE_MS);
+  }
+
+  function checkOnReturn(){
+    if(document.visibilityState==='visible'){
+      const last = parseInt(localStorage.getItem(TS_KEY)||'0');
+      if(last && (Date.now()-last) > IDLE_MS){ logout(); return; }
+      reset();
+    }
+  }
+
+  ['click','keydown','scroll','touchstart','mousemove'].forEach(e =>
+    document.addEventListener(e, reset, {passive:true})
+  );
+  document.addEventListener('visibilitychange', checkOnReturn);
+
+  // Kick off on load (after MEMBER_INFO confirms user is logged in)
+  window.addEventListener('message', function(e){
+    if(e.data && e.data.type==='MEMBER_INFO') reset();
+  });
+})();
+// ─────────────────────────────────────────────────────────────────────────────
+
 window.addEventListener('message',function(event){
   const msg=event.data;if(!msg||!msg.type)return;
   if(msg.type==='MEMBER_INFO'){
@@ -791,23 +834,6 @@ function switchMainTab(tab){
 
 // ── DOCUMENTS ──
 // Plans fields: title_fld, file (DOCUMENT), planType, customerId
-async function openPdfMobile(e, url){
-  e.preventDefault();
-  try{
-    const res=await fetch(`https://www.safestepsplansforms.com/_functions/pdf?url=${encodeURIComponent(url)}`);
-    const {pdf,error}=await res.json();
-    if(error||!pdf) throw new Error(error||'No data');
-    const binary=atob(pdf);
-    const bytes=new Uint8Array(binary.length);
-    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
-    const blob=new Blob([bytes],{type:'application/pdf'});
-    const blobUrl=URL.createObjectURL(blob);
-    window.open(blobUrl,'_blank');
-  }catch(err){
-    // Fallback: open direct URL and hope for the best
-    window.open(url,'_blank');
-  }
-}
 function getFileUrl(fileField){
   if(!fileField)return null;
   if(typeof fileField==='string'){
@@ -832,10 +858,9 @@ function renderDocuments(docs, fridgeUrl){
     // Fridge sheet uses dynamically built URL, all others use CMS file
     const url=isFridge ? fridgeUrl : getFileUrl(doc.file);
     const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const onClickAttr=(!isFridge && isMobile && url) ? `onclick="openPdfMobile(event,'${url.replace(/'/g,"\\'")}')"` : '';
-    const hrefAttr=(!isFridge && isMobile && url) ? 'href="#"' : (url ? `href="${isFridge ? url : url}" target="_blank"` : '');
+    const viewUrl=isFridge ? url : (isMobile ? `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true` : url);
     const downloadBtn=url
-      ?`<a class="btn-download" ${hrefAttr} ${onClickAttr}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</a>`
+      ?`<a class="btn-download" href="${viewUrl}" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</a>`
       :`<span class="btn-download-disabled">No File</span>`;
     const updateBtn=isFridge?`<button class="btn-update" onclick="openFridgeSheetPopup()">Update</button>`:'';
     return`<tr><td class="doc-td-type">${type}</td><td class="doc-td-action"><div class="doc-td-action-wrap">${downloadBtn}${updateBtn}</div></td></tr>`;
