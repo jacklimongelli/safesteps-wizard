@@ -1278,18 +1278,19 @@ function assessFinish(){
     <div class="dw-sec" style="padding:0">
       <div id="deliverables-loading" style="padding:26px 20px;font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.1em;color:rgba(28,18,8,.35)">LOADING PLAN CONTENTS...</div>
       <div id="deliverables-wrap" style="display:none">
-        <div style="background:#C3A97D;padding:14px 20px 12px;border-bottom:2px solid rgba(28,18,8,.16)">
+        <div class="dw-sec" style="border-bottom:2px solid rgba(28,18,8,.16);padding-bottom:12px;padding-top:14px">
           <div style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.08em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:4px">
             <span style="display:block;width:12px;height:1px;background:rgba(28,18,8,.55)"></span>WHAT YOU GET
           </div>
           <div style="font-family:Arial,sans-serif;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:.04em;color:#1C1208;line-height:1">PLAN CONTENTS</div>
         </div>
-        <div style="overflow-x:auto;padding:14px 14px 10px;background:rgba(28,18,8,.04);border-bottom:1px solid rgba(28,18,8,.1);-webkit-overflow-scrolling:touch;scrollbar-width:none" id="strip-scroll">
-          <div style="display:flex;gap:8px;width:max-content" id="thumb-strip"></div>
+        <div style="overflow-x:auto;padding:14px 20px 10px;background:rgba(28,18,8,.04);border-bottom:1px solid rgba(28,18,8,.1);-webkit-overflow-scrolling:touch;scrollbar-width:none" id="strip-scroll">
+          <div style="max-width:896px;margin:0 auto">
+            <div style="display:flex;gap:8px;width:max-content" id="thumb-strip"></div>
+          </div>
         </div>
-        <div style="font-family:Arial,sans-serif;font-size:.48rem;letter-spacing:.07em;color:rgba(28,18,8,.35);padding:6px 14px 8px;background:rgba(28,18,8,.04);border-bottom:1px solid rgba(28,18,8,.08)">← SCROLL TO SEE ALL DELIVERABLES &nbsp;·&nbsp; TAP TO EXPAND</div>
         <div id="deliv-detail" style="display:none;background:#1C1208">
-          <div style="padding:20px 20px">
+          <div class="dw-sec" style="padding-top:20px;padding-bottom:20px;background:#1C1208">
             <div id="deliv-img-wrap" style="background:#2a2010;margin-bottom:16px;display:flex;align-items:center;justify-content:center;min-height:180px">
               <img id="deliv-img" src="" alt="" style="width:100%;height:auto;display:block;max-height:320px;object-fit:contain">
             </div>
@@ -1311,13 +1312,6 @@ function assessFinish(){
       <div class="pdf-slideshow"
            data-pdf="https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/demo_fire_plan.pdf"
            data-label="Safe Steps — House Fire Plan">
-      </div>
-    </div>
-    <div class="dw-sec">
-      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
-      <div class="dw-title">EQUIPMENT BRIEF</div>
-      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:220px;display:flex;align-items:center;justify-content:center">
-        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT LIST — IMAGE PLACEHOLDER</div>
       </div>
     </div>
     <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
@@ -1714,6 +1708,7 @@ function assessFinish(){
       if (!items.length) { document.getElementById('deliverables-loading').textContent = 'NO CONTENT FOUND'; return; }
       delivItems = items;
       buildStrip();
+      delivOpen(0);
       document.getElementById('deliverables-loading').style.display = 'none';
       document.getElementById('deliverables-wrap').style.display = 'block';
     })
