@@ -1374,13 +1374,13 @@ function assessFinish(){
       <div style="font-size:.85rem;letter-spacing:.1em;color:#1C1208;display:flex;align-items:center;gap:7px;margin-bottom:7px;font-family:Arial,sans-serif"><span style="display:block;width:10px;height:1px;background:#1C1208"></span>02 / 07 — HOUSE</div>
       <div style="font-size:1.45rem;letter-spacing:.03em;color:#1C1208;line-height:1.05;margin-bottom:16px;font-weight:normal;font-family:Arial,sans-serif">TELL US ABOUT<br>YOUR HOME</div>
       <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">FLOORS</div>
-      <select style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none;margin-bottom:10px"><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4+</option></select>
+      <select id="inq-floors" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none;margin-bottom:10px"><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4+</option></select>
       <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">BEDROOMS</div>
-      <select style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none;margin-bottom:10px"><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select>
+      <select id="inq-bedrooms" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none;margin-bottom:10px"><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select>
       <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">BATHROOMS</div>
-      <select style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none;margin-bottom:10px"><option value="">Select</option><option>1</option><option>1.5</option><option>2</option><option>2.5</option><option>3</option><option>3.5+</option></select>
+      <select id="inq-bathrooms" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none;margin-bottom:10px"><option value="">Select</option><option>1</option><option>1.5</option><option>2</option><option>2.5</option><option>3</option><option>3.5+</option></select>
       <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">SQUARE FOOTAGE</div>
-      <select style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none"><option value="">Select</option><option>Under 1,500 sq ft</option><option>1,500 – 3,000 sq ft</option><option>3,000 – 5,000 sq ft</option><option>5,000+ sq ft</option></select>
+      <select id="inq-sqft" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none"><option value="">Select</option><option>Under 1,500 sq ft</option><option>1,500 – 3,000 sq ft</option><option>3,000 – 5,000 sq ft</option><option>5,000+ sq ft</option></select>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-top:1px solid rgba(28,18,8,.14);padding-top:13px">
         <button onclick="inqGo(1)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#1C1208;background:none;border:1px solid rgba(28,18,8,.22);padding:7px 14px;cursor:pointer">← BACK</button>
         <div style="font-size:.48rem;letter-spacing:.08em;color:#1C1208;font-family:Arial,sans-serif">2 OF 7</div>
@@ -1520,10 +1520,13 @@ function inqPick(el) {
   siblings.forEach(function(r) {
     r.style.background = 'rgba(28,18,8,.07)';
     r.style.borderColor = 'rgba(28,18,8,.18)';
+    r.style.color = '#1C1208';
+    r.removeAttribute('data-selected');
   });
   el.style.background = '#1C1208';
   el.style.borderColor = '#1C1208';
   el.style.color = '#C3A97D';
+  el.setAttribute('data-selected', 'true');
 }
 
 function inqCollectFamily() {
@@ -1540,25 +1543,17 @@ function inqCollectFamily() {
   return parts.join(' | ');
 }
 
-function inqCollectHouse() {
-  var sels = document.querySelectorAll('#inq-s2 select');
-  var labels = ['Floors','Bedrooms','Bathrooms','Sq Ft'];
-  var parts = [];
-  sels.forEach(function(s, i) { if (s.value) parts.push(labels[i] + ': ' + s.value); });
-  return parts.join(', ');
-}
-
 function inqCollectPick(stepId) {
-  var sel = document.querySelector('#inq-s' + stepId + ' .inq-ropt[style*="1C1208"]');
-  return sel ? sel.textContent : '';
+  var sel = document.querySelector('#inq-s' + stepId + ' .inq-ropt[data-selected="true"]');
+  return sel ? sel.textContent.trim() : '';
 }
 
 function inqSubmit() {
-  var name    = document.getElementById('inq-name').value;
-  var email   = document.getElementById('inq-email').value;
-  var phone   = document.getElementById('inq-phone').value;
-  var address = document.getElementById('inq-address').value;
-  var limits  = document.getElementById('inq-limitations').value;
+  var name    = (document.getElementById('inq-name').value || '').trim();
+  var email   = (document.getElementById('inq-email').value || '').trim();
+  var phone   = (document.getElementById('inq-phone').value || '').trim();
+  var address = (document.getElementById('inq-address').value || '').trim();
+  var limits  = (document.getElementById('inq-limitations').value || '').trim();
 
   if (!name || !email || !phone) {
     alert('Please fill in your name, email, and phone number.');
@@ -1566,7 +1561,10 @@ function inqSubmit() {
   }
 
   var family   = inqCollectFamily();
-  var house    = inqCollectHouse();
+  var floors   = (document.getElementById('inq-floors').value || '').trim();
+  var bedrooms = (document.getElementById('inq-bedrooms').value || '').trim();
+  var bathrooms= (document.getElementById('inq-bathrooms').value || '').trim();
+  var sqft     = (document.getElementById('inq-sqft').value || '').trim();
   var plan     = inqCollectPick(3);
   var motivat  = inqCollectPick(5);
   var invest   = inqCollectPick(6);
@@ -1574,10 +1572,10 @@ function inqSubmit() {
   var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScF_VzPkgrjfypZdGB-jjn_VOZRCM0TOFoV4ZkxkW0VCz_asQ/formResponse';
   var params = new URLSearchParams({
     'entry.636664641': family,
-    'entry.56983081':  house,
-    'entry.750911384': '',
-    'entry.703088214': '',
-    'entry.866286187': '',
+    'entry.56983081':  floors,
+    'entry.750911384': bedrooms,
+    'entry.703088214': bathrooms,
+    'entry.866286187': sqft,
     'entry.1567596141': plan,
     'entry.738327955': limits,
     'entry.10924613':  motivat,
