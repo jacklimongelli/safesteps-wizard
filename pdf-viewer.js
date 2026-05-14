@@ -111,7 +111,7 @@
 
     function renderPageToCanvas(num, canvas, callback) {
       pdfDoc.getPage(num).then(function (page) {
-        var dpr = window.devicePixelRatio || 1;
+        var dpr = Math.max(window.devicePixelRatio || 1, 2);
         var w   = stage.clientWidth || container.clientWidth || 360;
         var vp  = page.getViewport({ scale: 1 });
         var scale  = (w / vp.width) * dpr;
