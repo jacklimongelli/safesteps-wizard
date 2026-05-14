@@ -1333,13 +1333,272 @@ function assessFinish(){
            data-label="Safe Steps — House Fire Plan">
       </div>
     </div>
-    <div class="dw-sec"><a class="dw-btnp" onclick="nav('assessment')">START YOUR ASSESSMENT</a></div>
+    <div class="dw-sec"><a class="dw-btnp" onclick="openInquiry()">SUBMIT A FAMILY FIT INQUIRY</a></div>
     <div class="dw-footer"><div class="dw-footer-tag">© 2025 SAFE STEPS PLANS LLC · CHARLOTTESVILLE, VA<br>VETERAN-FOUNDED &amp; OPERATED</div></div>
   </div>
 </div>
 
+<!-- ══════════ FAMILY FIT INQUIRY POPUP ══════════ -->
+<div id="inquiry-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;overflow-y:auto;padding:20px">
+  <div id="inquiry-modal" style="background:#C3A97D;background-image:linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);background-size:60px 60px,60px 60px,15px 15px,15px 15px;width:100%;max-width:480px;margin:0 auto;border:1px solid rgba(28,18,8,.25);font-family:Arial,sans-serif">
+    <div style="background:#1C1208;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(195,169,125,.1)">
+      <div style="font-size:.85rem;letter-spacing:.08em;color:#C3A97D;font-family:Arial,sans-serif">FAMILY FIT INQUIRY</div>
+      <button onclick="closeInquiry()" style="font-size:.55rem;letter-spacing:.08em;color:#C3A97D;cursor:pointer;background:none;border:none;font-family:Arial,sans-serif">CLOSE ✕</button>
+    </div>
+    <div style="height:3px;background:rgba(28,18,8,.15)"><div id="inq-prog" style="height:100%;background:#C3A97D;transition:width .35s ease;width:14%"></div></div>
+
+    <div class="inq-step" id="inq-s1" style="display:block;padding:22px 20px 18px">
+      <div style="font-size:.85rem;letter-spacing:.1em;color:#1C1208;display:flex;align-items:center;gap:7px;margin-bottom:7px;font-family:Arial,sans-serif"><span style="display:block;width:10px;height:1px;background:#1C1208"></span>01 / 07 — FAMILY</div>
+      <div style="font-size:1.45rem;letter-spacing:.03em;color:#1C1208;line-height:1.05;margin-bottom:16px;font-weight:normal;font-family:Arial,sans-serif">TELL US ABOUT<br>YOUR FAMILY</div>
+      <div id="inq-members">
+        <div class="inq-mrow" style="display:grid;grid-template-columns:2fr 60px 2fr 20px;gap:5px;align-items:center;margin-bottom:5px">
+          <input placeholder="Name" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.75rem;color:#1C1208;outline:none"/>
+          <input placeholder="Age" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.75rem;color:#1C1208;outline:none"/>
+          <select style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none"><option value="">Role</option><option>Adult</option><option>Child</option><option>Elderly</option><option>Pet</option><option>Other</option></select>
+          <button onclick="inqRmRow(this)" style="background:none;border:none;color:#1C1208;font-size:.9rem;cursor:pointer;padding:0;font-family:Arial,sans-serif">✕</button>
+        </div>
+      </div>
+      <button onclick="inqAddRow()" style="width:100%;background:none;border:1px dashed rgba(28,18,8,.25);padding:7px;font-family:Arial,sans-serif;font-size:.52rem;letter-spacing:.08em;color:#1C1208;cursor:pointer;margin-top:5px">+ ADD PERSON</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-top:1px solid rgba(28,18,8,.14);padding-top:13px">
+        <div style="font-size:.48rem;letter-spacing:.08em;color:#1C1208;font-family:Arial,sans-serif">1 OF 7</div>
+        <button onclick="inqGo(2)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">NEXT →</button>
+      </div>
+    </div>
+
+    <div class="inq-step" id="inq-s2" style="display:none;padding:22px 20px 18px">
+      <div style="font-size:.85rem;letter-spacing:.1em;color:#1C1208;display:flex;align-items:center;gap:7px;margin-bottom:7px;font-family:Arial,sans-serif"><span style="display:block;width:10px;height:1px;background:#1C1208"></span>02 / 07 — HOUSE</div>
+      <div style="font-size:1.45rem;letter-spacing:.03em;color:#1C1208;line-height:1.05;margin-bottom:16px;font-weight:normal;font-family:Arial,sans-serif">TELL US ABOUT<br>YOUR HOME</div>
+      <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">FLOORS</div>
+      <select style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none;margin-bottom:10px"><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4+</option></select>
+      <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">BEDROOMS</div>
+      <select style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none;margin-bottom:10px"><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option></select>
+      <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">BATHROOMS</div>
+      <select style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none;margin-bottom:10px"><option value="">Select</option><option>1</option><option>1.5</option><option>2</option><option>2.5</option><option>3</option><option>3.5+</option></select>
+      <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">SQUARE FOOTAGE</div>
+      <select style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none"><option value="">Select</option><option>Under 1,500 sq ft</option><option>1,500 – 3,000 sq ft</option><option>3,000 – 5,000 sq ft</option><option>5,000+ sq ft</option></select>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-top:1px solid rgba(28,18,8,.14);padding-top:13px">
+        <button onclick="inqGo(1)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#1C1208;background:none;border:1px solid rgba(28,18,8,.22);padding:7px 14px;cursor:pointer">← BACK</button>
+        <div style="font-size:.48rem;letter-spacing:.08em;color:#1C1208;font-family:Arial,sans-serif">2 OF 7</div>
+        <button onclick="inqGo(3)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">NEXT →</button>
+      </div>
+    </div>
+
+    <div class="inq-step" id="inq-s3" style="display:none;padding:22px 20px 18px">
+      <div style="font-size:.85rem;letter-spacing:.1em;color:#1C1208;display:flex;align-items:center;gap:7px;margin-bottom:7px;font-family:Arial,sans-serif"><span style="display:block;width:10px;height:1px;background:#1C1208"></span>03 / 07 — CURRENT PLAN</div>
+      <div style="font-size:1.45rem;letter-spacing:.03em;color:#1C1208;line-height:1.05;margin-bottom:16px;font-weight:normal;font-family:Arial,sans-serif">DO YOU CURRENTLY HAVE<br>A RESPONSE PLAN?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">No plan</div>
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">We've talked about it</div>
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">Rally point and family passwords</div>
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">A written and rehearsed plan</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-top:1px solid rgba(28,18,8,.14);padding-top:13px">
+        <button onclick="inqGo(2)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#1C1208;background:none;border:1px solid rgba(28,18,8,.22);padding:7px 14px;cursor:pointer">← BACK</button>
+        <div style="font-size:.48rem;letter-spacing:.08em;color:#1C1208;font-family:Arial,sans-serif">3 OF 7</div>
+        <button onclick="inqGo(4)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">NEXT →</button>
+      </div>
+    </div>
+
+    <div class="inq-step" id="inq-s4" style="display:none;padding:22px 20px 18px">
+      <div style="font-size:.85rem;letter-spacing:.1em;color:#1C1208;display:flex;align-items:center;gap:7px;margin-bottom:7px;font-family:Arial,sans-serif"><span style="display:block;width:10px;height:1px;background:#1C1208"></span>04 / 07 — LIMITATIONS</div>
+      <div style="font-size:1.45rem;letter-spacing:.03em;color:#1C1208;line-height:1.05;margin-bottom:16px;font-weight:normal;font-family:Arial,sans-serif">ANY LIMITATIONS IN<br>YOUR HOUSEHOLD?</div>
+      <textarea id="inq-limitations" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;resize:vertical;min-height:72px" placeholder="e.g. limited mobility"></textarea>
+      <div style="font-size:.58rem;line-height:1.6;color:#1C1208;margin-top:10px;font-style:italic;font-family:Arial,sans-serif">We are able to accommodate nearly all limitations — this helps us better understand your family's needs. Leave blank if not applicable.</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-top:1px solid rgba(28,18,8,.14);padding-top:13px">
+        <button onclick="inqGo(3)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#1C1208;background:none;border:1px solid rgba(28,18,8,.22);padding:7px 14px;cursor:pointer">← BACK</button>
+        <div style="font-size:.48rem;letter-spacing:.08em;color:#1C1208;font-family:Arial,sans-serif">4 OF 7</div>
+        <button onclick="inqGo(5)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">NEXT →</button>
+      </div>
+    </div>
+
+    <div class="inq-step" id="inq-s5" style="display:none;padding:22px 20px 18px">
+      <div style="font-size:.85rem;letter-spacing:.1em;color:#1C1208;display:flex;align-items:center;gap:7px;margin-bottom:7px;font-family:Arial,sans-serif"><span style="display:block;width:10px;height:1px;background:#1C1208"></span>05 / 07 — MOTIVATION</div>
+      <div style="font-size:1.45rem;letter-spacing:.03em;color:#1C1208;line-height:1.05;margin-bottom:16px;font-weight:normal;font-family:Arial,sans-serif">WHY ARE YOU INTERESTED<br>IN A RESPONSE PLAN?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">Recent scare or close call</div>
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">Moving to a new home</div>
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">New baby or family change</div>
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">Just being proactive</div>
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">Friend or family recommendation</div>
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">Other</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-top:1px solid rgba(28,18,8,.14);padding-top:13px">
+        <button onclick="inqGo(4)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#1C1208;background:none;border:1px solid rgba(28,18,8,.22);padding:7px 14px;cursor:pointer">← BACK</button>
+        <div style="font-size:.48rem;letter-spacing:.08em;color:#1C1208;font-family:Arial,sans-serif">5 OF 7</div>
+        <button onclick="inqGo(6)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">NEXT →</button>
+      </div>
+    </div>
+
+    <div class="inq-step" id="inq-s6" style="display:none;padding:22px 20px 18px">
+      <div style="font-size:.85rem;letter-spacing:.1em;color:#1C1208;display:flex;align-items:center;gap:7px;margin-bottom:7px;font-family:Arial,sans-serif"><span style="display:block;width:10px;height:1px;background:#1C1208"></span>06 / 07 — INVESTMENT</div>
+      <div style="font-size:1.45rem;letter-spacing:.03em;color:#1C1208;line-height:1.05;margin-bottom:16px;font-weight:normal;font-family:Arial,sans-serif">HOW PREPARED ARE YOU TO<br>INVEST IN YOUR FAMILY'S SAFETY?</div>
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">I'm ready to invest if it's the right fit</div>
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">Seriously considering it, still doing research</div>
+        <div class="inq-ropt" onclick="inqPick(this)" style="background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.18);padding:9px 12px;font-size:.65rem;color:#1C1208;cursor:pointer;line-height:1.35;font-family:Arial,sans-serif">Interested but not ready to commit financially</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-top:1px solid rgba(28,18,8,.14);padding-top:13px">
+        <button onclick="inqGo(5)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#1C1208;background:none;border:1px solid rgba(28,18,8,.22);padding:7px 14px;cursor:pointer">← BACK</button>
+        <div style="font-size:.48rem;letter-spacing:.08em;color:#1C1208;font-family:Arial,sans-serif">6 OF 7</div>
+        <button onclick="inqGo(7)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">NEXT →</button>
+      </div>
+    </div>
+
+    <div class="inq-step" id="inq-s7" style="display:none;padding:22px 20px 18px">
+      <div style="font-size:.85rem;letter-spacing:.1em;color:#1C1208;display:flex;align-items:center;gap:7px;margin-bottom:7px;font-family:Arial,sans-serif"><span style="display:block;width:10px;height:1px;background:#1C1208"></span>07 / 07 — CONTACT</div>
+      <div style="font-size:1.45rem;letter-spacing:.03em;color:#1C1208;line-height:1.05;margin-bottom:16px;font-weight:normal;font-family:Arial,sans-serif">HOW DO WE<br>REACH YOU?</div>
+      <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">FULL NAME</div>
+      <input id="inq-name" placeholder="Full name" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.75rem;color:#1C1208;outline:none;margin-bottom:10px;display:block"/>
+      <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">EMAIL</div>
+      <input id="inq-email" type="email" placeholder="email@example.com" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.75rem;color:#1C1208;outline:none;margin-bottom:10px;display:block"/>
+      <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">PHONE</div>
+      <input id="inq-phone" type="tel" placeholder="(xxx) xxx-xxxx" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.75rem;color:#1C1208;outline:none;margin-bottom:10px;display:block"/>
+      <div style="font-size:.48rem;letter-spacing:.09em;color:#1C1208;margin-bottom:4px;font-family:Arial,sans-serif">ADDRESS <span style="font-style:italic">— OPTIONAL</span></div>
+      <input id="inq-address" placeholder="Street address, city, state" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.75rem;color:#1C1208;outline:none;display:block"/>
+      <div style="font-size:.72rem;color:#1C1208;line-height:1.5;margin-top:10px;font-family:Arial,sans-serif">Providing your address greatly improves our ability to assess fit.</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-top:1px solid rgba(28,18,8,.14);padding-top:13px">
+        <button onclick="inqGo(6)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#1C1208;background:none;border:1px solid rgba(28,18,8,.22);padding:7px 14px;cursor:pointer">← BACK</button>
+        <div style="font-size:.48rem;letter-spacing:.08em;color:#1C1208;font-family:Arial,sans-serif">7 OF 7</div>
+        <button onclick="inqSubmit()" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">SUBMIT →</button>
+      </div>
+    </div>
+
+    <div class="inq-step" id="inq-s8" style="display:none;padding:40px 20px;text-align:center">
+      <div style="width:44px;height:44px;background:#1C1208;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.2rem;color:#C3A97D;font-family:Arial,sans-serif">✓</div>
+      <div style="font-size:1.4rem;letter-spacing:.03em;color:#1C1208;margin-bottom:12px;font-family:Arial,sans-serif">SUBMISSION RECEIVED.</div>
+      <div style="font-size:.72rem;line-height:1.7;color:#1C1208;border-left:2px solid rgba(28,18,8,.2);padding-left:10px;text-align:left;font-family:Arial,sans-serif">We'll review your answers and be in touch within 24 hours. Check your email for a copy of everything you submitted.</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var inqCur = 1;
+
+function openInquiry() {
+  document.getElementById('inquiry-overlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  inqGo(1);
+}
+
+function closeInquiry() {
+  document.getElementById('inquiry-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function inqGo(n) {
+  document.querySelectorAll('.inq-step').forEach(function(s){ s.style.display = 'none'; });
+  document.getElementById('inq-s' + n).style.display = 'block';
+  inqCur = n;
+  var pct = n <= 7 ? Math.round((n / 7) * 100) : 100;
+  document.getElementById('inq-prog').style.width = pct + '%';
+}
+
+function inqAddRow() {
+  var row = document.createElement('div');
+  row.className = 'inq-mrow';
+  row.style.cssText = 'display:grid;grid-template-columns:2fr 60px 2fr 20px;gap:5px;align-items:center;margin-bottom:5px';
+  row.innerHTML = '<input placeholder="Name" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.75rem;color:#1C1208;outline:none"/>'
+    + '<input placeholder="Age" style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.75rem;color:#1C1208;outline:none"/>'
+    + '<select style="width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.22);padding:8px 10px;font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;outline:none;appearance:none"><option value="">Role</option><option>Adult</option><option>Child</option><option>Elderly</option><option>Pet</option><option>Other</option></select>'
+    + '<button onclick="inqRmRow(this)" style="background:none;border:none;color:#1C1208;font-size:.9rem;cursor:pointer;padding:0;font-family:Arial,sans-serif">✕</button>';
+  document.getElementById('inq-members').appendChild(row);
+}
+
+function inqRmRow(btn) {
+  var rows = document.querySelectorAll('.inq-mrow');
+  if (rows.length > 1) btn.closest('.inq-mrow').remove();
+}
+
+function inqPick(el) {
+  var siblings = el.parentElement.querySelectorAll('.inq-ropt');
+  siblings.forEach(function(r) {
+    r.style.background = 'rgba(28,18,8,.07)';
+    r.style.borderColor = 'rgba(28,18,8,.18)';
+  });
+  el.style.background = '#1C1208';
+  el.style.borderColor = '#1C1208';
+  el.style.color = '#C3A97D';
+}
+
+function inqCollectFamily() {
+  var rows = document.querySelectorAll('.inq-mrow');
+  var parts = [];
+  rows.forEach(function(row) {
+    var inputs = row.querySelectorAll('input');
+    var sel = row.querySelector('select');
+    var name = inputs[0] ? inputs[0].value : '';
+    var age = inputs[1] ? inputs[1].value : '';
+    var role = sel ? sel.value : '';
+    if (name || age || role) parts.push((name||'?') + ', ' + (age||'?') + ', ' + (role||'?'));
+  });
+  return parts.join(' | ');
+}
+
+function inqCollectHouse() {
+  var sels = document.querySelectorAll('#inq-s2 select');
+  var labels = ['Floors','Bedrooms','Bathrooms','Sq Ft'];
+  var parts = [];
+  sels.forEach(function(s, i) { if (s.value) parts.push(labels[i] + ': ' + s.value); });
+  return parts.join(', ');
+}
+
+function inqCollectPick(stepId) {
+  var sel = document.querySelector('#inq-s' + stepId + ' .inq-ropt[style*="1C1208"]');
+  return sel ? sel.textContent : '';
+}
+
+function inqSubmit() {
+  var name    = document.getElementById('inq-name').value;
+  var email   = document.getElementById('inq-email').value;
+  var phone   = document.getElementById('inq-phone').value;
+  var address = document.getElementById('inq-address').value;
+  var limits  = document.getElementById('inq-limitations').value;
+
+  if (!name || !email || !phone) {
+    alert('Please fill in your name, email, and phone number.');
+    return;
+  }
+
+  var family   = inqCollectFamily();
+  var house    = inqCollectHouse();
+  var plan     = inqCollectPick(3);
+  var motivat  = inqCollectPick(5);
+  var invest   = inqCollectPick(6);
+
+  var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScF_VzPkgrjfypZdGB-jjn_VOZRCM0TOFoV4ZkxkW0VCz_asQ/formResponse';
+  var params = new URLSearchParams({
+    'entry.636664641': family,
+    'entry.56983081':  house,
+    'entry.750911384': '',
+    'entry.703088214': '',
+    'entry.866286187': '',
+    'entry.1567596141': plan,
+    'entry.738327955': limits,
+    'entry.10924613':  motivat,
+    'entry.1302621290': invest,
+    'entry.1367554305': name,
+    'entry.2126515225': email,
+    'entry.46098198':  phone,
+    'entry.119229432': address
+  });
+
+  fetch(formUrl, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
+  }).catch(function(){});
+
+  inqGo(8);
+}
+
+document.getElementById('inquiry-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeInquiry();
+});
+</script>
+
 <!-- ══════════ PLAN: HOME INVASION ══════════ -->
-<div class="page" id="page-plan-invasion">
   <div class="dw">
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
