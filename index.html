@@ -1366,7 +1366,7 @@ function assessFinish(){
       <button onclick="inqAddRow()" style="width:100%;background:none;border:1px dashed rgba(28,18,8,.25);padding:7px;font-family:Arial,sans-serif;font-size:.52rem;letter-spacing:.08em;color:#1C1208;cursor:pointer;margin-top:5px">+ ADD PERSON</button>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-top:1px solid rgba(28,18,8,.14);padding-top:13px">
         <div style="font-size:.48rem;letter-spacing:.08em;color:#1C1208;font-family:Arial,sans-serif">1 OF 7</div>
-        <button onclick="inqGo(2)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">NEXT →</button>
+        <button onclick="inqNextFamily()" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">NEXT →</button>
       </div>
     </div>
 
@@ -1400,7 +1400,7 @@ function assessFinish(){
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;border-top:1px solid rgba(28,18,8,.14);padding-top:13px">
         <button onclick="inqGo(2)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#1C1208;background:none;border:1px solid rgba(28,18,8,.22);padding:7px 14px;cursor:pointer">← BACK</button>
         <div style="font-size:.48rem;letter-spacing:.08em;color:#1C1208;font-family:Arial,sans-serif">3 OF 7</div>
-        <button onclick="inqGo(4)" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">NEXT →</button>
+        <button onclick="inqNextPlan()" style="font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.08em;color:#C3A97D;background:#1C1208;border:1px solid #1C1208;padding:7px 14px;cursor:pointer">NEXT →</button>
       </div>
     </div>
 
@@ -1515,37 +1515,54 @@ function inqRmRow(btn) {
   if (rows.length > 1) btn.closest('.inq-mrow').remove();
 }
 
+var inqSelectedValues = {};
+
+function inqNextFamily() {
+  inqGo(2);
+}
+
+function inqNextPlan() {
+  inqGo(4);
+}
+
 function inqPick(el) {
+  var step = el.closest ? el.closest('.inq-step') : null;
+  if (!step && el.parentElement) {
+    var p = el.parentElement;
+    while (p && !p.classList.contains('inq-step')) p = p.parentElement;
+    step = p;
+  }
+  var stepId = step ? step.id : '';
   var siblings = el.parentElement.querySelectorAll('.inq-ropt');
   siblings.forEach(function(r) {
     r.style.background = 'rgba(28,18,8,.07)';
     r.style.borderColor = 'rgba(28,18,8,.18)';
     r.style.color = '#1C1208';
-    r.removeAttribute('data-selected');
   });
   el.style.background = '#1C1208';
   el.style.borderColor = '#1C1208';
   el.style.color = '#C3A97D';
-  el.setAttribute('data-selected', 'true');
+  if (stepId) inqSelectedValues[stepId] = el.textContent.trim();
 }
 
 function inqCollectFamily() {
-  var rows = document.querySelectorAll('.inq-mrow');
+  var container = document.getElementById('inq-members');
+  if (!container) return '';
+  var rows = container.getElementsByClassName('inq-mrow');
   var parts = [];
-  rows.forEach(function(row) {
-    var inputs = row.querySelectorAll('input');
-    var sel = row.querySelector('select');
-    var name = inputs[0] ? inputs[0].value : '';
-    var age = inputs[1] ? inputs[1].value : '';
-    var role = sel ? sel.value : '';
-    if (name || age || role) parts.push((name||'?') + ', ' + (age||'?') + ', ' + (role||'?'));
-  });
+  for (var i = 0; i < rows.length; i++) {
+    var inputs = rows[i].getElementsByTagName('input');
+    var sels = rows[i].getElementsByTagName('select');
+    var name = inputs[0] ? inputs[0].value.trim() : '';
+    var age  = inputs[1] ? inputs[1].value.trim() : '';
+    var role = sels[0]   ? sels[0].value           : '';
+    if (name || age || role) parts.push((name||'?') + ', age ' + (age||'?') + ', ' + (role||'?'));
+  }
   return parts.join(' | ');
 }
 
 function inqCollectPick(stepId) {
-  var sel = document.querySelector('#inq-s' + stepId + ' .inq-ropt[data-selected="true"]');
-  return sel ? sel.textContent.trim() : '';
+  return inqSelectedValues['inq-s' + stepId] || '';
 }
 
 function inqSubmit() {
