@@ -1175,14 +1175,24 @@ document.addEventListener('DOMContentLoaded', function(){
 
 // ── CALC IFRAME AUTO-RESIZE ──
 window.addEventListener("message", function(e) {
-  if (e.data && e.data.action === "resize" && e.data.height) {
-    var frame = document.getElementById("calc-frame");
-    if (frame) frame.style.minHeight = (e.data.height + 40) + "px";
-    var fframe = document.getElementById("fridge-frame");
-    if (fframe) fframe.style.minHeight = (e.data.height + 40) + "px";
-    var aframe = document.getElementById("accident-frame");
-    if (aframe) aframe.style.minHeight = (e.data.height + 40) + "px";
-  }
+  if (!e.data || e.data.action !== "resize" || !e.data.height) return;
+  var newH = e.data.height;
+  var frames = [
+    document.getElementById("calc-frame"),
+    document.getElementById("fridge-frame"),
+    document.getElementById("accident-frame")
+  ];
+  frames.forEach(function(frame) {
+    if (!frame) return;
+    // Only update the frame that sent this message
+    if (frame.contentWindow !== e.source) return;
+    var current = parseInt(frame.style.height) || 0;
+    // Only update if height changed by more than 10px to prevent loop
+    if (Math.abs(newH - current) > 10) {
+      frame.style.height = newH + "px";
+      frame.style.minHeight = "0";
+    }
+  });
 });
 
 // ── MOBILE MENU ──
@@ -2002,8 +2012,8 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       <h1>RESPONSE TIME<br>CALCULATOR</h1>
       <div class="dw-body">Enter your address to see real local response times for fire and EMS — and exactly how many minutes you are on your own before help arrives.</div>
     </div>
-    <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13)">
-      <iframe id="calc-frame" src="emergency-calc.html" style="width:100%;border:none;display:block;min-height:600px;" scrolling="no" title="Response Time Calculator"></iframe>
+    <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13);display:flex;justify-content:center">
+      <iframe id="calc-frame" src="emergency-calc.html" style="width:100%;max-width:960px;border:none;display:block;min-height:600px;" scrolling="no" title="Response Time Calculator"></iframe>
     </div>
     <div class="dw-sec" style="background:rgba(28,18,8,.04)">
       <div class="dw-eyebrow">READY FOR MORE?</div>
@@ -2025,8 +2035,8 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       <h1>FAMILY FRIDGE<br>SHEET BUILDER</h1>
       <div class="dw-body">Build your family's personalized emergency reference sheet — emergency contacts, rally points, medical info, and utility shutoffs. Print it, laminate it, post it.</div>
     </div>
-    <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13)">
-      <iframe id="fridge-frame" src="https://jacklimongelli.github.io/safesteps-wizard/automated%20fridge%20sheet.html" style="width:100%;border:none;display:block;min-height:600px;" scrolling="no" title="Family Fridge Sheet Builder"></iframe>
+    <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13);display:flex;justify-content:center">
+      <iframe id="fridge-frame" src="https://jacklimongelli.github.io/safesteps-wizard/automated%20fridge%20sheet.html" style="width:100%;max-width:960px;border:none;display:block;min-height:600px;" scrolling="no" title="Family Fridge Sheet Builder"></iframe>
     </div>
     <div class="dw-sec" style="background:rgba(28,18,8,.04)">
       <div class="dw-eyebrow">READY FOR MORE?</div>
@@ -2048,8 +2058,8 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       <h1>CAR ACCIDENT<br>RESPONSE CARD</h1>
       <div class="dw-body">A two-sided card for your glovebox — what to do step by step, what info to collect, what photos to take, and what never to say. Fill it in, print it, laminate it.</div>
     </div>
-    <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13)">
-      <iframe id="accident-frame" src="accident-card.html" style="width:100%;border:none;display:block;min-height:600px;" scrolling="no" title="Car Accident Response Card"></iframe>
+    <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13);display:flex;justify-content:center">
+      <iframe id="accident-frame" src="accident-card.html" style="width:100%;max-width:960px;border:none;display:block;min-height:600px;" scrolling="no" title="Car Accident Response Card"></iframe>
     </div>
     <div class="dw-sec" style="background:rgba(28,18,8,.04)">
       <div class="dw-eyebrow">READY FOR MORE?</div>
