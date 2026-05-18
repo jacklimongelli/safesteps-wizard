@@ -1231,6 +1231,59 @@ body{
 })();
 </script>
 
+<script>
+// ── NAVIGATION ──
+function nav(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  window.scrollTo(0,0);
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  const nl=document.getElementById('nl-'+page);
+  if(nl)nl.classList.add('active');
+  if(page==='home')setTimeout(runAnim,80);
+}
+
+// ── MOBILE MENU ──
+function toggleMenu(){
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+// ── TYPING ANIMATION ──
+function typeEl(el,text,speed,done){
+  el.innerHTML='';let i=0;
+  const cur=document.createElement('span');cur.className='cur';el.appendChild(cur);
+  const iv=setInterval(()=>{
+    if(i<text.length){el.insertBefore(document.createTextNode(text[i++]),cur);}
+    else{clearInterval(iv);setTimeout(()=>cur.remove(),1400);if(done)done();}
+  },speed);
+}
+
+// ── COUNT UP ──
+function countUp(el,target,suffix,dur){
+  const t0=Date.now();
+  const iv=setInterval(()=>{
+    const p=Math.min((Date.now()-t0)/dur,1);
+    const e=1-Math.pow(1-p,3);
+    el.innerHTML=Math.round(e*target)+'<span class="u">'+suffix+'</span>';
+    if(p>=1)clearInterval(iv);
+  },16);
+}
+
+// ── HOME ANIMATIONS ──
+function runAnim(){
+  const h=document.getElementById('h1-type');
+  if(h)typeEl(h,"THE NIGHT YOU NEED A PLAN ISN'T THE NIGHT TO MAKE ONE",48);
+  [{id:'iv1',v:3,s:' MIN',d:150},{id:'iv2',v:10,s:' MIN',d:320},{id:'iv3',v:11,s:' MIN',d:490},{id:'iv4',v:73,s:' %',d:660}]
+  .forEach(({id,v,s,d})=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.innerHTML='0<span class="u">'+s+'</span>';
+    setTimeout(()=>countUp(el,v,s,800),d);
+  });
+}
+runAnim();
+</script>
+
 <!-- ══════════ PLAN: HOUSE FIRE ══════════ -->
 <div class="page" id="page-plan-fire">
   <div class="dw">
