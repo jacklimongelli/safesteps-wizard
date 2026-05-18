@@ -1163,7 +1163,7 @@ window.addEventListener('popstate', function(e){
 });
 
 // On first load, restore page from hash or default to home
-(function(){
+document.addEventListener('DOMContentLoaded', function(){
   const hash = window.location.hash.replace('#','');
   const validPage = hash && document.getElementById('page-'+hash);
   if(validPage){
@@ -1171,7 +1171,7 @@ window.addEventListener('popstate', function(e){
   } else {
     history.replaceState({page:'home'}, '', '#home');
   }
-})();
+});
 
 // ── CALC IFRAME AUTO-RESIZE ──
 window.addEventListener("message", function(e) {
