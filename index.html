@@ -1255,7 +1255,7 @@ body{
 
 <script>
 // ── NAVIGATION ──
-function nav(page){
+function nav(page, skipPush){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   window.scrollTo(0,0);
@@ -1263,7 +1263,16 @@ function nav(page){
   const nl=document.getElementById('nl-'+page);
   if(nl)nl.classList.add('active');
   if(page==='home')setTimeout(runAnim,80);
+  if(!skipPush) history.pushState({page:page},'','#'+page);
 }
+
+window.addEventListener('popstate',function(e){
+  var page = (e.state && e.state.page) ? e.state.page : 'home';
+  nav(page, true);
+});
+
+// Set initial state
+history.replaceState({page:'home'},'','#home');
 
 // ── MOBILE MENU ──
 function toggleMenu(){
