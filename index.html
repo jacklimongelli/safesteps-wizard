@@ -109,7 +109,7 @@ body{
 .hero::after{content:'';position:absolute;bottom:10px;right:10px;width:20px;height:20px;border-bottom:2px solid rgba(28,18,8,.33);border-right:2px solid rgba(28,18,8,.33)}
 .hero .wrap{position:relative;z-index:1}
 .sit-tag{font-family:Arial,sans-serif;font-size:.82rem;letter-spacing:.08em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:12px}
-.sit-tag::before{content:'';display:block;width:14px;height:1px;background:rgba(28,18,8,.55)}
+.sit-tag::before{content:'';display:block;width:14px;height:1px;background:rgba(28,18,8,.55);flex-shrink:0}
 .hero h1{
   font-family:Arial,sans-serif;font-size:clamp(2.4rem,6vw,4.2rem);
   line-height:1;letter-spacing:.03em;color:#1C1208;
@@ -540,7 +540,7 @@ body{
   </div>
 
   <div class="hero textured">
-    <div class="sit-tag">CUSTOM HOME EMERGENCY PLANS<span id="user-location"></span></div>
+    <div class="sit-tag"><span>CUSTOM HOME EMERGENCY PLANS<span id="user-location"> // CHARLOTTESVILLE, VA</span></span></div>
     <h1 id="h1-type"></h1>
     <div class="bodytxt">Custom emergency response plans for house fire, medical emergencies, home invasion, and weather events. Designed by combat veterans. Built for your home, your family, your terrain.</div>
     <div class="ctas">
