@@ -208,6 +208,8 @@ body{
   min-height:100vh;
 }
 .dw-sec{padding:26px 20px;border-bottom:2px solid rgba(28,18,8,.13)}
+.price-cta{display:inline-flex;background:#1C1208;align-items:stretch;max-width:100%}
+@media(max-width:520px){.price-cta{display:flex;width:100%}.price-cta .price-cta-left{padding:14px 16px}.price-cta .price-cta-btn{flex:1;padding:12px 10px}.price-cta .price-cta-btn a{font-size:clamp(.55rem,3.2vw,.85rem);padding:10px 10px;white-space:nowrap}.price-cta .price-cta-left span:last-child{font-size:clamp(.9rem,4vw,1.4rem)}}
 .dw-eyebrow{font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.08em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:5px}
 .dw-eyebrow::before{content:'';display:block;width:12px;height:1px;background:rgba(28,18,8,.55)}
 .dw-title{font-family:Arial,sans-serif;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:.04em;color:#1C1208;line-height:1.05;margin-bottom:14px}
@@ -1323,12 +1325,12 @@ function assessFinish(){
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$2,500</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="openInquiry()" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">SUBMIT A FAMILY FIT INQUIRY</a>
         </div>
       </div>
@@ -1655,12 +1657,12 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$2,500</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">START YOUR ASSESSMENT</a>
         </div>
       </div>
@@ -1699,12 +1701,12 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$2,500</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">START YOUR ASSESSMENT</a>
         </div>
       </div>
@@ -1743,12 +1745,12 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$2,500</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">START YOUR ASSESSMENT</a>
         </div>
       </div>
@@ -1780,12 +1782,12 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$175</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">START YOUR ASSESSMENT</a>
         </div>
       </div>
@@ -1817,12 +1819,12 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$297</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">START YOUR ASSESSMENT</a>
         </div>
       </div>
@@ -1854,12 +1856,12 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$175</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">START YOUR ASSESSMENT</a>
         </div>
       </div>
@@ -1891,12 +1893,12 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$175</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">START YOUR ASSESSMENT</a>
         </div>
       </div>
@@ -1928,12 +1930,12 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$175</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">START YOUR ASSESSMENT</a>
         </div>
       </div>
@@ -1965,12 +1967,12 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$175</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">START YOUR ASSESSMENT</a>
         </div>
       </div>
@@ -2002,12 +2004,12 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
         <div class="dw-sec">
-      <div style="display:inline-flex;background:#1C1208;align-items:stretch">
-        <div style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
           <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">CUSTOM PLAN</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$175</span>
         </div>
-        <div style="padding:16px 20px;display:flex;align-items:center">
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
           <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">START YOUR ASSESSMENT</a>
         </div>
       </div>
