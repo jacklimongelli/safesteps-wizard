@@ -247,7 +247,7 @@ body{
     linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),
     linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);
   background-size:60px 60px,60px 60px,15px 15px,15px 15px;
-  color:var(--dark);min-height:100vh;
+  color:var(--dark);min-height:100vh;display:flex;flex-direction:column;
 }
 /* LOADING */
 .loading{display:flex;position:fixed;inset:0;z-index:300;background-color:#C3A97D;background-image:linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);background-size:60px 60px,60px 60px,15px 15px,15px 15px;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
@@ -331,7 +331,7 @@ body{
 .main-tab.active::after{background:var(--tan);}
 .main-tab.active .main-tab-num{color:rgba(195,169,125,.55);}
 .tab-content{display:none;}
-.tab-content.active{display:block;}
+.tab-content.active{display:block;flex:1;}
 /* DW-SEC */
 .dw-sec{padding:26px 20px;border-bottom:2px solid var(--border);text-align:center;}
 .dw-eyebrow{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.25em;color:var(--text-dim);display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:5px;}
@@ -552,8 +552,8 @@ body{
 </style>
 
 <style>
-.dw-footer{background:#0e0b05;padding:28px 20px 48px;text-align:center}
-.dw-footer-brand{font-family:Arial,sans-serif;font-size:1.2rem;letter-spacing:.05em;color:#C3A97D;margin-bottom:6px;display:flex;justify-content:center}
+.dw-footer{background:#0e0b05;padding:28px 20px 48px}
+.dw-footer-brand{font-family:Arial,sans-serif;font-size:1.2rem;letter-spacing:.05em;color:#C3A97D;margin-bottom:6px}
 .dw-footer-tag{font-family:Arial,sans-serif;font-size:.7rem;color:rgba(195,169,125,.55);line-height:1.6}
 </style>
 </head>
