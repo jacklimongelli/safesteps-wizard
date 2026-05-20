@@ -323,13 +323,13 @@ body{
 }
 .main-tab:last-child{border-right:none;}
 .main-tab::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:transparent;transition:background .2s;}
-.main-tab-num{font-family:'Bebas Neue',sans-serif;font-size:.7rem;letter-spacing:.3em;color:rgba(195,169,125,.25);transition:color .2s;}
+.main-tab-num{font-family:'Bebas Neue',sans-serif;font-size:.7rem;letter-spacing:.3em;color:rgba(195,169,125,.45);transition:color .2s;}
 .main-tab-label{transition:color .2s;}
 .main-tab:hover:not(.active){color:rgba(195,169,125,.75);background:rgba(195,169,125,.06);}
-.main-tab:hover:not(.active) .main-tab-num{color:rgba(195,169,125,.45);}
+.main-tab:hover:not(.active) .main-tab-num{color:rgba(195,169,125,.75);}
 .main-tab.active{color:var(--tan);background:rgba(195,169,125,.08);}
 .main-tab.active::after{background:var(--tan);}
-.main-tab.active .main-tab-num{color:rgba(195,169,125,.55);}
+.main-tab.active .main-tab-num{color:var(--tan);}
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 /* DW-SEC */
