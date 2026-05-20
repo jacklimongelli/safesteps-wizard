@@ -1296,7 +1296,17 @@ window.addEventListener('popstate',function(e){
   if(startPage !== 'home') nav(startPage, true);
 })();
 
-// ── MOBILE MENU ──
+// ── IFRAME AUTO-RESIZE ──
+window.addEventListener('message', function(e) {
+  var h = null;
+  if (e.data && e.data.action === 'resize') h = e.data.height;
+  if (e.data && e.data.type === 'resize') h = e.data.height;
+  if (!h) return;
+  ['calc-frame','fridge-frame','accident-frame'].forEach(function(id){
+    var f = document.getElementById(id);
+    if (f && e.source === f.contentWindow) f.style.height = h + 'px';
+  });
+});
 function toggleMenu(){
   document.getElementById('mobile-menu').classList.toggle('open');
 }
@@ -2131,7 +2141,7 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       <div class="dw-body">A visor-sized card that walks you step by step through the first five minutes of a car accident. Available for printing on waterproof, tear-proof paper.</div>
     </div>
     <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13);display:flex;justify-content:center">
-      <iframe id="accident-frame" src="accident-card.html" style="width:100%;max-width:960px;border:none;display:block;min-height:600px;" scrolling="no" title="Car Accident Response Card"></iframe>
+      <iframe id="accident-frame" src="accident-card.html" style="width:100%;max-width:960px;border:none;display:block;min-height:900px;" scrolling="no" title="Car Accident Response Card"></iframe>
     </div>
     <div class="dw-sec" style="background:rgba(28,18,8,.04)">
       <div class="dw-eyebrow">READY FOR MORE?</div>
