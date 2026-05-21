@@ -4,6 +4,14 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=1024"/>
 <title>Safe Steps — Family Emergency Sheet Builder</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TS63YXNNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2TS63YXNNN');
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -690,11 +698,24 @@ function App(){
       "utilData="+enc(utilData),
       "manUtils="+enc(manualUtils),
     ].join("&");
+    if(typeof gtag === 'function'){
+      gtag('event', 'fridge_sheet_print', {
+        event_category: 'Free Tool',
+        event_label: 'Family Fridge Sheet'
+      });
+    }
     window.open("https://jacklimongelli.github.io/safesteps-wizard/safesteps-sheet.html?"+params,"_blank");
   };
 
   const goNext=()=>{
     const n=step+1;setStep(n);
+    if(typeof gtag === 'function'){
+      gtag('event', 'fridge_sheet_step', {
+        event_category: 'Free Tool',
+        event_label: 'Family Fridge Sheet',
+        step_number: n
+      });
+    }
     if(n===2)loadER();
     if(n===3)loadUC();
     if(n===6)setUtilData(getUtils(address.state));
