@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Safe Steps Plans LLC — Emergency Preparedness</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TS63YXNNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2TS63YXNNN');
+</script>
 
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -795,7 +803,7 @@ body{
           <div class="sv5-name">NEW<br>DRIVER</div>
         </div>
         <div class="sv5-pkg-desc">Step-by-step plans covering what to do in an accident, how to change a flat tire, jump a car, and other vital vehicle how-to's — bundled with essential safety equipment.</div>
-        <a class="sv5-view-link" onclick="nav('pkg-a')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="nav('new-driver')">VIEW PACKAGE →</a>
       </div>
 
       <div class="sv5-pkg-card">
@@ -805,7 +813,7 @@ body{
           <div class="sv5-name">ELDERLY<br>PARENTS</div>
         </div>
         <div class="sv5-pkg-desc">A consultation to make an aging parent's home safer, more accessible, and easier to navigate independently.</div>
-        <a class="sv5-view-link" onclick="nav('pkg-b')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="nav('elderly-parents')">VIEW PACKAGE →</a>
       </div>
 
       <div class="sv5-pkg-card">
@@ -815,7 +823,7 @@ body{
           <div class="sv5-name">OFF TO<br>COLLEGE</div>
         </div>
         <div class="sv5-pkg-desc">A step-by-step response guide for the social emergencies most likely to happen in a college environment — alcohol poisoning, drug overdose, sexual assault, and mental health crisis — bundled with essential safety equipment.</div>
-        <a class="sv5-view-link" onclick="nav('pkg-c')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="nav('off-to-college')">VIEW PACKAGE →</a>
       </div>
 
       <div class="sv5-pkg-card">
@@ -825,7 +833,7 @@ body{
           <div class="sv5-name">SOLO<br>TRAVELER</div>
         </div>
         <div class="sv5-pkg-desc">Essential safety equipment and information built around the specific risks of traveling alone.</div>
-        <a class="sv5-view-link" onclick="nav('pkg-d')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="nav('solo-traveler')">VIEW PACKAGE →</a>
       </div>
 
       <div class="sv5-pkg-card">
@@ -835,7 +843,7 @@ body{
           <div class="sv5-name">SOLO FEMALE<br>RUNNER</div>
         </div>
         <div class="sv5-pkg-desc">Essential safety equipment designed for women who run, walk, or train outdoors alone.</div>
-        <a class="sv5-view-link" onclick="nav('pkg-e')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="nav('solo-female-runner')">VIEW PACKAGE →</a>
       </div>
 
       <div class="sv5-pkg-card">
@@ -845,7 +853,7 @@ body{
           <div class="sv5-name">BABY<br>PROOFING</div>
         </div>
         <div class="sv5-pkg-desc">Consultation and installation of key baby proofing concepts — covering hazard identification, room-by-room safety measures, and essential childproofing equipment for a safer home.</div>
-        <a class="sv5-view-link" onclick="nav('pkg-f')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="nav('baby-proofing')">VIEW PACKAGE →</a>
       </div>
 
     </div>
@@ -1291,6 +1299,12 @@ function nav(page, skipPush){
   if(nl)nl.classList.add('active');
   if(page==='home')setTimeout(runAnim,80);
   if(!skipPush) history.pushState({page:page},'','#'+page);
+  if(typeof gtag === 'function'){
+    gtag('event', 'page_view', {
+      page_title: page,
+      page_location: window.location.origin + '/#' + page
+    });
+  }
 }
 
 window.addEventListener('popstate',function(e){
@@ -1850,7 +1864,7 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
 </div>
 
 <!-- ══════════ PKG-A: NEW DRIVER ══════════ -->
-<div class="page" id="page-pkg-a">
+<div class="page" id="page-new-driver">
   <div class="dw">
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
@@ -1890,7 +1904,7 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
 </div>
 
 <!-- ══════════ PKG-C: ELDERLY PARENTS ══════════ -->
-<div class="page" id="page-pkg-b">
+<div class="page" id="page-elderly-parents">
   <div class="dw">
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
@@ -1930,7 +1944,7 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
 </div>
 
 <!-- ══════════ PKG-E: OFF TO COLLEGE ══════════ -->
-<div class="page" id="page-pkg-c">
+<div class="page" id="page-off-to-college">
   <div class="dw">
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
@@ -1970,7 +1984,7 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
 </div>
 
 <!-- ══════════ PKG-F: SOLO TRAVELER ══════════ -->
-<div class="page" id="page-pkg-d">
+<div class="page" id="page-solo-traveler">
   <div class="dw">
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
@@ -2010,7 +2024,7 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
 </div>
 
 <!-- ══════════ PKG-G: SOLO FEMALE RUNNER ══════════ -->
-<div class="page" id="page-pkg-e">
+<div class="page" id="page-solo-female-runner">
   <div class="dw">
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
@@ -2050,7 +2064,7 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
 </div>
 
 <!-- ══════════ PKG-F: BABY PROOFING ══════════ -->
-<div class="page" id="page-pkg-f">
+<div class="page" id="page-baby-proofing">
   <div class="dw">
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
