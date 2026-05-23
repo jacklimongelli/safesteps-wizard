@@ -611,16 +611,28 @@ function PrintSheet({address,members,er,urgentCares,contacts,pets,utilData,selec
 }
 
 function PreviewStep(props){
-
+  const{orderPrint,ordering,orderError}=props;
+  const OB={background:"#6e1008",color:"#C3A97D",border:"none",padding:"12px 28px",fontSize:"0.95rem",fontWeight:700,letterSpacing:"0.06em",textTransform:"uppercase",cursor:ordering?"not-allowed":"pointer",opacity:ordering?0.6:1,marginTop:8};
   return(
     <div>
-      <div style={cH} className="card-header"><h2 style={cT}>Preview Your Emergency Sheet</h2><p style={cS}>Review below, then click the button to print or save as PDF.</p></div>
+      <div style={cH} className="card-header"><h2 style={cT}>Preview Your Emergency Sheet</h2><p style={cS}>Review below, then print free or order a waterproof printed copy.</p></div>
       <div style={cB} className="card-body">
-        <div style={{textAlign:"center",marginBottom:16}}>
-          <button style={{...BP,fontSize:"1rem",padding:"12px 32px"}} onClick={props.openPrint}>
-            🖨 Print / Save as PDF
-          </button>
-          <div style={{fontSize:"0.7rem",color:LABEL,marginTop:7}}>Opens in a new tab — use your browser's print dialog to save as PDF</div>
+        <div style={{display:"flex",gap:16,marginBottom:20,flexWrap:"wrap",justifyContent:"center"}}>
+          <div style={{border:"1.5px solid rgba(28,18,8,0.2)",padding:"18px 20px",flex:"1",minWidth:220,background:"rgba(195,169,125,0.1)"}}>
+            <div style={{fontWeight:700,fontSize:"0.7rem",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:6,color:"#1C1208"}}>🖨 Free Digital Copy</div>
+            <div style={{fontSize:"0.78rem",color:"rgba(28,18,8,0.7)",marginBottom:12}}>Print at home or save as PDF — always free.</div>
+            <button style={{...BP,fontSize:"0.85rem",padding:"10px 20px"}} onClick={props.openPrint}>Print / Save as PDF</button>
+            <div style={{fontSize:"0.62rem",color:"rgba(28,18,8,0.5)",marginTop:5}}>Opens in a new tab</div>
+          </div>
+          <div style={{border:"2px solid #6e1008",padding:"18px 20px",flex:"1",minWidth:220,background:"rgba(110,16,8,0.04)"}}>
+            <div style={{fontWeight:700,fontSize:"0.7rem",letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:6,color:"#6e1008"}}>📦 Waterproof Printed Copy</div>
+            <div style={{fontSize:"0.78rem",color:"rgba(28,18,8,0.7)",marginBottom:4}}>Printed on waterproof, tear-proof paper and mailed to you.</div>
+            <div style={{fontSize:"0.78rem",fontWeight:700,color:"#1C1208",marginBottom:12}}>$19.99 + shipping</div>
+            <button style={OB} onClick={orderPrint} disabled={ordering}>
+              {ordering?"Saving your data…":"Order Printed Copy →"}
+            </button>
+            {orderError&&<div style={{fontSize:"0.68rem",color:"#6e1008",marginTop:7,fontWeight:600}}>{orderError}</div>}
+          </div>
         </div>
         <PrintSheet {...props}/>
       </div>
@@ -647,6 +659,8 @@ function App(){
   const[shutoffs,setShutoffs]=useState({gas:"",elec:"",water:""});
   const[manualUtils,setManualUtils]=useState({gas:{name:"",phone:""},elec:{name:"",phone:""},water:{name:"",phone:""}});
   const onManual=(t,field,val)=>setManualUtils(u=>({...u,[t]:{...u[t],[field]:val}}));
+  const[ordering,setOrdering]=useState(false);
+  const[orderError,setOrderError]=useState("");
 
   const addr=[address.street,address.city,address.state,address.zip].filter(Boolean).join(", ");
 
@@ -707,6 +721,30 @@ function App(){
     window.open("https://jacklimongelli.github.io/safesteps-wizard/safesteps-sheet.html?"+params,"_blank");
   };
 
+  const orderPrint=async()=>{
+    setOrdering(true);setOrderError("");
+    try{
+      const payload={
+        address,members,
+        er:erSelected!==null?erOptions?.[erSelected]:null,
+        urgentCares:ucSelected.map(i=>ucOptions?.[i]),
+        contacts,pets,utilData,selectedUtils,shutoffs,manualUtils,
+        product:"fridge_sheet"
+      };
+      const res=await fetch("https://www.safestepsplansforms.com/_functions/saveOrder",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      const data=await res.json();
+      if(data.id){
+        if(typeof gtag==='function'){gtag('event','fridge_sheet_order',{event_category:'Purchase',event_label:'Printed Fridge Sheet'});}
+        window.location.href="https://www.safestepsplansforms.com/product-page/printed-family-fridge-sheet?ref="+data.id;
+      }else throw new Error(data.error||"No order ID returned");
+    }catch(e){setOrderError("Something went wrong — please try again. ("+e.message+")");}
+    setOrdering(false);
+  };
+
   const goNext=()=>{
     const n=step+1;setStep(n);
     if(typeof gtag === 'function'){
@@ -743,7 +781,8 @@ function App(){
       shutoffs={shutoffs} onShutoff={(t,v)=>setShutoffs(u=>({...u,[t]:v}))}
       manualUtils={manualUtils} onManual={onManual}/>,
     <PreviewStep address={address} members={members} er={er} urgentCares={urgentCares}
-      contacts={contacts} pets={pets} utilData={utilData} selectedUtils={selectedUtils} shutoffs={shutoffs} manualUtils={manualUtils} openPrint={openPrint}/>,
+      contacts={contacts} pets={pets} utilData={utilData} selectedUtils={selectedUtils} shutoffs={shutoffs} manualUtils={manualUtils} openPrint={openPrint}
+      orderPrint={orderPrint} ordering={ordering} orderError={orderError}/>,
   ];
 
   return(
