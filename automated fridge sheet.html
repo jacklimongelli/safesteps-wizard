@@ -73,15 +73,15 @@ async function searchNearby(address,placeType,keyword,keywords,excludeTerms=[]){
   const places=(nearby.results||[]).filter(p=>!excludeTerms.some(t=>p.name.toLowerCase().includes(t.toLowerCase())));
   const detailed=await Promise.all(
     places.slice(0,8).map(async p=>{
-      const [det, drive] = await Promise.allSettled([
-        placesCall({type:"details",place_id:p.place_id}),
-        getDriving(address,p.lat,p.lng),
-      ]);
-      const d=det.status==="fulfilled"&&!det.value.error?det.value:null;
-      const dr=drive.status==="fulfilled"?drive.value:null;
-      const distLabel=dr?dr.distance+" ("+dr.duration+")":"";
-      const _mins=dr?parseDurationMins(dr.duration):9999;
-      return{name:d?.name||p.name,address:d?.address||p.address,phone:d?.phone||"",distance:distLabel,_mins};
+      try{
+        const[det,drive]=await Promise.all([
+          placesCall({type:"details",place_id:p.place_id}),
+          getDriving(address,p.lat,p.lng),
+        ]);
+        const distLabel=drive?drive.distance+" ("+drive.duration+")":"";
+        const _mins=drive?parseDurationMins(drive.duration):9999;
+        return{name:det.name||p.name,address:det.address||p.address,phone:det.phone||"",distance:distLabel,_mins};
+      }catch{return{name:p.name,address:p.address,phone:"",distance:"",_mins:9999};}
     })
   );
   detailed.sort((a,b)=>a._mins-b._mins);
@@ -97,15 +97,15 @@ async function searchByName(facilityName,searchCity,originAddress){
   const places=nearby.results||[];
   const detailed=await Promise.all(
     places.slice(0,5).map(async p=>{
-      const [det, drive] = await Promise.allSettled([
-        placesCall({type:"details",place_id:p.place_id}),
-        getDriving(originAddress,p.lat,p.lng),
-      ]);
-      const d=det.status==="fulfilled"&&!det.value.error?det.value:null;
-      const dr=drive.status==="fulfilled"?drive.value:null;
-      const distLabel=dr?dr.distance+" ("+dr.duration+")":"";
-      const _mins=dr?parseDurationMins(dr.duration):9999;
-      return{name:d?.name||p.name,address:d?.address||p.address,phone:d?.phone||"",distance:distLabel,_mins};
+      try{
+        const[det,drive]=await Promise.all([
+          placesCall({type:"details",place_id:p.place_id}),
+          getDriving(originAddress,p.lat,p.lng),
+        ]);
+        const distLabel=drive?drive.distance+" ("+drive.duration+")":"";
+        const _mins=drive?parseDurationMins(drive.duration):9999;
+        return{name:det.name||p.name,address:det.address||p.address,phone:det.phone||"",distance:distLabel,_mins};
+      }catch{return{name:p.name,address:p.address,phone:"",distance:"",_mins:9999};}
     })
   );
   detailed.sort((a,b)=>a._mins-b._mins);
@@ -498,7 +498,7 @@ function UtilitiesStep({utilData,selected,onSelect,shutoffs,onShutoff,manualUtil
                   </div>
                 )}
               </div>
-              {!isNA&&selected[t.key]!==null&&(
+              {(t.key==="water"||(!isNA&&selected[t.key]!==null))&&(
                 <Inp label={t.label+" Shutoff Location"} value={shutoffs[t.key]||""} onChange={v=>onShutoff(t.key,v)}
                   placeholder={t.key==="gas"?"e.g. Left side of house":t.key==="elec"?"e.g. Basement, north wall":"e.g. Basement near water heater"}/>
               )}
@@ -755,7 +755,7 @@ function App(){
       const data=await res.json();
       if(data.id){
         if(typeof gtag==='function'){gtag('event','fridge_sheet_order',{event_category:'Purchase',event_label:'Printed Fridge Sheet'});}
-        window.location.href="https://buy.stripe.com/7sYcN5g1wcouaKR82Kbsc01?client_reference_id="+data.id;
+        window.top.location.href="https://buy.stripe.com/7sYcN5g1wcouaKR82Kbsc01?client_reference_id="+data.id;
       }else throw new Error(data.error||"No order ID returned");
     }catch(e){setOrderError("Something went wrong — please try again. ("+e.message+")");}
     setOrdering(false);
