@@ -755,7 +755,7 @@ function App(){
       const data=await res.json();
       if(data.id){
         if(typeof gtag==='function'){gtag('event','fridge_sheet_order',{event_category:'Purchase',event_label:'Printed Fridge Sheet'});}
-        window.top.location.href="https://buy.stripe.com/test_3cI14n01ybFD5y8dm95os00?client_reference_id="+data.id;
+        window.top.location.href="https://buy.stripe.com/7sYcN5g1wcouaKR82Kbsc01?client_reference_id="+data.id;
       }else throw new Error(data.error||"No order ID returned");
     }catch(e){setOrderError("Something went wrong — please try again. ("+e.message+")");}
     setOrdering(false);
