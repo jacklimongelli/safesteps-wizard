@@ -460,35 +460,51 @@ function UtilitiesStep({utilData,selected,onSelect,shutoffs,onShutoff,manualUtil
     <div>
       <div style={cH} className="card-header"><h2 style={cT}>Utility Providers &amp; Shutoffs</h2><p style={cS}>Providers are pre-filled based on your state. Select yours and add shutoff locations.</p></div>
       <div style={cB} className="card-body">
-        {UTIL_TYPES.map(t=>(
-          <div key={t.key} style={{marginBottom:20}}>
-            <SH>{t.emoji} {t.label}</SH>
-            <div style={{display:"flex",flexDirection:"column",gap:7,marginBottom:9}}>
-              <OptCard selected={selected[t.key]==="na"} onClick={()=>onSelect(t.key,"na")}>
-                <div style={{fontWeight:700,fontSize:"0.84rem",color:LABEL}}>N/A - We don't have {t.label.toLowerCase()}</div>
-              </OptCard>
-              {(utilData[t.key]||[]).map((o,i)=>(
-                <OptCard key={i} selected={selected[t.key]===i} onClick={()=>onSelect(t.key,i)}>
-                  <div style={{fontWeight:700,fontSize:"0.84rem",color:"#1C1208"}}>{o.n}</div>
-                  {o.p&&<div style={{fontSize:"0.72rem",color:LABEL,marginTop:2}}>Emergency: {o.p}</div>}
-                </OptCard>
-              ))}
-              {(utilData[t.key]||[]).length===0&&selected[t.key]!=="na"&&(
-                <div style={{border:"1.5px solid rgba(28,18,8,0.22)",borderRadius:0,padding:"11px 13px",background:FILL}}>
-                  <div style={{fontSize:"0.7rem",color:LABEL,marginBottom:9}}>No providers found for your state — enter manually:</div>
-                  <div className="step-grid-2" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9}}>
-                    <Inp label="Provider Name" value={manualUtils[t.key]?.name||""} onChange={v=>onManual(t.key,"name",v)} placeholder={"e.g. City of Charlottesville Water"}/>
-                    <Inp label="Emergency Phone" value={manualUtils[t.key]?.phone||""} onChange={v=>onManual(t.key,"phone",v)} placeholder="e.g. 434-970-3211"/>
+        {UTIL_TYPES.map(t=>{
+          const hasListed=(utilData[t.key]||[]).length>0;
+          const isManual=selected[t.key]==="manual";
+          const isNA=selected[t.key]==="na";
+          const showManualBox=isManual||(!hasListed&&!isNA);
+          return(
+            <div key={t.key} style={{marginBottom:20}}>
+              <SH>{t.emoji} {t.label}</SH>
+              <div style={{display:"flex",flexDirection:"column",gap:7,marginBottom:9}}>
+                {t.key!=="water"&&(
+                  <OptCard selected={isNA} onClick={()=>onSelect(t.key,"na")}>
+                    <div style={{fontWeight:700,fontSize:"0.84rem",color:LABEL}}>N/A — We don't have {t.label.toLowerCase()}</div>
+                  </OptCard>
+                )}
+                {(utilData[t.key]||[]).map((o,i)=>(
+                  <OptCard key={i} selected={selected[t.key]===i} onClick={()=>onSelect(t.key,i)}>
+                    <div style={{fontWeight:700,fontSize:"0.84rem",color:"#1C1208"}}>{o.n}</div>
+                    {o.p&&<div style={{fontSize:"0.72rem",color:LABEL,marginTop:2}}>Emergency: {o.p}</div>}
+                  </OptCard>
+                ))}
+                {showManualBox&&!isNA&&(
+                  <div style={{border:"1.5px solid rgba(28,18,8,0.22)",padding:"11px 13px",background:FILL}}>
+                    <div style={{fontSize:"0.7rem",color:LABEL,marginBottom:9}}>
+                      {hasListed?"Enter your provider name and number:":"No providers found for your state — enter manually:"}
+                    </div>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9}}>
+                      <Inp label="Provider Name" value={manualUtils[t.key]?.name||""} onChange={v=>onManual(t.key,"name",v)} placeholder="e.g. City of Charlottesville Water"/>
+                      <Inp label="Emergency Phone" value={manualUtils[t.key]?.phone||""} onChange={v=>onManual(t.key,"phone",v)} placeholder="e.g. 434-970-3211"/>
+                    </div>
                   </div>
-                </div>
+                )}
+                {hasListed&&!isNA&&(
+                  <div style={{fontSize:"0.7rem",color:"#6e1008",cursor:"pointer",fontWeight:600,paddingLeft:2,marginTop:2}}
+                    onClick={()=>onSelect(t.key,isManual?null:"manual")}>
+                    {isManual?"↑ Cancel manual entry":"↓ Don't see yours? Enter manually"}
+                  </div>
+                )}
+              </div>
+              {!isNA&&selected[t.key]!==null&&(
+                <Inp label={t.label+" Shutoff Location"} value={shutoffs[t.key]||""} onChange={v=>onShutoff(t.key,v)}
+                  placeholder={t.key==="gas"?"e.g. Left side of house":t.key==="elec"?"e.g. Basement, north wall":"e.g. Basement near water heater"}/>
               )}
             </div>
-            {selected[t.key]!=="na"&&(
-              <Inp label={t.label+" Shutoff Location"} value={shutoffs[t.key]||""} onChange={v=>onShutoff(t.key,v)}
-                placeholder={t.key==="gas"?"e.g. Left side of house":t.key==="elec"?"e.g. Basement, north wall":"e.g. Basement near water heater"}/>
-            )}
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -777,7 +793,7 @@ function App(){
     <ContactsStep contacts={contacts} setContacts={setContacts}/>,
     <PetsStep pets={pets} setPets={setPets}/>,
     <UtilitiesStep utilData={utilData} selected={selectedUtils}
-      onSelect={(t,i)=>setSelectedUtils(u=>({...u,[t]:u[t]===i?null:i}))}
+      onSelect={(t,i)=>setSelectedUtils(u=>({...u,[t]:i}))}
       shutoffs={shutoffs} onShutoff={(t,v)=>setShutoffs(u=>({...u,[t]:v}))}
       manualUtils={manualUtils} onManual={onManual}/>,
     <PreviewStep address={address} members={members} er={er} urgentCares={urgentCares}
