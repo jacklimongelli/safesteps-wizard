@@ -76,14 +76,14 @@ async function searchNearby(address,placeType,keyword,keywords,excludeTerms=[],r
   const geo=await placesCall({type:"geocode",address});
   if(geo.error) throw new Error(geo.error+(geo.status?" ("+geo.status+")":""));
   const {lat,lng}=geo;
-  const nearby=await placesCall({type:"nearby",lat,lng,placeType,keyword,keywords,radius});
+  const nearby=await placesCall({type:"nearby",lat,lng,placeType,keyword,keywords});
   if(nearby.error) throw new Error(nearby.error+(nearby.status?" ("+nearby.status+")":""));
   let places=(nearby.results||[]).filter(p=>!excludeTerms.some(t=>p.name.toLowerCase().includes(t.toLowerCase())));
 
   // If fewer than 5 results, retry with doubled radius to get more candidates
   if(places.length<5 && radius<80000){
     try{
-      const nearby2=await placesCall({type:"nearby",lat,lng,placeType,keyword,keywords,radius:Math.min(radius*2,80000)});
+      const nearby2=await placesCall({type:"nearby",lat,lng,placeType,keyword,keywords});
       if(!nearby2.error){
         const extra=(nearby2.results||[]).filter(p=>!excludeTerms.some(t=>p.name.toLowerCase().includes(t.toLowerCase())));
         const seen=new Set(places.map(p=>p.place_id));
@@ -706,7 +706,7 @@ function App(){
     if(erLoading||erOptions)return;
     setErLoading(true);setErError("");
     try{
-      const results=await searchNearby(addr,"hospital","emergency room",null,["urgent care","walk-in","walk in","minuteclinic","medexpress","concentra","quick care","med express"],24000);
+      const results=await searchNearby(addr,"hospital","emergency room",null,["urgent care","walk-in","walk in","minuteclinic","medexpress","concentra","quick care","med express"]);
       setErOptions(results.length>0?results.slice(0,5):null);
       if(!results.length)setErError("Google Maps returned no hospitals near this address.");
     }catch(e){
