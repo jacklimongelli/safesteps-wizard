@@ -64,46 +64,24 @@ async function getDriving(origin,destLat,destLng){
   }catch{return null;}
 }
 
-function haversineMins(lat1,lng1,lat2,lng2){
-  const R=6371,toR=Math.PI/180;
-  const dLat=(lat2-lat1)*toR,dLng=(lng2-lng1)*toR;
-  const a=Math.sin(dLat/2)**2+Math.cos(lat1*toR)*Math.cos(lat2*toR)*Math.sin(dLng/2)**2;
-  const km=R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-  return km/50*60; // assume ~50 km/h avg → convert to minutes
-}
-
-async function searchNearby(address,placeType,keyword,keywords,excludeTerms=[],radius=8000){
+async function searchNearby(address,placeType,keyword,keywords,excludeTerms=[]){
   const geo=await placesCall({type:"geocode",address});
   if(geo.error) throw new Error(geo.error+(geo.status?" ("+geo.status+")":""));
   const {lat,lng}=geo;
   const nearby=await placesCall({type:"nearby",lat,lng,placeType,keyword,keywords});
   if(nearby.error) throw new Error(nearby.error+(nearby.status?" ("+nearby.status+")":""));
-  let places=(nearby.results||[]).filter(p=>!excludeTerms.some(t=>p.name.toLowerCase().includes(t.toLowerCase())));
-
-  // If fewer than 5 results, retry with doubled radius to get more candidates
-  if(places.length<5 && radius<80000){
-    try{
-      const nearby2=await placesCall({type:"nearby",lat,lng,placeType,keyword,keywords});
-      if(!nearby2.error){
-        const extra=(nearby2.results||[]).filter(p=>!excludeTerms.some(t=>p.name.toLowerCase().includes(t.toLowerCase())));
-        const seen=new Set(places.map(p=>p.place_id));
-        for(const p of extra){if(!seen.has(p.place_id)){places.push(p);seen.add(p.place_id);}}
-      }
-    }catch{}
-  }
-
+  const places=(nearby.results||[]).filter(p=>!excludeTerms.some(t=>p.name.toLowerCase().includes(t.toLowerCase())));
   const detailed=await Promise.all(
-    places.slice(0,20).map(async p=>{
+    places.slice(0,8).map(async p=>{
       try{
         const[det,drive]=await Promise.all([
           placesCall({type:"details",place_id:p.place_id}),
           getDriving(address,p.lat,p.lng),
         ]);
         const distLabel=drive?drive.distance+" ("+drive.duration+")":"";
-        // Fallback to straight-line haversine estimate if driving time unavailable
-        const _mins=drive?parseDurationMins(drive.duration):haversineMins(lat,lng,p.lat,p.lng);
+        const _mins=drive?parseDurationMins(drive.duration):9999;
         return{name:det.name||p.name,address:det.address||p.address,phone:det.phone||"",distance:distLabel,_mins};
-      }catch{return{name:p.name,address:p.address,phone:"",distance:"",_mins:haversineMins(lat,lng,p.lat,p.lng)};}
+      }catch{return{name:p.name,address:p.address,phone:"",distance:"",_mins:9999};}
     })
   );
   detailed.sort((a,b)=>a._mins-b._mins);
