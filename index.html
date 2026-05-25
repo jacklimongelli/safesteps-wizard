@@ -157,11 +157,12 @@ body{
 .ic{background:rgba(28,18,8,.28);border:1px solid rgba(28,18,8,.5);padding:13px 12px}
 .ic.threat{border-left:3px solid rgba(110,16,8,.58)}
 .ic.neutral{border-left:3px solid rgba(28,18,8,.28)}
-.itag{font-family:Arial,sans-serif;font-size:.72rem;letter-spacing:.04em;color:rgba(28,18,8,.82);margin-bottom:4px;font-weight:bold}
-.ival{font-family:Arial,sans-serif;font-size:2.2rem;line-height:1;color:#1C1208}
-.ival .u{font-size:.82rem;color:rgba(28,18,8,.68)}
+.itag{font-family:Arial,sans-serif;font-size:.85rem;letter-spacing:.04em;color:rgba(28,18,8,.82);margin-bottom:4px;font-weight:bold}
+.ival{font-family:Arial,sans-serif;font-size:2.8rem;line-height:1;color:#1C1208}
+.ival .u{font-size:1rem;color:rgba(28,18,8,.68)}
 .ic.threat .ival{color:#6e1008}
-.idesc{font-family:Arial,sans-serif;font-size:.67rem;line-height:1.45;color:rgba(28,18,8,.72);margin-top:5px}
+.idesc{font-family:Arial,sans-serif;font-size:.82rem;line-height:1.45;color:rgba(28,18,8,.72);margin-top:5px}
+.isource{font-family:Arial,sans-serif;font-size:.68rem;color:rgba(28,18,8,.42);margin-top:6px;font-style:italic}
 
 /* ── SECTIONS ── */
 .sec{padding:26px 20px;border-bottom:2px solid rgba(28,18,8,.13)}
@@ -558,32 +559,34 @@ body{
   </div>
 
   <div class="intel-sec">
-    <div class="intel-hdr"><span>1. INTEL BRIEF // LOCAL RESPONSE TIMES</span><span>ALBEMARLE CO.</span></div>
+    <div class="intel-hdr"><span>1. INTEL BRIEF // RESPONSE TIMES</span></div>
     <div class="intel-grid">
       <div class="ic threat">
-        <div class="itag">HOUSE FIRE</div>
+        <div class="itag">HOUSE FIRE SPREAD</div>
         <div class="ival" id="iv1">3<span class="u"> MIN</span></div>
-        <div class="idesc">Before floor 2 becomes uninhabitable. Your family needs a plan before the smoke alarm sounds.</div>
-        <div class="ithreat-bar"></div>
+        <div class="idesc">Until second floor becomes uninhabitable.</div>
+        <div class="isource">ULFSRI</div>
       </div>
       <div class="ic neutral">
         <div class="itag">FIRE DEPT. ARRIVAL</div>
-        <div class="ival" id="iv2">10<span class="u"> MIN</span></div>
-        <div class="idesc">90th percentile response, Charlottesville. That's a 7-minute gap you fill alone.</div>
+        <div class="ival" id="iv2">15<span class="u"> MIN</span></div>
+        <div class="idesc">Avg. response time for rural dept.</div>
+        <div class="isource">JAMA Surgery</div>
       </div>
       <div class="ic neutral">
-        <div class="itag">EMS / POLICE</div>
-        <div class="ival" id="iv3">11<span class="u"> MIN</span></div>
-        <div class="idesc">Avg. combined response time, area. First responders are not your first line of defense.</div>
+        <div class="itag">FIRE DEPT. STANDARD</div>
+        <div class="ival" id="iv3">42<span class="u"> %</span></div>
+        <div class="idesc">Of full-time fire depts. fail to meet NFPA response time standards.</div>
+        <div class="isource">Boston Globe</div>
       </div>
       <div class="ic threat">
         <div class="itag">FAMILIES WITH NO PLAN</div>
         <div class="ival" id="iv4">73<span class="u"> %</span></div>
-        <div class="idesc">Have never drilled a single emergency scenario. Is your family in this number?</div>
-        <div class="ithreat-bar"></div>
+        <div class="idesc">Of families have never rehearsed an emergency response scenario.</div>
+        <div class="isource">FEMA</div>
       </div>
     </div>
-    <div class="intel-footer">Data sourced from NFPA, Charlottesville Fire Dept. annual reports, and FEMA household survey data.</div>
+
   </div>
 
 
@@ -1360,7 +1363,7 @@ function countUp(el,target,suffix,dur){
 function runAnim(){
   const h=document.getElementById('h1-type');
   if(h)typeEl(h,"THE NIGHT YOU NEED A PLAN ISN'T THE NIGHT TO MAKE ONE",48);
-  [{id:'iv1',v:3,s:' MIN',d:150},{id:'iv2',v:10,s:' MIN',d:320},{id:'iv3',v:11,s:' MIN',d:490},{id:'iv4',v:73,s:' %',d:660}]
+  [{id:'iv1',v:3,s:' MIN',d:150},{id:'iv2',v:15,s:' MIN',d:320},{id:'iv3',v:42,s:' %',d:490},{id:'iv4',v:73,s:' %',d:660}]
   .forEach(({id,v,s,d})=>{
     const el=document.getElementById(id);
     if(!el)return;
