@@ -134,13 +134,14 @@ body {
   body { background:white !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .topbar { display:none !important; }
   .page { padding:0 !important; gap:0 !important; }
-  .card-wrap { transform:none !important; width:6in !important; margin:0 !important; }
+  .card-wrap:first-child { page-break-after: always; }
+  .card-wrap:last-child { page-break-after: avoid; }
+  .page { display:block; padding:0 !important; }
+  .card-wrap { transform:none !important; width:6in !important; margin:2in auto 0 !important; }
   .side {
     width:6in !important; height:4in !important;
     border:0.5pt solid #BBB !important; box-shadow:none !important;
-    page-break-after: always;
   }
-  .side:last-child { page-break-after:avoid; }
   .edit-badge { display:none !important; }
   .iv { background:transparent !important; border-bottom:none !important; box-shadow:none !important; padding:0 !important; }
   .iv:empty::before { content:''; }
