@@ -163,6 +163,8 @@ body{
 .ic.threat .ival{color:#6e1008}
 .idesc{font-family:Arial,sans-serif;font-size:.82rem;line-height:1.45;color:rgba(28,18,8,.72);margin-top:5px}
 .isource{font-family:Arial,sans-serif;font-size:.68rem;color:rgba(28,18,8,.42);margin-top:6px;font-style:italic}
+.intel-cta-btn{display:block;width:100%;text-align:center;font-family:Arial,sans-serif;font-size:.82rem;letter-spacing:.04em;background:#1C1208;color:#C3A97D;border:2px solid #1C1208;cursor:pointer;text-decoration:none;box-sizing:border-box;height:60px;line-height:56px;margin-top:14px}
+.intel-cta-wrap{text-align:center}
 
 /* ── SECTIONS ── */
 .sec{padding:26px 20px;border-bottom:2px solid rgba(28,18,8,.13)}
@@ -452,6 +454,8 @@ body{
   .ctabtn{display:inline-block;width:auto;padding:14px 32px;margin-right:10px}
   .ctaband{text-align:left}
   .ctaband .wrap{display:flex;flex-direction:column;align-items:flex-start}
+  .intel-cta-btn{display:inline-block;width:auto;padding:0 32px;text-align:center}
+  .intel-cta-wrap{text-align:left}
 }
 
 @media(min-width:768px){
@@ -586,7 +590,9 @@ body{
         <div class="isource">FEMA</div>
       </div>
     </div>
-
+    <div class="intel-cta-wrap" style="margin-top:14px">
+      <a onclick="nav('calc')" class="intel-cta-btn">ESTIMATE YOUR RESPONSE TIME</a>
+    </div>
   </div>
 
 
