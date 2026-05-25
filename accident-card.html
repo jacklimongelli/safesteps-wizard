@@ -62,6 +62,8 @@ body {
 .btn-print:hover { opacity:.85; }
 .btn-clear { background:transparent; color:#1C1208; border:1.5px solid rgba(28,18,8,0.33); }
 .btn-clear:hover { background:rgba(28,18,8,0.1); }
+.btn-order { background:#8B1A1A; color:#fff; }
+.btn-order:hover { opacity:.85; }
 
 /* ── Page & card scaler ── */
 .page {
@@ -311,6 +313,7 @@ body{font-family:Arial,sans-serif;color:var(--text);padding:0;}
   <div class="topbar-actions">
     <button class="btn btn-clear" onclick="clearAll()">Clear All</button>
     <button class="btn btn-print" onclick="printCard()">&#128424;&nbsp; Print Card</button>
+    <button class="btn btn-order" onclick="orderPrint()">&#128230;&nbsp; Order Printed Copy</button>
   </div>
 </div>
 
@@ -330,23 +333,23 @@ body{font-family:Arial,sans-serif;color:var(--text);padding:0;}
 
       <div>
         <div class="sh">My Vehicle</div>
-        <div class="ir"><div class="il">Vehicle</div><div class="iv" contenteditable="true" data-ph="Year Color Make Model"></div></div>
+        <div class="ir"><div class="il">Vehicle</div><div id="ac-vehicle" class="iv" contenteditable="true" data-ph="Year Color Make Model"></div></div>
         <div class="pair" style="margin-bottom:0">
-          <div class="ir" style="margin-bottom:0"><div class="il">Plate</div><div class="iv" contenteditable="true" data-ph="VA · ABC-1234"></div></div>
-          <div class="ir" style="margin-bottom:0"><div class="il">Registration #</div><div class="iv" contenteditable="true" data-ph="VA 2024-00000"></div></div>
+          <div class="ir" style="margin-bottom:0"><div class="il">Plate</div><div id="ac-plate" class="iv" contenteditable="true" data-ph="VA · ABC-1234"></div></div>
+          <div class="ir" style="margin-bottom:0"><div class="il">Registration #</div><div id="ac-reg" class="iv" contenteditable="true" data-ph="VA 2024-00000"></div></div>
         </div>
-        <div class="ir" style="margin-bottom:0"><div class="il">DL #</div><div class="iv" contenteditable="true" data-ph="State + Number"></div></div>
-        <div class="ir" style="margin-bottom:0"><div class="il">VIN</div><div class="iv" contenteditable="true" data-ph="17-character VIN"></div></div>
+        <div class="ir" style="margin-bottom:0"><div class="il">DL #</div><div id="ac-dl" class="iv" contenteditable="true" data-ph="State + Number"></div></div>
+        <div class="ir" style="margin-bottom:0"><div class="il">VIN</div><div id="ac-vin" class="iv" contenteditable="true" data-ph="17-character VIN"></div></div>
       </div>
 
       <div>
         <div class="div"></div>
         <div class="sh">My Insurance</div>
         <div class="pair" style="margin-bottom:0">
-          <div class="ir" style="margin-bottom:0"><div class="il">Company</div><div class="iv" contenteditable="true" data-ph="USAA / State Farm…"></div></div>
-          <div class="ir" style="margin-bottom:0"><div class="il">Policy #</div><div class="iv" contenteditable="true" data-ph="POL-000000"></div></div>
+          <div class="ir" style="margin-bottom:0"><div class="il">Company</div><div id="ac-ins-company" class="iv" contenteditable="true" data-ph="USAA / State Farm…"></div></div>
+          <div class="ir" style="margin-bottom:0"><div class="il">Policy #</div><div id="ac-ins-policy" class="iv" contenteditable="true" data-ph="POL-000000"></div></div>
         </div>
-        <div class="ir" style="margin-bottom:0"><div class="il">Claims Phone</div><div class="iv" contenteditable="true" data-ph="(800) 000-0000"></div></div>
+        <div class="ir" style="margin-bottom:0"><div class="il">Claims Phone</div><div id="ac-ins-phone" class="iv" contenteditable="true" data-ph="(800) 000-0000"></div></div>
       </div>
 
       <div>
@@ -355,26 +358,26 @@ body{font-family:Arial,sans-serif;color:var(--text);padding:0;}
         <div class="pair" style="margin-bottom:1pt">
           <div class="med-field" style="margin-bottom:0">
             <div class="med-label">Blood Type</div>
-            <div class="iv" contenteditable="true" data-ph="O+"></div>
+            <div id="ac-blood" class="iv" contenteditable="true" data-ph="O+"></div>
           </div>
           <div class="med-field" style="margin-bottom:0">
             <div class="med-label">Allergies</div>
-            <div class="iv" contenteditable="true" data-ph="Penicillin, etc."></div>
+            <div id="ac-allergies" class="iv" contenteditable="true" data-ph="Penicillin, etc."></div>
           </div>
         </div>
         <div class="med-field" style="margin-bottom:1pt">
           <div class="med-label">Current Medications</div>
-          <div class="iv" contenteditable="true" data-ph="Med name + dose"></div>
-          <div class="iv" contenteditable="true" data-ph="Med name + dose"></div>
+          <div id="ac-med1" class="iv" contenteditable="true" data-ph="Med name + dose"></div>
+          <div id="ac-med2" class="iv" contenteditable="true" data-ph="Med name + dose"></div>
         </div>
         <div class="med-field" style="margin-bottom:1pt">
           <div class="med-label">Pre-existing Conditions</div>
-          <div class="iv" contenteditable="true" data-ph="e.g. Hypertension"></div>
-          <div class="iv" contenteditable="true" data-ph="e.g. Asthma"></div>
+          <div id="ac-cond1" class="iv" contenteditable="true" data-ph="e.g. Hypertension"></div>
+          <div id="ac-cond2" class="iv" contenteditable="true" data-ph="e.g. Asthma"></div>
         </div>
         <div class="med-field" style="margin-bottom:0">
           <div class="med-label">Primary Care Doctor &amp; Phone</div>
-          <div class="iv" contenteditable="true" data-ph="Dr. Name · (000) 000-0000"></div>
+          <div id="ac-doctor" class="iv" contenteditable="true" data-ph="Dr. Name · (000) 000-0000"></div>
         </div>
       </div>
 
@@ -504,15 +507,15 @@ body{font-family:Arial,sans-serif;color:var(--text);padding:0;}
         <div class="sh">Emergency Contacts</div>
         <div style="margin-top:2pt;display:flex;flex-direction:column;gap:0;">
           <div>
-            <div style="margin-bottom:1pt;"><div class="il">Relationship</div><div class="iv" contenteditable="true" data-ph="Spouse"></div></div>
-            <div style="margin-bottom:1pt;"><div class="il">Name</div><div class="iv" contenteditable="true" data-ph="Full name"></div></div>
-            <div style="margin-bottom:0;"><div class="il">Phone</div><div class="iv" contenteditable="true" data-ph="(000) 000-0000"></div></div>
+            <div style="margin-bottom:1pt;"><div class="il">Relationship</div><div id="ac-ec1-rel" class="iv" contenteditable="true" data-ph="Spouse"></div></div>
+            <div style="margin-bottom:1pt;"><div class="il">Name</div><div id="ac-ec1-name" class="iv" contenteditable="true" data-ph="Full name"></div></div>
+            <div style="margin-bottom:0;"><div class="il">Phone</div><div id="ac-ec1-phone" class="iv" contenteditable="true" data-ph="(000) 000-0000"></div></div>
           </div>
           <div class="div" style="margin:2pt 0;"></div>
           <div>
-            <div style="margin-bottom:1pt;"><div class="il">Relationship</div><div class="iv" contenteditable="true" data-ph="Parent"></div></div>
-            <div style="margin-bottom:1pt;"><div class="il">Name</div><div class="iv" contenteditable="true" data-ph="Full name"></div></div>
-            <div style="margin-bottom:0;"><div class="il">Phone</div><div class="iv" contenteditable="true" data-ph="(000) 000-0000"></div></div>
+            <div style="margin-bottom:1pt;"><div class="il">Relationship</div><div id="ac-ec2-rel" class="iv" contenteditable="true" data-ph="Parent"></div></div>
+            <div style="margin-bottom:1pt;"><div class="il">Name</div><div id="ac-ec2-name" class="iv" contenteditable="true" data-ph="Full name"></div></div>
+            <div style="margin-bottom:0;"><div class="il">Phone</div><div id="ac-ec2-phone" class="iv" contenteditable="true" data-ph="(000) 000-0000"></div></div>
           </div>
         </div>
       </div>
@@ -561,6 +564,42 @@ function clearAll() {
   document.querySelectorAll('[contenteditable="true"]').forEach(el => el.textContent = '');
 }
 
+async function orderPrint() {
+  const g = id => (document.getElementById(id)||{}).textContent.trim()||'';
+  const orderData = {
+    product: 'accident_card',
+    vehicle:    g('ac-vehicle'),
+    plate:      g('ac-plate'),
+    reg:        g('ac-reg'),
+    dl:         g('ac-dl'),
+    vin:        g('ac-vin'),
+    insCompany: g('ac-ins-company'),
+    insPolicy:  g('ac-ins-policy'),
+    insPhone:   g('ac-ins-phone'),
+    blood:      g('ac-blood'),
+    allergies:  g('ac-allergies'),
+    med1:       g('ac-med1'),
+    med2:       g('ac-med2'),
+    cond1:      g('ac-cond1'),
+    cond2:      g('ac-cond2'),
+    doctor:     g('ac-doctor'),
+    ec1:{ rel:g('ac-ec1-rel'), name:g('ac-ec1-name'), phone:g('ac-ec1-phone') },
+    ec2:{ rel:g('ac-ec2-rel'), name:g('ac-ec2-name'), phone:g('ac-ec2-phone') },
+  };
+  try {
+    const res = await fetch('https://www.safestepsplansforms.com/_functions/saveOrder', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(orderData)
+    });
+    const data = await res.json();
+    if(!data.id) throw new Error('No order ID returned');
+    window.top.location.href = 'https://buy.stripe.com/test_cNi5kD4hOcJH9Oo0zn5os01?client_reference_id=' + data.id;
+  } catch(err) {
+    alert('Something went wrong: ' + err.message);
+  }
+}
+
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Enter' && e.target.hasAttribute('contenteditable')) {
     e.preventDefault();
@@ -605,6 +644,48 @@ function sendHeight() {
 window.addEventListener('load', scaleCards);
 window.addEventListener('resize', scaleCards);
 new MutationObserver(sendHeight).observe(document.body, {subtree:true, childList:true, attributes:true});
+
+// Pre-populate fields from URL params (for printed order fulfillment)
+(function loadFromParams() {
+  const params = new URLSearchParams(window.location.search);
+  const map = {
+    'vehicle':    'ac-vehicle',
+    'plate':      'ac-plate',
+    'reg':        'ac-reg',
+    'dl':         'ac-dl',
+    'vin':        'ac-vin',
+    'insCompany': 'ac-ins-company',
+    'insPolicy':  'ac-ins-policy',
+    'insPhone':   'ac-ins-phone',
+    'blood':      'ac-blood',
+    'allergies':  'ac-allergies',
+    'med1':       'ac-med1',
+    'med2':       'ac-med2',
+    'cond1':      'ac-cond1',
+    'cond2':      'ac-cond2',
+    'doctor':     'ac-doctor',
+  };
+  for(const [param, id] of Object.entries(map)) {
+    const val = params.get(param);
+    if(val) {
+      const el = document.getElementById(id);
+      if(el) el.textContent = JSON.parse(decodeURIComponent(val));
+    }
+  }
+  // Emergency contacts
+  ['ec1','ec2'].forEach((key, i) => {
+    const val = params.get(key);
+    if(!val) return;
+    try {
+      const obj = JSON.parse(decodeURIComponent(val));
+      const n = i + 1;
+      ['rel','name','phone'].forEach(field => {
+        const el = document.getElementById('ac-' + key + '-' + field);
+        if(el && obj[field]) el.textContent = obj[field];
+      });
+    } catch(e) {}
+  });
+})();
 </script>
 </body>
 </html>
