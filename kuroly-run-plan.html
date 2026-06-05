@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuroly Run Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f6f3;
+    --surface: #ffffff;
+    --surface2: #f0efe9;
+    --surface3: #e8e7e0;
+    --border: rgba(0,0,0,0.1);
+    --border-mid: rgba(0,0,0,0.15);
+    --text-primary: #1a1916;
+    --text-secondary: #6b6960;
+    --text-tertiary: #9e9d96;
+
+    --walk-bg: #e1f5ee; --walk-text: #0f6e56;
+    --mix-bg: #faeeda;  --mix-text: #854f0b;
+    --easy-bg: #eaf3de; --easy-text: #3b6d11;
+    --run-bg: #e6f1fb;  --run-text: #185fa5;
+
+    --phase-bg: #eeecea;
+    --header-bg: #f0efe9;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+  }
+
+  .legend {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+  .b-walk { background: var(--walk-bg); color: var(--walk-text); }
+  .b-mix  { background: var(--mix-bg);  color: var(--mix-text);  }
+  .b-easy { background: var(--easy-bg); color: var(--easy-text); }
+  .b-run  { background: var(--run-bg);  color: var(--run-text);  }
+
+  .rpe-note {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 760px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border-left: 3px solid var(--border-mid);
+    border-radius: 0 6px 6px 0;
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 0.5px solid var(--border-mid);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    background: var(--surface);
+    margin-top: 1.5rem;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 980px;
+    font-size: 12px;
+  }
+
+  thead th {
+    background: var(--header-bg);
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 10px 8px;
+    border-bottom: 0.5px solid var(--border-mid);
+    border-right: 0.5px solid var(--border);
+    text-align: center;
+    white-space: nowrap;
+  }
+  thead th:first-child { text-align: left; min-width: 76px; }
+  thead th:last-child { border-right: none; }
+
+  td {
+    padding: 8px 7px;
+    border-bottom: 0.5px solid var(--border);
+    border-right: 0.5px solid var(--border);
+    text-align: center;
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  td:last-child { border-right: none; }
+
+  tr:last-child td { border-bottom: none; }
+
+  td.week-label {
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-align: left;
+    white-space: nowrap;
+    background: var(--surface2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  td.rest {
+    color: var(--text-tertiary);
+    font-size: 11px;
+    vertical-align: middle;
+  }
+
+  .cell-badge { display: inline-block; margin-bottom: 3px; }
+  .cell-dist { font-size: 12px; font-weight: 500; display: block; }
+  .cell-pace { font-size: 11px; color: var(--text-secondary); display: block; }
+  .cell-note { font-size: 10px; color: var(--text-tertiary); display: block; margin-top: 2px; line-height: 1.4; }
+
+  tr.phase-row td {
+    background: var(--phase-bg);
+    font-size: 10px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 7px 8px;
+    text-align: left;
+    border-bottom: 0.5px solid var(--border-mid);
+  }
+
+  tr:not(.phase-row):hover td:not(.week-label) {
+    background: #fafaf7;
+  }
+
+  footer {
+    margin-top: 2.5rem;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>Kuroly Run Plan</h1>
+    <p class="subtitle">Goal: 2 miles in 19 min (9:30/mi) &nbsp;·&nbsp; 16 weeks</p>
+    <div class="legend">
+      <span class="badge b-walk">Walk</span>
+      <span class="badge b-mix">Walk/Run</span>
+      <span class="badge b-easy">Easy run</span>
+      <span class="badge b-run">Effort run</span>
+    </div>
+    <div class="rpe-note">
+      Every session: 5 min brisk walk warm-up + 5 min easy walk cool-down.<br>
+      RPE 4–5 = can hold a full conversation &nbsp;·&nbsp; RPE 6–7 = can speak in short sentences &nbsp;·&nbsp; RPE 8 = can barely talk.
+    </div>
+  </header>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Day 1</th>
+          <th>Day 2</th>
+          <th>Day 3</th>
+          <th>Day 4</th>
+          <th>Day 5</th>
+          <th>Day 6</th>
+          <th>Day 7</th>
+        </tr>
+      </thead>
+      <tbody id="plan-body"></tbody>
+    </table>
+  </div>
+
+
+</div>
+
+<script>
+const REST = null;
+
+function w(dist, pace, note) { return { type:'walk', dist, pace, note }; }
+function m(dist, pace, note) { return { type:'mix',  dist, pace, note }; }
+function e(dist, pace, note) { return { type:'easy', dist, pace, note }; }
+function r(dist, pace, note) { return { type:'run',  dist, pace, note }; }
+
+const plan = [
+  {
+    phase: 'Phase 1 — Aerobic base: walking only (weeks 1–3)',
+    weeks: [
+      { label:'Wk 1', days:[
+        w('1.5 mi','20 min/mi','RPE 4–5'),
+        REST,
+        w('1.5 mi','20 min/mi','RPE 4–5'),
+        REST,
+        w('2 mi','20 min/mi','RPE 4–5'),
+        REST,
+        REST
+      ]},
+      { label:'Wk 2', days:[
+        w('2 mi','19:30/mi','RPE 4–5'),
+        REST,
+        w('2 mi','19:30/mi','RPE 4–5'),
+        REST,
+        w('2.5 mi','19:30/mi','RPE 5'),
+        w('1.5 mi','20 min/mi','easy recovery'),
+        REST
+      ]},
+      { label:'Wk 3', days:[
+        w('2 mi','19 min/mi','RPE 5'),
+        REST,
+        w('2.5 mi','19 min/mi','RPE 5'),
+        REST,
+        w('3 mi','19 min/mi','RPE 5'),
+        w('2 mi','20 min/mi','easy recovery'),
+        REST
+      ]},
+    ]
+  },
+  {
+    phase: 'Phase 2 — Walk/run intervals, long ratio (weeks 4–7)',
+    weeks: [
+      { label:'Wk 4', days:[
+        m('2 mi','walk 18/mi · run 13/mi','5×[4 min walk + 1 min run] · RPE 6 on runs'),
+        REST,
+        m('2 mi','walk 18/mi · run 13/mi','5×[4+1] · RPE 6 on runs'),
+        REST,
+        w('3 mi','19 min/mi','easy RPE 4–5'),
+        REST,
+        REST
+      ]},
+      { label:'Wk 5', days:[
+        m('2 mi','walk 17/mi · run 12:30/mi','5×[3 min walk + 2 min run] · RPE 6'),
+        REST,
+        m('2 mi','walk 17/mi · run 12:30/mi','5×[3+2] · RPE 6'),
+        REST,
+        w('3 mi','18:30/mi','easy RPE 4–5'),
+        m('2 mi','walk 17/mi · run 12:30/mi','4×[3+2] · RPE 6'),
+        REST
+      ]},
+      { label:'Wk 6', days:[
+        m('2.5 mi','walk 16/mi · run 12/mi','5×[2 min walk + 3 min run] · RPE 6'),
+        REST,
+        m('2.5 mi','walk 16/mi · run 12/mi','5×[2+3] · RPE 6'),
+        REST,
+        w('3 mi','18 min/mi','easy RPE 4–5'),
+        m('2 mi','walk 16/mi · run 12/mi','4×[2+3] · RPE 6'),
+        REST
+      ]},
+      { label:'Wk 7', days:[
+        m('2.5 mi','walk 15/mi · run 11:30/mi','5×[90s walk + 3 min run] · RPE 6–7'),
+        REST,
+        m('2.5 mi','walk 15/mi · run 11:30/mi','5×[1.5+3] · RPE 6–7'),
+        REST,
+        w('3.5 mi','18 min/mi','easy RPE 4–5'),
+        m('2 mi','walk 15/mi · run 11:30/mi','4×[1.5+3] · RPE 6'),
+        REST
+      ]},
+    ]
+  },
+  {
+    phase: 'Phase 3 — Shifting to continuous running (weeks 8–12)',
+    weeks: [
+      { label:'Wk 8', days:[
+        m('2.5 mi','walk 15/mi · run 11/mi','5×[1 min walk + 4 min run] · RPE 6–7'),
+        REST,
+        m('2.5 mi','walk 15/mi · run 11/mi','5×[1+4] · RPE 6–7'),
+        REST,
+        e('2 mi','12 min/mi','first continuous easy run · RPE 5'),
+        REST,
+        REST
+      ]},
+      { label:'Wk 9', days:[
+        e('1.5 mi','11:30/mi','RPE 5 — talk test'),
+        REST,
+        m('2.5 mi','walk 15/mi · run 11/mi','3×[1+5] · RPE 6'),
+        REST,
+        e('2 mi','11:30/mi','RPE 5'),
+        REST,
+        REST
+      ]},
+      { label:'Wk 10', days:[
+        e('2 mi','11:15/mi','RPE 5–6'),
+        REST,
+        e('1.5 mi','11 min/mi','RPE 5–6'),
+        REST,
+        e('2.5 mi','11:15/mi','RPE 5–6'),
+        e('1.5 mi','12 min/mi','easy recovery'),
+        REST
+      ]},
+      { label:'Wk 11', days:[
+        e('2 mi','11 min/mi','RPE 5–6'),
+        REST,
+        e('2 mi','10:45/mi','RPE 6'),
+        REST,
+        e('3 mi','11 min/mi','long easy · RPE 5'),
+        e('1.5 mi','12 min/mi','easy recovery'),
+        REST
+      ]},
+      { label:'Wk 12', days:[
+        e('2 mi','10:30/mi','RPE 6'),
+        REST,
+        r('1.5 mi','10 min/mi','tempo effort · RPE 7'),
+        REST,
+        e('3 mi','11 min/mi','long easy · RPE 5'),
+        REST,
+        REST
+      ]},
+    ]
+  },
+  {
+    phase: 'Phase 4 — Speed development & goal pace (weeks 13–16)',
+    weeks: [
+      { label:'Wk 13', days:[
+        e('2 mi','10:15/mi','RPE 6'),
+        REST,
+        r('2 mi','10 min/mi','steady effort · RPE 7'),
+        REST,
+        e('3 mi','10:45/mi','long easy · RPE 5–6'),
+        REST,
+        REST
+      ]},
+      { label:'Wk 14', days:[
+        e('2 mi','10 min/mi','RPE 6'),
+        REST,
+        r('2 mi','9:45/mi','goal-pace feel · RPE 7–8'),
+        REST,
+        e('3 mi','10:30/mi','long easy · RPE 5–6'),
+        e('1.5 mi','11 min/mi','easy recovery'),
+        REST
+      ]},
+      { label:'Wk 15', days:[
+        e('2 mi','9:45/mi','RPE 6–7'),
+        REST,
+        r('2 mi','9:30/mi','goal pace · RPE 8'),
+        REST,
+        e('2.5 mi','10:15/mi','easy · RPE 5–6'),
+        REST,
+        REST
+      ]},
+      { label:'Wk 16', days:[
+        e('1.5 mi','10 min/mi','RPE 6 — taper'),
+        REST,
+        r('1 mi','9:30/mi','sharp & fresh · RPE 7'),
+        REST,
+        w('1.5 mi','20 min/mi','easy walk — legs fresh'),
+        REST,
+        r('2 mi','GOAL: 9:30/mi','race day — RPE 8–9')
+      ]},
+    ]
+  }
+];
+
+const badgeClass = { walk:'b-walk', mix:'b-mix', easy:'b-easy', run:'b-run' };
+const badgeLabel = { walk:'Walk', mix:'Walk/Run', easy:'Easy run', run:'Effort run' };
+
+const tbody = document.getElementById('plan-body');
+
+plan.forEach(phase => {
+  const phRow = document.createElement('tr');
+  phRow.className = 'phase-row';
+  phRow.innerHTML = `<td colspan="8">${phase.phase}</td>`;
+  tbody.appendChild(phRow);
+
+  phase.weeks.forEach(week => {
+    const tr = document.createElement('tr');
+    let html = `<td class="week-label">${week.label}</td>`;
+    week.days.forEach(day => {
+      if (!day) {
+        html += `<td class="rest">Rest</td>`;
+      } else {
+        const bc = badgeClass[day.type];
+        const bl = badgeLabel[day.type];
+        html += `<td>
+          <span class="badge ${bc} cell-badge">${bl}</span>
+          <span class="cell-dist">${day.dist}</span>
+          <span class="cell-pace">${day.pace}</span>
+          ${day.note ? `<span class="cell-note">${day.note}</span>` : ''}
+        </td>`;
+      }
+    });
+    tr.innerHTML = html;
+    tbody.appendChild(tr);
+  });
+});
+</script>
+</body>
+</html>
