@@ -93,7 +93,8 @@
   }
 
   .table-wrap {
-    overflow-x: auto;
+    overflow: auto;
+    max-height: 80vh;
     border-radius: 10px;
     border: 0.5px solid var(--border-mid);
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
@@ -120,8 +121,11 @@
     border-right: 0.5px solid var(--border);
     text-align: center;
     white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 2;
   }
-  thead th:first-child { text-align: left; min-width: 76px; }
+  thead th:first-child { text-align: left; min-width: 76px; position: sticky; left: 0; z-index: 3; }
   thead th:last-child { border-right: none; }
 
   td {
@@ -144,6 +148,9 @@
     white-space: nowrap;
     background: var(--surface2);
     font-family: 'DM Mono', monospace;
+    position: sticky;
+    left: 0;
+    z-index: 1;
   }
 
   td.rest {
