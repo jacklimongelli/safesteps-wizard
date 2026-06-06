@@ -297,6 +297,31 @@ body{
 .tf-input{width:100%;background:rgba(28,18,8,.05);border:1px solid rgba(28,18,8,.25);color:#1C1208;font-family:Arial,sans-serif;font-size:.8rem;padding:12px 14px;outline:none}
 .tf-input::placeholder{color:rgba(28,18,8,.3)}
 
+/* ── COMING SOON MODAL ── */
+.cs-overlay{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(14,11,5,.72);
+  align-items:center;justify-content:center;
+  padding:20px;
+}
+.cs-overlay.open{display:flex}
+.cs-modal{
+  background:#C3A97D;
+  border-top:3px solid #1C1208;
+  border:2px solid rgba(28,18,8,.35);
+  max-width:420px;width:100%;
+  position:relative;
+  padding:32px 28px 28px;
+}
+.cs-modal::before{content:'';position:absolute;top:8px;left:8px;width:16px;height:16px;border-top:2px solid rgba(28,18,8,.3);border-left:2px solid rgba(28,18,8,.3)}
+.cs-modal::after{content:'';position:absolute;bottom:8px;right:8px;width:16px;height:16px;border-bottom:2px solid rgba(28,18,8,.3);border-right:2px solid rgba(28,18,8,.3)}
+.cs-eyebrow{font-family:Arial,sans-serif;font-size:.56rem;letter-spacing:.1em;color:rgba(28,18,8,.6);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.cs-eyebrow::before{content:'';display:block;width:12px;height:1px;background:rgba(28,18,8,.45);flex-shrink:0}
+.cs-title{font-family:Arial,sans-serif;font-size:1.55rem;letter-spacing:.04em;color:#1C1208;line-height:1;margin-bottom:14px}
+.cs-body{font-family:Arial,sans-serif;font-size:.8rem;line-height:1.7;color:rgba(28,18,8,.78);border-left:3px solid rgba(28,18,8,.3);padding-left:13px;margin-bottom:22px}
+.cs-close{display:block;width:100%;font-family:Arial,sans-serif;font-size:.82rem;letter-spacing:.05em;background:#1C1208;color:#C3A97D;border:none;padding:13px 0;cursor:pointer;text-align:center}
+.cs-dismiss{display:block;width:100%;font-family:Arial,sans-serif;font-size:.72rem;letter-spacing:.04em;background:transparent;color:rgba(28,18,8,.55);border:1px solid rgba(28,18,8,.2);padding:10px 0;cursor:pointer;text-align:center;margin-top:8px}
+
 /* ── TOOLS ── */
 .tool-card{border:1px solid rgba(28,18,8,.5);margin-bottom:13px;background:rgba(28,18,8,.26)}
 .tool-head{padding:15px 15px 11px;border-bottom:1px solid rgba(28,18,8,.2);display:flex;align-items:center;gap:13px}
@@ -758,7 +783,8 @@ body{
           <div class="sv5-name">HOME<br>INVASION</div>
         </div>
         <div class="sv5-pkg-desc">A fully customized defensive plan covering strong points, safe rooms, and law enforcement coordination to ensure family safety.</div>
-        <a class="sv5-view-link" onclick="nav('plan-invasion')">VIEW PLAN →</a>
+        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
+        <!-- <a class="sv5-view-link" onclick="nav('plan-invasion')">VIEW PLAN →</a> -->
       </div>
 
       <div class="sv5-pkg-card">
@@ -770,7 +796,8 @@ body{
           <div class="sv5-name">MEDICAL<br>EMERGENCY</div>
         </div>
         <div class="sv5-pkg-desc">A household-specific response plan covering 911 scripts, role assignments, and documented medical information for every person under your roof.</div>
-        <a class="sv5-view-link" onclick="nav('plan-medical')">VIEW PLAN →</a>
+        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
+        <!-- <a class="sv5-view-link" onclick="nav('plan-medical')">VIEW PLAN →</a> -->
       </div>
 
       <div class="sv5-pkg-card">
@@ -782,7 +809,8 @@ body{
           <div class="sv5-name">WEATHER<br>EVENTS</div>
         </div>
         <div class="sv5-pkg-desc">A response plan covering shelter-in-place, evacuation, and supply protocols for snowstorms and hurricanes — including generator installation and maintenance.</div>
-        <a class="sv5-view-link" onclick="nav('plan-weather')">VIEW PLAN →</a>
+        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
+        <!-- <a class="sv5-view-link" onclick="nav('plan-weather')">VIEW PLAN →</a> -->
       </div>
 
     </div>
@@ -822,7 +850,8 @@ body{
           <div class="sv5-name">ELDERLY<br>PARENTS</div>
         </div>
         <div class="sv5-pkg-desc">A consultation to make an aging parent's home safer, more accessible, and easier to navigate independently.</div>
-        <a class="sv5-view-link" onclick="nav('elderly-parents')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
+        <!-- <a class="sv5-view-link" onclick="nav('elderly-parents')">VIEW PACKAGE →</a> -->
       </div>
 
       <div class="sv5-pkg-card">
@@ -832,7 +861,8 @@ body{
           <div class="sv5-name">OFF TO<br>COLLEGE</div>
         </div>
         <div class="sv5-pkg-desc">A step-by-step response guide for the social emergencies most likely to happen in a college environment — alcohol poisoning, drug overdose, sexual assault, and mental health crisis — bundled with essential safety equipment.</div>
-        <a class="sv5-view-link" onclick="nav('off-to-college')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
+        <!-- <a class="sv5-view-link" onclick="nav('off-to-college')">VIEW PACKAGE →</a> -->
       </div>
 
       <div class="sv5-pkg-card">
@@ -842,7 +872,8 @@ body{
           <div class="sv5-name">SOLO<br>TRAVELER</div>
         </div>
         <div class="sv5-pkg-desc">Essential safety equipment and information built around the specific risks of traveling alone.</div>
-        <a class="sv5-view-link" onclick="nav('solo-traveler')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
+        <!-- <a class="sv5-view-link" onclick="nav('solo-traveler')">VIEW PACKAGE →</a> -->
       </div>
 
       <div class="sv5-pkg-card">
@@ -852,7 +883,8 @@ body{
           <div class="sv5-name">SOLO FEMALE<br>RUNNER</div>
         </div>
         <div class="sv5-pkg-desc">Essential safety equipment designed for women who run, walk, or train outdoors alone.</div>
-        <a class="sv5-view-link" onclick="nav('solo-female-runner')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
+        <!-- <a class="sv5-view-link" onclick="nav('solo-female-runner')">VIEW PACKAGE →</a> -->
       </div>
 
       <div class="sv5-pkg-card">
@@ -862,7 +894,8 @@ body{
           <div class="sv5-name">BABY<br>PROOFING</div>
         </div>
         <div class="sv5-pkg-desc">Consultation and installation of key baby proofing concepts — covering hazard identification, room-by-room safety measures, and essential childproofing equipment for a safer home.</div>
-        <a class="sv5-view-link" onclick="nav('baby-proofing')">VIEW PACKAGE →</a>
+        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
+        <!-- <a class="sv5-view-link" onclick="nav('baby-proofing')">VIEW PACKAGE →</a> -->
       </div>
 
     </div>
@@ -2162,6 +2195,32 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
     </div>
   </div>
 </div>
+
+<!-- ══════════ COMING SOON MODAL ══════════ -->
+<div class="cs-overlay" id="cs-overlay" onclick="csClose(event)">
+  <div class="cs-modal">
+    <div class="cs-eyebrow">IN DEVELOPMENT</div>
+    <div class="cs-title">COMING<br>SOON.</div>
+    <div class="cs-body">This service is currently in active development. We are committed to ensuring that every plan we release meets our full standard of research, testing, and operational rigor. We will make it available once we are fully confident in the product.</div>
+    <button class="cs-close" onclick="csCloseBtn()">UNDERSTOOD</button>
+    <button class="cs-dismiss" onclick="csCloseBtn()">CLOSE</button>
+  </div>
+</div>
+
+<script>
+function csOpen(){
+  document.getElementById('cs-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function csCloseBtn(){
+  document.getElementById('cs-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+function csClose(e){
+  if(e.target===document.getElementById('cs-overlay')) csCloseBtn();
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') csCloseBtn(); });
+</script>
 
 <script src="pdf-viewer.js"></script>
 <script>
