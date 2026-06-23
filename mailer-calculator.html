@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Safe Steps — Mailer Calculator</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: monospace; background: #0e0b05; color: #C3A97D; padding: 24px; min-height: 100vh; }
+    h1 { font-size: 1.1rem; letter-spacing: .08em; margin-bottom: 6px; }
+    .sub { font-size: .78rem; color: rgba(195,169,125,.6); margin-bottom: 24px; }
+
+    textarea {
+      width: 100%; max-width: 700px; height: 200px;
+      background: rgba(195,169,125,.07); border: 1px solid rgba(195,169,125,.3);
+      color: #C3A97D; font-family: monospace; font-size: .82rem;
+      padding: 12px; resize: vertical; margin-bottom: 12px;
+    }
+    textarea:focus { outline: none; border-color: #C3A97D; }
+    textarea::placeholder { color: rgba(195,169,125,.35); }
+
+    .controls { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+    button {
+      background: #6e1008; color: #C3A97D; border: none;
+      padding: 12px 28px; font-family: monospace; font-size: .9rem;
+      letter-spacing: .08em; cursor: pointer;
+    }
+    button:disabled { opacity: .4; cursor: not-allowed; }
+    button.secondary { background: rgba(195,169,125,.15); display: none; }
+    button#killBtn { background: #8b0000; display: none; }
+
+    .stats-bar {
+      display: flex; gap: 28px; flex-wrap: wrap;
+      background: rgba(195,169,125,.07); border: 1px solid rgba(195,169,125,.2);
+      padding: 12px 18px; margin-bottom: 16px; max-width: 700px;
+    }
+    .stat-block label { display: block; font-size: .58rem; letter-spacing: .08em; color: rgba(195,169,125,.5); margin-bottom: 3px; }
+    .stat-block span { font-size: 1.1rem; color: #fff; font-weight: bold; }
+
+    .progress-wrap { max-width: 700px; height: 5px; background: rgba(195,169,125,.15); margin-bottom: 20px; }
+    .progress-fill { height: 100%; background: #C3A97D; width: 0%; transition: width .15s; }
+
+    #log {
+      max-width: 700px; background: rgba(195,169,125,.07);
+      border: 1px solid rgba(195,169,125,.2); padding: 14px;
+      font-size: .72rem; line-height: 1.7; max-height: 300px;
+      overflow-y: auto; white-space: pre-wrap; margin-bottom: 20px; display: none;
+    }
+
+    table {
+      width: 100%; max-width: 1100px; border-collapse: collapse;
+      font-size: .75rem; margin-bottom: 20px; display: none;
+    }
+    th {
+      background: rgba(195,169,125,.15); color: #C3A97D;
+      font-size: .6rem; letter-spacing: .08em; padding: 10px 12px;
+      text-align: left; border-bottom: 1px solid rgba(195,169,125,.3);
+    }
+    td {
+      padding: 9px 12px; border-bottom: 1px solid rgba(195,169,125,.1);
+      color: rgba(195,169,125,.9); vertical-align: top;
+    }
+    tr:hover td { background: rgba(195,169,125,.04); }
+    .err-row td { color: #e83838; }
+    .killed { color: #e83838; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<h1>SAFE STEPS — MAILER CALCULATOR</h1>
+<div class="sub">Paste addresses below, one per line. Returns closest fire + EMS station with estimated arrival times.</div>
+
+<textarea id="addressInput" placeholder="123 Main St, Charlottesville, VA 22902&#10;456 Oak Ave, Charlottesville, VA 22903&#10;789 Elm St, Crozet, VA 22932"></textarea>
+
+<div class="controls">
+  <button id="runBtn" onclick="runBatch()">RUN BATCH</button>
+  <button id="killBtn" onclick="kill()">⛔ KILL</button>
+  <button id="downloadBtn" class="secondary" onclick="downloadCSV()">DOWNLOAD CSV</button>
+</div>
+
+<div class="stats-bar">
+  <div class="stat-block"><label>TOTAL</label><span id="statTotal">—</span></div>
+  <div class="stat-block"><label>PROCESSED</label><span id="statDone">0</span></div>
+  <div class="stat-block"><label>ERRORS</label><span id="statErr">0</span></div>
+  <div class="stat-block"><label>REMAINING</label><span id="statRem">—</span></div>
+</div>
+<div class="progress-wrap"><div class="progress-fill" id="progressFill"></div></div>
+
+<div id="log"></div>
+
+<table id="resultsTable">
+  <thead>
+    <tr>
+      <th>ADDRESS</th>
+      <th>FIRE STATION</th>
+      <th>FIRE ARRIVAL (MIN)</th>
+      <th>EMS STATION</th>
+      <th>EMS ARRIVAL (MIN)</th>
+    </tr>
+  </thead>
+  <tbody id="resultsBody"></tbody>
+</table>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+const FIRE_DB_URL = 'https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/fire-stations.json';
+const EMS_DB_URL  = 'https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/albemarle_ems-stations.json';
+const CENSUS_URL  = 'https://geocoding.geo.census.gov/geocoder/locations/onelineaddress';
+const OSRM_URL    = 'https://router.project-osrm.org/route/v1/driving';
+
+// Overhead minutes by dept type
+const OVERHEAD = {
+  fire: { career: 3, volunteer: 8, combination: 5, unknown: 8 },
+  ems:  { career: 4, volunteer: 10, combination: 7, unknown: 10 }
+};
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let killed = false;
+let fireDb = null;
+let emsDb  = null;
+let results = [];
+
+// ── DB loaders ────────────────────────────────────────────────────────────────
+async function loadDbs() {
+  if (!fireDb) {
+    const r = await fetch(FIRE_DB_URL);
+    fireDb = await r.json();
+  }
+  if (!emsDb) {
+    const r = await fetch(EMS_DB_URL);
+    emsDb = await r.json();
+  }
+}
+
+// ── Census geocoder ───────────────────────────────────────────────────────────
+async function geocode(address) {
+  const url = `${CENSUS_URL}?address=${encodeURIComponent(address)}&benchmark=Public_AR_Current&format=json`;
+  const res = await fetch(url);
+  const data = await res.json();
+  const matches = data?.result?.addressMatches;
+  if (!matches || !matches.length) throw new Error('Address not found');
+  const { x: lng, y: lat } = matches[0].coordinates;
+  return { lat, lng };
+}
+
+// ── OSRM drive time ───────────────────────────────────────────────────────────
+async function getDriveMinutes(fromLat, fromLng, toLat, toLng) {
+  const url = `${OSRM_URL}/${fromLng},${fromLat};${toLng},${toLat}?overview=false`;
+  const res = await fetch(url);
+  const data = await res.json();
+  if (data.code !== 'Ok' || !data.routes?.length) return null;
+  return data.routes[0].duration / 60; // seconds → minutes
+}
+
+// ── Haversine ─────────────────────────────────────────────────────────────────
+function haversineMiles(lat1, lng1, lat2, lng2) {
+  const R = 3958.8;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ── Find closest station ──────────────────────────────────────────────────────
+async function findClosest(lat, lng, db, nameField, typeField, category) {
+  // Sort by haversine, take top 5, then get actual drive times via OSRM
+  const nearest5 = db
+    .map(s => ({ ...s, _miles: haversineMiles(lat, lng, s.lat, s.lng) }))
+    .sort((a, b) => a._miles - b._miles)
+    .slice(0, 5);
+
+  const withDrive = await Promise.all(nearest5.map(async s => {
+    const driveMin = await getDriveMinutes(lat, lng, s.lat, s.lng);
+    return { ...s, driveMin };
+  }));
+
+  const valid = withDrive
+    .filter(s => s.driveMin !== null)
+    .sort((a, b) => a.driveMin - b.driveMin);
+
+  if (!valid.length) return null;
+
+  const best = valid[0];
+  const deptType = (best[typeField] || 'unknown').toLowerCase();
+  const overhead = OVERHEAD[category][deptType] ?? OVERHEAD[category].unknown;
+  const arrival  = Math.round(best.driveMin + overhead);
+
+  return {
+    name:    best[nameField] || best.name || '',
+    arrival,
+    driveMin: Math.round(best.driveMin),
+    deptType
+  };
+}
+
+// ── Logging ───────────────────────────────────────────────────────────────────
+function log(msg, cls) {
+  const el = document.getElementById('log');
+  el.style.display = 'block';
+  if (cls) {
+    const span = document.createElement('span');
+    span.className = cls;
+    span.textContent = msg + '\n';
+    el.appendChild(span);
+  } else {
+    el.textContent += msg + '\n';
+  }
+  el.scrollTop = el.scrollHeight;
+}
+
+// ── Update stats ──────────────────────────────────────────────────────────────
+function updateStats(done, total, errors) {
+  document.getElementById('statDone').textContent = done;
+  document.getElementById('statErr').textContent  = errors;
+  document.getElementById('statRem').textContent  = total - done;
+  document.getElementById('progressFill').style.width = Math.round((done / total) * 100) + '%';
+}
+
+// ── Add row to table ──────────────────────────────────────────────────────────
+function addRow(address, fire, ems, isError, errorMsg) {
+  const tbody = document.getElementById('resultsBody');
+  const tr = document.createElement('tr');
+  if (isError) {
+    tr.className = 'err-row';
+    tr.innerHTML = `<td>${address}</td><td colspan="4">ERROR: ${errorMsg}</td>`;
+  } else {
+    tr.innerHTML = `
+      <td>${address}</td>
+      <td>${fire ? fire.name : '—'}</td>
+      <td>${fire ? fire.arrival + ' min (' + fire.deptType + ')' : '—'}</td>
+      <td>${ems  ? ems.name  : '—'}</td>
+      <td>${ems  ? ems.arrival  + ' min (' + ems.deptType  + ')' : '—'}</td>`;
+  }
+  tbody.appendChild(tr);
+  document.getElementById('resultsTable').style.display = 'table';
+}
+
+// ── Kill ──────────────────────────────────────────────────────────────────────
+function kill() {
+  killed = true;
+  log('\n⛔ KILL SIGNAL SENT — stopping after current address...', 'killed');
+}
+
+// ── Main batch ────────────────────────────────────────────────────────────────
+async function runBatch() {
+  const raw = document.getElementById('addressInput').value.trim();
+  if (!raw) { alert('Please paste at least one address.'); return; }
+
+  const addresses = raw.split('\n').map(a => a.trim()).filter(Boolean);
+  if (!addresses.length) { alert('No valid addresses found.'); return; }
+
+  // Reset
+  killed = false;
+  results = [];
+  document.getElementById('resultsBody').innerHTML = '';
+  document.getElementById('resultsTable').style.display = 'none';
+  document.getElementById('log').textContent = '';
+  document.getElementById('log').style.display = 'block';
+  document.getElementById('runBtn').disabled = true;
+  document.getElementById('killBtn').style.display = 'inline-block';
+  document.getElementById('downloadBtn').style.display = 'none';
+  document.getElementById('statTotal').textContent = addresses.length;
+  updateStats(0, addresses.length, 0);
+
+  log(`Loading station databases...`);
+  try {
+    await loadDbs();
+    log(`Fire stations loaded: ${fireDb.length} | EMS stations loaded: ${emsDb.length}\n`);
+  } catch (e) {
+    log(`ERROR loading databases: ${e.message}`, 'killed');
+    document.getElementById('runBtn').disabled = false;
+    document.getElementById('killBtn').style.display = 'none';
+    return;
+  }
+
+  let done = 0, errors = 0;
+
+  for (const address of addresses) {
+    if (killed) break;
+
+    log(`[${done + 1}/${addresses.length}] ${address}`);
+
+    try {
+      // 1. Geocode via Census
+      const { lat, lng } = await geocode(address);
+      log(`  → (${lat.toFixed(5)}, ${lng.toFixed(5)})`);
+
+      // 2. Find closest fire station via OSRM
+      const fire = await findClosest(lat, lng, fireDb, 'n', 't', 'fire');
+      log(`  → Fire: ${fire ? fire.name + ' — ' + fire.arrival + ' min' : 'not found'}`);
+
+      // 3. Find closest EMS station via OSRM
+      const ems = await findClosest(lat, lng, emsDb, 'name', 'dept_type', 'ems');
+      log(`  → EMS:  ${ems  ? ems.name  + ' — ' + ems.arrival  + ' min' : 'not found'}`);
+
+      results.push({ address, fire, ems, error: null });
+      addRow(address, fire, ems, false);
+
+    } catch (e) {
+      log(`  → ERROR: ${e.message}`);
+      results.push({ address, fire: null, ems: null, error: e.message });
+      addRow(address, null, null, true, e.message);
+      errors++;
+    }
+
+    done++;
+    updateStats(done, addresses.length, errors);
+  }
+
+  document.getElementById('killBtn').style.display = 'none';
+  document.getElementById('runBtn').disabled = false;
+
+  if (killed) log('\n⛔ Stopped by user.', 'killed');
+  else log(`\nComplete. ${done} addresses processed, ${errors} errors.`);
+
+  if (results.length) document.getElementById('downloadBtn').style.display = 'inline-block';
+}
+
+// ── CSV download ──────────────────────────────────────────────────────────────
+function downloadCSV() {
+  const rows = [['Address', 'Fire Station', 'Fire Arrival (min)', 'Fire Dept Type', 'EMS Station', 'EMS Arrival (min)', 'EMS Dept Type']];
+  for (const r of results) {
+    rows.push([
+      r.address,
+      r.fire?.name    || '',
+      r.fire?.arrival || '',
+      r.fire?.deptType || '',
+      r.ems?.name     || '',
+      r.ems?.arrival  || '',
+      r.ems?.deptType  || '',
+    ]);
+  }
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'mailer-results.csv';
+  a.click();
+}
+</script>
+</body>
+</html>
