@@ -69,7 +69,9 @@
 <h1>SAFE STEPS — MAILER CALCULATOR</h1>
 <div class="sub">Paste addresses below, one per line. Returns closest fire + EMS station with estimated arrival times.</div>
 
-<textarea id="addressInput" placeholder="123 Main St, Charlottesville, VA 22902&#10;456 Oak Ave, Charlottesville, VA 22903&#10;789 Elm St, Crozet, VA 22932"></textarea>
+<textarea id="addressInput" placeholder="123 Main St, Charlottesville, VA 22902
+456 Oak Ave, Charlottesville, VA 22903
+789 Elm St, Crozet, VA 22932"></textarea>
 
 <div class="controls">
   <button id="runBtn" onclick="runBatch()">RUN BATCH</button>
@@ -104,7 +106,7 @@
 // ── Config ────────────────────────────────────────────────────────────────────
 const FIRE_DB_URL = 'https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/fire-stations.json';
 const EMS_DB_URL  = 'https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/albemarle_ems-stations.json';
-const CENSUS_URL  = 'https://geocoding.geo.census.gov/geocoder/locations/onelineaddress';
+const PROXY       = 'https://www.safestepsplansforms.com/_functions/places';
 const OSRM_URL    = 'https://router.project-osrm.org/route/v1/driving';
 
 // Overhead minutes by dept type
@@ -114,9 +116,9 @@ const OVERHEAD = {
 };
 
 // ── State ─────────────────────────────────────────────────────────────────────
-let killed = false;
-let fireDb = null;
-let emsDb  = null;
+let killed  = false;
+let fireDb  = null;
+let emsDb   = null;
 let results = [];
 
 // ── DB loaders ────────────────────────────────────────────────────────────────
@@ -131,15 +133,16 @@ async function loadDbs() {
   }
 }
 
-// ── Census geocoder ───────────────────────────────────────────────────────────
+// ── Census geocoder via Wix proxy ─────────────────────────────────────────────
 async function geocode(address) {
-  const url = `${CENSUS_URL}?address=${encodeURIComponent(address)}&benchmark=Public_AR_Current&format=json`;
-  const res = await fetch(url);
+  const res = await fetch(PROXY, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'geocode_census', address })
+  });
   const data = await res.json();
-  const matches = data?.result?.addressMatches;
-  if (!matches || !matches.length) throw new Error('Address not found');
-  const { x: lng, y: lat } = matches[0].coordinates;
-  return { lat, lng };
+  if (data.error) throw new Error('Address not found: ' + address);
+  return { lat: data.lat, lng: data.lng };
 }
 
 // ── OSRM drive time ───────────────────────────────────────────────────────────
@@ -148,7 +151,7 @@ async function getDriveMinutes(fromLat, fromLng, toLat, toLng) {
   const res = await fetch(url);
   const data = await res.json();
   if (data.code !== 'Ok' || !data.routes?.length) return null;
-  return data.routes[0].duration / 60; // seconds → minutes
+  return data.routes[0].duration / 60;
 }
 
 // ── Haversine ─────────────────────────────────────────────────────────────────
@@ -162,7 +165,6 @@ function haversineMiles(lat1, lng1, lat2, lng2) {
 
 // ── Find closest station ──────────────────────────────────────────────────────
 async function findClosest(lat, lng, db, nameField, typeField, category) {
-  // Sort by haversine, take top 5, then get actual drive times via OSRM
   const nearest5 = db
     .map(s => ({ ...s, _miles: haversineMiles(lat, lng, s.lat, s.lng) }))
     .sort((a, b) => a._miles - b._miles)
@@ -179,13 +181,13 @@ async function findClosest(lat, lng, db, nameField, typeField, category) {
 
   if (!valid.length) return null;
 
-  const best = valid[0];
+  const best     = valid[0];
   const deptType = (best[typeField] || 'unknown').toLowerCase();
   const overhead = OVERHEAD[category][deptType] ?? OVERHEAD[category].unknown;
   const arrival  = Math.round(best.driveMin + overhead);
 
   return {
-    name:    best[nameField] || best.name || '',
+    name:     best[nameField] || best.name || '',
     arrival,
     driveMin: Math.round(best.driveMin),
     deptType
@@ -227,8 +229,8 @@ function addRow(address, fire, ems, isError, errorMsg) {
       <td>${address}</td>
       <td>${fire ? fire.name : '—'}</td>
       <td>${fire ? fire.arrival + ' min (' + fire.deptType + ')' : '—'}</td>
-      <td>${ems  ? ems.name  : '—'}</td>
-      <td>${ems  ? ems.arrival  + ' min (' + ems.deptType  + ')' : '—'}</td>`;
+      <td>${ems  ? ems.name   : '—'}</td>
+      <td>${ems  ? ems.arrival + ' min (' + ems.deptType + ')' : '—'}</td>`;
   }
   tbody.appendChild(tr);
   document.getElementById('resultsTable').style.display = 'table';
@@ -261,7 +263,7 @@ async function runBatch() {
   document.getElementById('statTotal').textContent = addresses.length;
   updateStats(0, addresses.length, 0);
 
-  log(`Loading station databases...`);
+  log('Loading station databases...');
   try {
     await loadDbs();
     log(`Fire stations loaded: ${fireDb.length} | EMS stations loaded: ${emsDb.length}\n`);
@@ -280,15 +282,12 @@ async function runBatch() {
     log(`[${done + 1}/${addresses.length}] ${address}`);
 
     try {
-      // 1. Geocode via Census
       const { lat, lng } = await geocode(address);
       log(`  → (${lat.toFixed(5)}, ${lng.toFixed(5)})`);
 
-      // 2. Find closest fire station via OSRM
       const fire = await findClosest(lat, lng, fireDb, 'n', 't', 'fire');
       log(`  → Fire: ${fire ? fire.name + ' — ' + fire.arrival + ' min' : 'not found'}`);
 
-      // 3. Find closest EMS station via OSRM
       const ems = await findClosest(lat, lng, emsDb, 'name', 'dept_type', 'ems');
       log(`  → EMS:  ${ems  ? ems.name  + ' — ' + ems.arrival  + ' min' : 'not found'}`);
 
@@ -321,11 +320,11 @@ function downloadCSV() {
   for (const r of results) {
     rows.push([
       r.address,
-      r.fire?.name    || '',
-      r.fire?.arrival || '',
+      r.fire?.name     || '',
+      r.fire?.arrival  || '',
       r.fire?.deptType || '',
-      r.ems?.name     || '',
-      r.ems?.arrival  || '',
+      r.ems?.name      || '',
+      r.ems?.arrival   || '',
       r.ems?.deptType  || '',
     ]);
   }
