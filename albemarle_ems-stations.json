@@ -32,14 +32,6 @@
     "dept_type": "career"
   },
   {
-    "place_id": "ChIJW_SoLkUis4kRJoDa5_PTesc",
-    "name": "Amherst Fire Department",
-    "address": "135 2nd St, Amherst",
-    "lat": 37.58459,
-    "lng": -79.050772,
-    "dept_type": "career"
-  },
-  {
     "place_id": "ChIJcWHUVkMis4kRzcWf5Ew-lzQ",
     "name": "Amherst Life Saving Crew",
     "address": "205 Richmond Hwy, Amherst",
@@ -62,14 +54,6 @@
     "lat": 37.3498601,
     "lng": -78.8157129,
     "dept_type": "volunteer"
-  },
-  {
-    "place_id": "ChIJ59BhvuO-s4kRs6YhDKT9tbk",
-    "name": "Arvonia Firemans Building",
-    "address": "46 Boxwood Drive Rd, Arvonia",
-    "lat": 37.6809766,
-    "lng": -78.3427296,
-    "dept_type": "career"
   },
   {
     "place_id": "ChIJg9wF394qs4kRMh4yB-fLCPg",
@@ -192,22 +176,6 @@
     "dept_type": "career"
   },
   {
-    "place_id": "ChIJr9nEHRrJs4kRCp7_GT3mf1A",
-    "name": "Cumberland Volunteer Fire Department",
-    "address": "30 Old Buckingham Rd, Cumberland",
-    "lat": 37.5074893,
-    "lng": -78.2306244,
-    "dept_type": "volunteer"
-  },
-  {
-    "place_id": "ChIJXViIJkLas4kR67ry_29rK50",
-    "name": "Deep Creek Volunteer Fire Department - Company 5",
-    "address": "5631 Anderson Hwy, Powhatan",
-    "lat": 37.5622529,
-    "lng": -78.0454488,
-    "dept_type": "volunteer"
-  },
-  {
     "place_id": "ChIJwaYpDab8sokR_6LFvbXcEbA",
     "name": "Delta Response Team",
     "address": "175 W Ridge Ln, Appomattox",
@@ -240,43 +208,11 @@
     "dept_type": "career"
   },
   {
-    "place_id": "ChIJ1Xzb3f-ts4kR1tLiLh8fems",
-    "name": "Dillwyn Firehouse",
-    "address": "15896 N James Madison Hwy, Dillwyn",
-    "lat": 37.54097240000001,
-    "lng": -78.4761716,
-    "dept_type": "career"
-  },
-  {
-    "place_id": "ChIJAZgYJBqJs4kRlZDQJ_XC-qk",
-    "name": "Emergency Training Solutions, LLC",
-    "address": "400 Martha Jefferson Dr STE 100, Charlottesville",
-    "lat": 38.024789,
-    "lng": -78.4450346,
-    "dept_type": "career"
-  },
-  {
-    "place_id": "ChIJgyiVMHAQsYkRpgdC4owt4D8",
-    "name": "EMS of Virginia",
-    "address": "707 N Courthouse Rd, North Chesterfield",
-    "lat": 37.5004834,
-    "lng": -77.6083684,
-    "dept_type": "career"
-  },
-  {
     "place_id": "ChIJc1N6tGVJs4kRAwg4xyy9tDY",
     "name": "Fairfield Volunteer Rescue Squad",
     "address": "5885 N Lee Hwy, Fairfield",
     "lat": 37.884671,
     "lng": -79.2792434,
-    "dept_type": "volunteer"
-  },
-  {
-    "place_id": "ChIJa9yGv99lsYkRr1JEkWt7ajs",
-    "name": "Fine Creek Volunteer Fire Department",
-    "address": "1825 Huguenot Trail, Powhatan",
-    "lat": 37.5923175,
-    "lng": -77.7691876,
     "dept_type": "volunteer"
   },
   {
@@ -310,14 +246,6 @@
     "lat": 37.5032283,
     "lng": -77.6486603,
     "dept_type": "volunteer"
-  },
-  {
-    "place_id": "ChIJkTGrZDMbs4kRum2vqbtA7BI",
-    "name": "Gladstone Fire Department",
-    "address": "8786 Richmond Hwy, Gladstone",
-    "lat": 37.55078530000001,
-    "lng": -78.8374053,
-    "dept_type": "career"
   },
   {
     "place_id": "ChIJJ0upxbQEs4kR0e_cHHTH2JQ",
@@ -368,27 +296,11 @@
     "dept_type": "career"
   },
   {
-    "place_id": "ChIJh9Hc-YVgsYkRZnqfpTDGw3A",
-    "name": "Henley Fire-Rescue Training Center",
-    "address": "2485 Old Courthouse Rd, Goochland",
-    "lat": 37.6788848,
-    "lng": -77.8751898,
-    "dept_type": "career"
-  },
-  {
     "place_id": "ChIJ65K-n7hbsYkRgU_d1TjLjqY",
     "name": "Holly Grove Vol Rescue Squad",
     "address": "155 Factory Mill Rd, Bumpass",
     "lat": 37.7955121,
     "lng": -77.810108,
-    "dept_type": "volunteer"
-  },
-  {
-    "place_id": "ChIJs855c816sYkR-aUHqd3Aen0",
-    "name": "Huguenot Volunteer Fire Department",
-    "address": "1959 Urbine Rd, Powhatan",
-    "lat": 37.5091238,
-    "lng": -77.7784341,
     "dept_type": "volunteer"
   },
   {
@@ -416,46 +328,6 @@
     "dept_type": "career"
   },
   {
-    "place_id": "ChIJ1apcv-USs4kRaHpgqKs3uaE",
-    "name": "Lovingston Fire Department Main Station",
-    "address": "53 Baker Ln, Lovingston",
-    "lat": 37.7613527,
-    "lng": -78.8738596,
-    "dept_type": "career"
-  },
-  {
-    "place_id": "ChIJ07VKSG3ZsokR4VmCIaU8Xhc",
-    "name": "Lynchburg Emergency Management",
-    "address": "900 Church St #100, Lynchburg",
-    "lat": 37.41403440000001,
-    "lng": -79.1425943,
-    "dept_type": "career"
-  },
-  {
-    "place_id": "ChIJB-CgQpzXsokR5dLjYsdYlAY",
-    "name": "Lynchburg Fire Department, Station 5 - Peakland",
-    "address": "4800 Boonsboro Rd, Lynchburg",
-    "lat": 37.446206,
-    "lng": -79.2146771,
-    "dept_type": "career"
-  },
-  {
-    "place_id": "ChIJjeV4vcLRs4kRIJQXxy1RfLk",
-    "name": "Macon Volunteer Fire Department - Company 3",
-    "address": "6377 Old Buckingham Rd, Powhatan",
-    "lat": 37.4821975,
-    "lng": -78.09802909999999,
-    "dept_type": "volunteer"
-  },
-  {
-    "place_id": "ChIJ_YUesthosYkRGI7z818obJs",
-    "name": "Manakin Fire-Rescue",
-    "address": "180 River Rd W, Manakin-Sabot",
-    "lat": 37.6020189,
-    "lng": -77.7006217,
-    "dept_type": "career"
-  },
-  {
     "place_id": "ChIJE-CMq792sYkRU-eFDUnpILY",
     "name": "Manchester Volunteer Rescue Squad",
     "address": "7810 Winterpock Rd, Chesterfield",
@@ -472,43 +344,11 @@
     "dept_type": "volunteer"
   },
   {
-    "place_id": "ChIJLWYuc3p-sYkRlUr-rXGS5TE",
-    "name": "MATTOAX FIRE DEPARTMENT",
-    "address": "12201 Genito Rd, Amelia Court House",
-    "lat": 37.4328246,
-    "lng": -77.8933838,
-    "dept_type": "career"
-  },
-  {
-    "place_id": "ChIJ16nO-iSGs4kRkFWrvkcwUjc",
-    "name": "MEDIC SOLO Wilderness First Aid & Wilderness First Responder Cert. Courses",
-    "address": "250 W Main St, Charlottesville",
-    "lat": 38.0305792,
-    "lng": -78.4843405,
-    "dept_type": "volunteer"
-  },
-  {
-    "place_id": "ChIJBdfOSsAiTYgRrN__x0DUjZs",
-    "name": "MES",
-    "address": "1273 Colonial Fort Dr, Montvale",
-    "lat": 37.3799575,
-    "lng": -79.7146228,
-    "dept_type": "career"
-  },
-  {
     "place_id": "ChIJmbr8HtQns4kR0jD7jxiGX4A",
     "name": "Monelison Fire & Rescue Station #3",
     "address": "2537 Elon Rd, Monroe",
     "lat": 37.5195723,
     "lng": -79.1955132,
-    "dept_type": "career"
-  },
-  {
-    "place_id": "ChIJpVbbNa_YsokRnTc4hV9YRpc",
-    "name": "Monelison Vol Fire Department",
-    "address": "133 Amer Cir, Madison Heights",
-    "lat": 37.4703072,
-    "lng": -79.1184749,
     "dept_type": "career"
   },
   {
@@ -536,22 +376,6 @@
     "dept_type": "career"
   },
   {
-    "place_id": "ChIJY_0FPUZJsokROtdaggffBF0",
-    "name": "Paladin Medical Transport",
-    "address": "215 Bush River Dr, Farmville",
-    "lat": 37.2812343,
-    "lng": -78.3543028,
-    "dept_type": "career"
-  },
-  {
-    "place_id": "ChIJD2LYTPk9s4kR2ZD5z9jqlok",
-    "name": "Piney River Volunteer Fire Department",
-    "address": "249 Firehouse Rd, Piney River",
-    "lat": 37.7155886,
-    "lng": -79.02632919999999,
-    "dept_type": "volunteer"
-  },
-  {
     "place_id": "ChIJvSAQVKJtsYkRQbPLo7uOVec",
     "name": "Powhatan Rescue - Fine Creek",
     "address": "1804 Huguenot Trail, Powhatan",
@@ -565,14 +389,6 @@
     "address": "5901 Old Buckingham Rd, Powhatan",
     "lat": 37.498528,
     "lng": -78.0639121,
-    "dept_type": "volunteer"
-  },
-  {
-    "place_id": "ChIJR49NbJ9isYkRTB8wTSab4_w",
-    "name": "Powhatan Volunteer Fire Department - Company 1",
-    "address": "3971 Old Buckingham Rd, Powhatan",
-    "lat": 37.5488209,
-    "lng": -77.92513199999999,
     "dept_type": "volunteer"
   },
   {
@@ -592,27 +408,11 @@
     "dept_type": "volunteer"
   },
   {
-    "place_id": "ChIJ9S5DwL7LTIgRZyW1Vd5FxBY",
-    "name": "Rockbridge County Emergency Management",
-    "address": "100 Baner Ln, Buena Vista",
-    "lat": 37.7440608,
-    "lng": -79.3756717,
-    "dept_type": "career"
-  },
-  {
     "place_id": "ChIJOzdElkoVs4kR-7InhpurzAA",
     "name": "Roseland Rescue Squad",
     "address": "7745 Patrick Henry Hwy, Roseland",
     "lat": 37.7632604,
     "lng": -78.9788493,
-    "dept_type": "volunteer"
-  },
-  {
-    "place_id": "ChIJG1yB7QMVs4kR17a5gUaZueQ",
-    "name": "Roseland Rescue Squad Heliport",
-    "address": "7745 Patrick Henry Hwy, Roseland",
-    "lat": 37.7632394,
-    "lng": -78.97884859999999,
     "dept_type": "volunteer"
   },
   {
@@ -624,43 +424,11 @@
     "dept_type": "volunteer"
   },
   {
-    "place_id": "ChIJQbR9pmCGs4kRx8kzKdh8FxY",
-    "name": "Thomas Jefferson Emergency Medical Services Council",
-    "address": "400 Martha Jefferson Dr STE 100, Charlottesville",
-    "lat": 38.0248081,
-    "lng": -78.445056,
-    "dept_type": "career"
-  },
-  {
-    "place_id": "ChIJT_Gws_Tps4kRDAkA8QXnXj8",
-    "name": "TST CPR and First Aid Training Services LLC",
-    "address": "858 Bryants Ford Rd, Fork Union",
-    "lat": 37.777244,
-    "lng": -78.19446529999999,
-    "dept_type": "volunteer"
-  },
-  {
     "place_id": "ChIJpVw8CFZqsYkRpsaXcwhe4M0",
     "name": "Tuckahoe Volunteer Rescue Squad",
     "address": "2320 Pump Rd, Henrico",
     "lat": 37.6247383,
     "lng": -77.60862019999999,
-    "dept_type": "volunteer"
-  },
-  {
-    "place_id": "ChIJic8LU-mFs4kR7e8mLfXpZn8",
-    "name": "UVA Medical Transport Network",
-    "address": "1205 Stoney Ridge Rd, Charlottesville",
-    "lat": 38.0028579,
-    "lng": -78.499102,
-    "dept_type": "career"
-  },
-  {
-    "place_id": "ChIJEwJJPBxdsYkRvZ8yvDqaeBM",
-    "name": "Va Association-Volunteer Rescue Squad",
-    "address": "2535 Turkey Creek Rd, Oilville",
-    "lat": 37.7175575,
-    "lng": -77.7734948,
     "dept_type": "volunteer"
   },
   {
