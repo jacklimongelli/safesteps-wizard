@@ -77,6 +77,7 @@
   <button id="runBtn" onclick="runBatch()">RUN BATCH</button>
   <button id="killBtn" onclick="kill()">⛔ KILL</button>
   <button id="downloadBtn" class="secondary" onclick="downloadCSV()">DOWNLOAD CSV</button>
+  <button id="copyBtn" class="secondary" onclick="copyTable()">COPY TABLE</button>
 </div>
 
 <div class="stats-bar">
@@ -326,7 +327,33 @@ async function runBatch() {
   if (killed) log('\n⛔ Stopped by user.', 'killed');
   else log(`\nComplete. ${done} addresses processed, ${errors} errors.`);
 
-  if (results.length) document.getElementById('downloadBtn').style.display = 'inline-block';
+  if (results.length) {
+    document.getElementById('downloadBtn').style.display = 'inline-block';
+    document.getElementById('copyBtn').style.display = 'inline-block';
+  }
+}
+
+// ── Copy table to clipboard (tab-separated for Excel paste) ──────────────────
+function copyTable() {
+  const rows = [['Address','Fire Station','Fire Arrival (min)','Fire Dept Type','EMS Station','EMS Arrival (min)','EMS Dept Type']];
+  for (const r of results) {
+    rows.push([
+      r.address,
+      r.fire?.name     || '',
+      r.fire?.arrival  || '',
+      r.fire?.deptType || '',
+      r.ems?.name      || '',
+      r.ems?.arrival   || '',
+      r.ems?.deptType  || '',
+    ]);
+  }
+  const tsv = rows.map(r => r.join('\t')).join('\n');
+  navigator.clipboard.writeText(tsv).then(() => {
+    const btn = document.getElementById('copyBtn');
+    const orig = btn.textContent;
+    btn.textContent = 'COPIED ✓';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
 }
 
 // ── CSV download ──────────────────────────────────────────────────────────────
