@@ -543,6 +543,23 @@ body{
   /* ensure full-bleed on mobile */
   .pillar-grid,.phase-grid,.eplan-grid,.tool-grid{display:block}
 }
+
+/* ── HOUSE FIRE FACTS PAGE ── */
+.fact-card{position:relative;background:#C3A97D;border:1px solid rgba(28,18,8,.35);padding:20px 18px 18px;overflow:hidden}
+.fact-ghost{position:absolute;top:6px;right:12px;font-size:2.6rem;font-weight:bold;line-height:1;color:rgba(28,18,8,.1);pointer-events:none;user-select:none;letter-spacing:-.02em;z-index:0;font-family:Arial,sans-serif}
+.fact-eyebrow{position:relative;z-index:1;font-family:Arial,sans-serif;font-size:.72rem;font-weight:bold;letter-spacing:.05em;color:#1C1208;padding-bottom:12px;margin-bottom:14px;border-bottom:2px solid rgba(28,18,8,.2)}
+.fact-stat{position:relative;z-index:1;font-family:Arial,sans-serif;font-size:clamp(2.1rem,8vw,2.9rem);line-height:1;color:#1C1208;margin-bottom:8px}
+.fact-stat.threat{color:#6e1008}
+.fact-stat .u{font-size:1rem;font-weight:normal;color:rgba(28,18,8,.62);margin-left:2px}
+.fact-desc{position:relative;z-index:1;font-family:Arial,sans-serif;font-size:.86rem;line-height:1.55;color:rgba(28,18,8,.85);margin-bottom:16px;max-width:560px}
+.fact-desc strong{color:#1C1208}
+.fact-chart{position:relative;z-index:1;background:rgba(255,252,240,.55);border:1px solid rgba(28,18,8,.22);padding:16px 16px 12px;margin-bottom:10px}
+.fact-chart-cap{font-family:Arial,sans-serif;font-size:.62rem;letter-spacing:.05em;color:rgba(28,18,8,.55);margin-bottom:10px;text-transform:uppercase;font-weight:bold}
+.fact-source{position:relative;z-index:1;font-family:Arial,sans-serif;font-size:.66rem;color:rgba(28,18,8,.48);font-style:italic;line-height:1.5}
+@media(max-width:520px){
+  .fact-stat{font-size:2.3rem}
+  .fact-ghost{font-size:2rem}
+}
 </style>
 <link rel="stylesheet" href="flipbook.css">
 </head>
@@ -555,6 +572,7 @@ body{
     <a onclick="nav('home')" id="nl-home" class="active">Home</a>
     <a onclick="nav('assessment')" id="nl-assessment">Assessment</a>
     <a onclick="nav('tools')" id="nl-tools">Free Tools</a>
+    <a onclick="nav('house-fire-facts')" id="nl-house-fire-facts">House Fire Facts</a>
     <a onclick="nav('services')" id="nl-services">Services</a>
     <a href="https://www.safestepsplansforms.com/blank" target="_blank" id="nl-login">Portal Login</a>
   </div>
@@ -569,6 +587,7 @@ body{
   <a onclick="nav('home');toggleMenu()">Home</a>
   <a onclick="nav('assessment');toggleMenu()">Assessment</a>
   <a onclick="nav('tools');toggleMenu()">Free Tools</a>
+  <a onclick="nav('house-fire-facts');toggleMenu()">House Fire Facts</a>
   <a onclick="nav('services');toggleMenu()">Services</a>
   <a href="https://www.safestepsplansforms.com/blank" target="_blank">Portal Login</a>
 </div>
@@ -752,14 +771,8 @@ body{
 <div class="page" id="page-services">
   <div class="dw">
 
-    <!-- HERO -->
-    <div class="dw-hero">
-      <div class="dw-eyebrow">SERVICES &amp; PRICING</div>
-      <h1>BUILD YOUR<br>PLAN.</h1>
-    </div>
-
     <!-- SCENARIOS BANNER -->
-    <div class="dw-sec" style="padding-top:0;padding-bottom:0">
+    <div class="dw-sec" style="padding-top:24px;padding-bottom:0">
       <div class="sv5-banner">
         <div class="sv5-banner-eyebrow">01 // EMERGENCY PLANS</div>
         <div class="sv5-banner-title">CHOOSE YOUR<br>SCENARIOS</div>
@@ -933,13 +946,8 @@ body{
 <!-- ══════════ FREE TOOLS ══════════ -->
 <div class="page" id="page-tools">
   <div class="dw">
-    <div class="dw-hero">
-      <div class="dw-eyebrow">FREE RESOURCES</div>
-      <h1>FREE TOOLS.<br>NO PLAN REQUIRED.</h1>
-    </div>
-
     <!-- TOOLS BANNER -->
-    <div class="dw-sec" style="padding-top:0;padding-bottom:0">
+    <div class="dw-sec" style="padding-top:24px;padding-bottom:0">
       <div class="sv5-banner">
         <div class="sv5-banner-eyebrow">01 // FREE TOOLS</div>
         <div class="sv5-banner-title">PICK YOUR<br>TOOL</div>
@@ -1013,18 +1021,197 @@ body{
   </div>
 </div>
 
+<!-- ══════════ HOUSE FIRE FACTS ══════════ -->
+<div class="page" id="page-house-fire-facts">
+  <div class="dw">
+
+    <div class="sec" style="padding-top:24px;padding-bottom:0">
+      <div class="sv5-banner">
+        <div class="sv5-banner-eyebrow">01 // SAFETY BY THE NUMBERS</div>
+        <div class="sv5-banner-title">HOUSE FIRE<br>FACTS</div>
+        <div class="sv5-banner-sub">Ten facts that highlight the serious risk of house fires.</div>
+      </div>
+    </div>
+
+    <!-- 01 -->
+    <div class="sec">
+      <div class="fact-card">
+        <div class="fact-ghost">01</div>
+        <div class="fact-eyebrow">01/10 // HOUSE FIRE DEATHS ARE RISING</div>
+        <div class="fact-stat threat">3,920</div>
+        <div class="fact-desc">3,920 Americans died in home fires in 2024, the highest total in over a decade.</div>
+        <div class="fact-chart">
+          <div class="fact-chart-cap">Civilian Fire Deaths, 2014–2024</div>
+          <div id="ch-1"></div>
+        </div>
+        <div class="fact-source">Source: NFPA, "Fire Loss in the United States During 2024."</div>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="sec darker">
+      <div class="fact-card">
+        <div class="fact-ghost">02</div>
+        <div class="fact-eyebrow">02/10 // MODERN HOMES REACH FLASHOVER MUCH FASTER</div>
+        <div class="fact-stat threat">3.5<span class="u">minutes</span></div>
+        <div class="fact-desc">A home with furniture made from modern synthetic fabrics reaches flashover (the point at which a fire is completely unsurvivable) in about 3.5 minutes.</div>
+        <div class="fact-chart">
+          <div class="fact-chart-cap">Time to Flashover: Legacy vs. Modern Furnishings</div>
+          <div id="ch-2"></div>
+        </div>
+        <div class="fact-source">Source: UL Fire Safety Research Institute (UL FSRI), 2009–2020.</div>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="sec">
+      <div class="fact-card">
+        <div class="fact-ghost">03</div>
+        <div class="fact-eyebrow">03/10 // NIGHTTIME FIRES ARE FAR MORE DEADLY</div>
+        <div class="fact-stat threat">41%</div>
+        <div class="fact-desc">17% of home fires happen between 11pm and 7am, but that window accounts for 41% of all fire deaths.</div>
+        <div class="fact-chart">
+          <div class="fact-chart-cap">Share of Fires vs. Share of Deaths: Night vs. Day</div>
+          <div id="ch-3"></div>
+        </div>
+        <div class="fact-source">Source: NFPA Research, fire incidence and fatality by time of day.</div>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="sec darker">
+      <div class="fact-card">
+        <div class="fact-ghost">04</div>
+        <div class="fact-eyebrow">04/10 // MOST CHILD FIRE DEATHS HAPPEN DURING SLEEP</div>
+        <div class="fact-stat threat">58%</div>
+        <div class="fact-desc">58% of children under 10 who died in a home fire were asleep at the time, compared with 31% across all ages. Children are far less likely to self-evacuate.</div>
+        <div class="fact-chart">
+          <div class="fact-chart-cap">Asleep at Time of Fatal Injury: Children Under 10 vs. All Ages</div>
+          <div id="ch-4"></div>
+        </div>
+        <div class="fact-source">Source: USFA; National Fatality Review Case Reporting System.</div>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="sec">
+      <div class="fact-card">
+        <div class="fact-ghost">05</div>
+        <div class="fact-eyebrow">05/10 // A CLOSED DOOR SIGNIFICANTLY EXTENDS SURVIVAL TIME</div>
+        <div class="fact-stat threat">4×</div>
+        <div class="fact-desc">When an adjacent room is on fire, a closed door can extend your room's survivable conditions from about 2 minutes to upwards of 12 minutes.</div>
+        <div class="fact-chart">
+          <div class="fact-chart-cap">Time Room Remains Survivable: Fire in Adjacent Room</div>
+          <div id="ch-5"></div>
+        </div>
+        <div class="fact-source">Source: UL FSRI door-control research.</div>
+      </div>
+    </div>
+
+    <!-- 06 -->
+    <div class="sec darker">
+      <div class="fact-card">
+        <div class="fact-ghost">06</div>
+        <div class="fact-eyebrow">06/10 // SMOKE ALARMS ONLY WORK IF THEY ARE FUNCTIONING</div>
+        <div class="fact-stat threat">~19%</div>
+        <div class="fact-desc">Nearly 1 in 5 homes with a smoke alarm has at least one that doesn't actually work.</div>
+        <div class="fact-chart">
+          <div class="fact-chart-cap">Smoke Alarm Presence vs. Fully Functional Status</div>
+          <div id="ch-6"></div>
+        </div>
+        <div class="fact-source">Source: CPSC 2024 household smoke alarm survey.</div>
+      </div>
+    </div>
+
+    <!-- 07 -->
+    <div class="sec">
+      <div class="fact-card">
+        <div class="fact-ghost">07</div>
+        <div class="fact-eyebrow">07/10 // FIRE EXTINGUISHERS DO NOT STOP HOUSE FIRES</div>
+        <div class="fact-stat threat">5%</div>
+        <div class="fact-desc">98% of people can operate a fire extinguisher, but only 74% use correct technique. Frighteningly, only 5% of home fires are actually put out by a fire extinguisher.</div>
+        <div class="fact-chart">
+          <div class="fact-chart-cap">Extinguisher Use: Capability vs. Technique vs. Real-World Outcome</div>
+          <div id="ch-7"></div>
+        </div>
+        <div class="fact-source">Source: WPI / Eastern Kentucky University study; CPSC 2009 residential fire survey.</div>
+      </div>
+    </div>
+
+    <!-- 08 -->
+    <div class="sec darker">
+      <div class="fact-card">
+        <div class="fact-ghost">08</div>
+        <div class="fact-eyebrow">08/10 // OLDER ADULTS FACE A MUCH HIGHER FIRE DEATH RISK</div>
+        <div class="fact-stat threat">3.6×</div>
+        <div class="fact-desc">Adults 85 and older die in home fires at 3.6 times the rate of the general population, the highest of any age group.</div>
+        <div class="fact-chart">
+          <div class="fact-chart-cap">Fire Death Risk by Age Group: Multiplier vs. General Population</div>
+          <div id="ch-8"></div>
+        </div>
+        <div class="fact-source">Source: USFA, age-based fire death risk ratios.</div>
+      </div>
+    </div>
+
+    <!-- 09 -->
+    <div class="sec">
+      <div class="fact-card">
+        <div class="fact-ghost">09</div>
+        <div class="fact-eyebrow">09/10 // ELECTRIC RANGES ARE RISKIER THAN GAS RANGES</div>
+        <div class="fact-stat threat">3.4×</div>
+        <div class="fact-desc">Homes with electric ranges have a cooking fire death rate 3.4 times higher than homes with gas ranges.</div>
+        <div class="fact-chart">
+          <div class="fact-chart-cap">Electric vs. Gas Ranges: Risk Multiplier</div>
+          <div id="ch-9"></div>
+        </div>
+        <div class="fact-source">Source: National Propane Gas Association, summary of NFPA study.</div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="sec darker">
+      <div class="fact-card">
+        <div class="fact-ghost">10</div>
+        <div class="fact-eyebrow">10/10 // FIRE DEPARTMENTS OFTEN ARRIVE TOO LATE</div>
+        <div class="fact-stat threat">9<span class="u">min</span></div>
+        <div class="fact-desc">The national average fire department arrival time is about 9 minutes, well after a modern room can already flash over at 3.5 minutes.</div>
+        <div class="fact-chart">
+          <div class="fact-chart-cap">Room Flashover vs. National Average Fire Department Arrival</div>
+          <div id="ch-10"></div>
+        </div>
+        <div class="fact-source">Source: NFPA 1710; UL FSRI; Globe/Purvis analysis of department response compliance.</div>
+      </div>
+    </div>
+
+    <div class="ctaband">
+      <div class="ctaband-ey">THE DATA IS THE ARGUMENT</div>
+      <h2>NOW BUILD THE PLAN.</h2>
+      <p>Every fact above is a reason a family needed a plan before the fire started, not after. SafeSteps builds that plan: role-based evacuation, rehearsed drills, and a documented response your whole household knows cold.</p>
+      <a class="ctabtn" onclick="nav('assessment')">TAKE THE ASSESSMENT</a>
+      <a class="ctabtn out" onclick="nav('services')">SEE OUR SERVICES</a>
+    </div>
+
+    <div class="dw-footer">
+      <div class="dw-footer-left">
+      <div class="dw-footer-brand"><img src="data:image/png;base64,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" alt="Safe Steps" style="height:30px;filter:invert(1) brightness(1.1);mix-blend-mode:screen"></div>
+      <div class="dw-footer-tag">© 2026 SAFE STEPS PLANS LLC<br>VETERAN-FOUNDED &amp; OPERATED</div>
+      </div>
+      <div class="dw-footer-decals" style="display:flex;align-items:center;gap:12px;margin-left:auto;">
+        <img src="https://github.com/jacklimongelli/safesteps-wizard/blob/main/Service-Disabled%20Veteran-Owned-Certified.png?raw=true" alt="Service-Disabled Veteran-Owned Certified" loading="lazy" style="height:48px;width:auto;">
+        <img src="https://github.com/jacklimongelli/safesteps-wizard/blob/main/Veteran-Owned%20Certified.png?raw=true" alt="Veteran-Owned Certified" loading="lazy" style="height:48px;width:auto;">
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- ══════════ ASSESSMENT ══════════ -->
 <div class="page" id="page-assessment">
   <div class="dw">
 
     <!-- HERO -->
-    <div class="dw-hero">
-      <div class="dw-eyebrow">FAMILY ASSESSMENT</div>
-      <h1>IS YOUR FAMILY<br>PREPARED?</h1>
-    </div>
-
     <!-- BANNER -->
-    <div class="dw-sec" style="padding-top:0;padding-bottom:0">
+    <div class="dw-sec" style="padding-top:24px;padding-bottom:0">
       <div class="sv5-banner">
         <div class="sv5-banner-eyebrow">01 // ASSESSMENT</div>
         <div class="sv5-banner-title">CHOOSE YOUR<br>PLAN</div>
@@ -2418,6 +2605,159 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') csCloseBtn
     initDeliverables();
   }
 })();
+</script>
+<script>
+// ── HOUSE FIRE FACTS: CHART ENGINE ──
+document.addEventListener('DOMContentLoaded', function(){
+  if(!document.getElementById('ch-1')) return;
+
+  const DARK = '#1C1208', RED = '#6e1008', SOFT = 'rgba(28,18,8,.55)', GRID = 'rgba(28,18,8,.15)';
+  const FF = "Arial,sans-serif";
+  function el(id){ return document.getElementById(id); }
+
+  function hBar(id, rows, opts){
+    const { max, suffix='%', barH=28, gap=16, lw=150, cw=null, fontSize=13 } = opts||{};
+    const M = max !== undefined ? max : Math.max(...rows.map(r=>r.v))*1.15;
+    const containerW = 560;
+    const CW = cw || (containerW - lw - 90);
+    const scale = CW/M;
+    const totalH = rows.length*(barH+gap)+8;
+    const W = lw+CW+90;
+    let s = `<svg viewBox="0 0 ${W} ${totalH}" width="100%" style="display:block" xmlns="http://www.w3.org/2000/svg">`;
+    rows.forEach((r,i)=>{
+      const y = 4+i*(barH+gap);
+      const bw = Math.max(r.v*scale,1);
+      const col = r.c || DARK;
+      const lab = `${r.v}${r.s!==undefined?r.s:suffix}`;
+      const lines = String(r.l).split('\n');
+      const lh = fontSize+3;
+      const blockH = lines.length*lh;
+      const startY = y+barH/2 - blockH/2 + lh*0.72;
+      lines.forEach((ln,li)=>{
+        s += `<text x="${lw-8}" y="${(startY+li*lh).toFixed(1)}" font-size="${fontSize}" font-weight="700" fill="${DARK}" text-anchor="end" font-family="${FF}">${ln}</text>`;
+      });
+      s += `<rect x="${lw}" y="${y}" width="${bw.toFixed(1)}" height="${barH}" fill="${col}" rx="1"/>`;
+      s += `<text x="${(lw+bw+7).toFixed(1)}" y="${y+barH*.63}" font-size="${fontSize}" font-weight="800" fill="${col}" font-family="${FF}">${lab}</text>`;
+    });
+    s += `</svg>`;
+    el(id).innerHTML = s;
+  }
+
+  function vGroupBar(id, groups, opts){
+    const { scaleMax=100, h=200, barW=56, innerGap=12, groupGap=64, mt=22, mb=48, ml=8, gridN=4 } = opts||{};
+    const groupW = groups.map(g=>g.bars.length*barW+(g.bars.length-1)*innerGap);
+    const totalW = ml + groupW.reduce((s,w)=>s+w,0) + (groups.length-1)*groupGap + 40;
+    const ch = h-mt-mb;
+    const ys = v => mt+ch-(v/scaleMax)*ch;
+    const base = mt+ch;
+    let s = `<svg viewBox="0 0 ${totalW} ${h}" width="100%" style="display:block" xmlns="http://www.w3.org/2000/svg">`;
+    for(let g=0; g<=gridN; g++){
+      const v=(g/gridN)*scaleMax, y=ys(v).toFixed(1);
+      s+=`<line x1="${ml}" y1="${y}" x2="${totalW-16}" y2="${y}" stroke="${GRID}" stroke-width="1"/>`;
+    }
+    s+=`<line x1="${ml}" y1="${base}" x2="${totalW-16}" y2="${base}" stroke="${DARK}" stroke-width="1.5"/>`;
+    let curX = ml+16;
+    groups.forEach((g,gi)=>{
+      const gStartX = curX;
+      g.bars.forEach(b=>{
+        const bh=(b.v/scaleMax)*ch, by=(base-bh).toFixed(1);
+        s+=`<rect x="${curX}" y="${by}" width="${barW}" height="${bh.toFixed(1)}" fill="${b.c}" rx="1"/>`;
+        s+=`<text x="${(curX+barW/2).toFixed(1)}" y="${(base-bh-8).toFixed(1)}" font-size="12.5" font-weight="800" fill="${b.c}" text-anchor="middle" font-family="${FF}">${b.v}%</text>`;
+        s+=`<text x="${(curX+barW/2).toFixed(1)}" y="${base+15}" font-size="10.5" fill="${SOFT}" text-anchor="middle" font-family="${FF}">${b.l}</text>`;
+        curX+=barW+innerGap;
+      });
+      const gcx=gStartX+groupW[gi]/2;
+      s+=`<text x="${gcx.toFixed(1)}" y="${base+32}" font-size="11.5" font-weight="700" fill="${DARK}" text-anchor="middle" font-family="${FF}">${g.l}</text>`;
+      curX=curX-innerGap+groupGap;
+    });
+    s+=`</svg>`;
+    el(id).innerHTML=s;
+  }
+
+  function lineChart(id, pts, opts){
+    const { minV=0, maxV, w=600, h=190, ml=44, mr=16, mt=20, mb=32, gridN=4 } = opts||{};
+    const maxVal = maxV || Math.max(...pts.map(p=>p.v));
+    const cw=w-ml-mr, ch=h-mt-mb;
+    const xs = i => ml+(i/(pts.length-1))*cw;
+    const ys = v => mt+ch-((v-minV)/(maxVal-minV))*ch;
+    let s = `<svg viewBox="0 0 ${w} ${h}" width="100%" style="display:block" xmlns="http://www.w3.org/2000/svg">`;
+    for(let g=0; g<=gridN; g++){
+      const v=minV+(g/gridN)*(maxVal-minV), y=ys(v).toFixed(1);
+      s+=`<line x1="${ml}" y1="${y}" x2="${ml+cw}" y2="${y}" stroke="${GRID}" stroke-width="1"/>`;
+      s+=`<text x="${ml-6}" y="${(ys(v)+3).toFixed(1)}" font-size="9.5" fill="${SOFT}" text-anchor="end" font-family="${FF}">${Math.round(v).toLocaleString()}</text>`;
+    }
+    s+=`<line x1="${ml}" y1="${mt}" x2="${ml}" y2="${mt+ch}" stroke="${DARK}" stroke-width="1.4"/>`;
+    s+=`<line x1="${ml}" y1="${mt+ch}" x2="${ml+cw}" y2="${mt+ch}" stroke="${DARK}" stroke-width="1.4"/>`;
+    const poly = pts.map((p,i)=>`${xs(i).toFixed(1)},${ys(p.v).toFixed(1)}`).join(' ');
+    const last = pts.length-1;
+    s+=`<polygon points="${xs(0).toFixed(1)},${ys(pts[0].v).toFixed(1)} ${poly} ${xs(last).toFixed(1)},${(mt+ch).toFixed(1)} ${xs(0).toFixed(1)},${(mt+ch).toFixed(1)}" fill="${RED}" opacity="0.1"/>`;
+    s+=`<polyline points="${poly}" fill="none" stroke="${RED}" stroke-width="2.5" stroke-linejoin="round"/>`;
+    pts.forEach((p,i)=>{
+      const x=xs(i).toFixed(1), y=ys(p.v).toFixed(1);
+      const isFirst=i===0, isLast=i===last;
+      s+=`<circle cx="${x}" cy="${y}" r="${isFirst||isLast?4.5:2.5}" fill="${isLast?RED:DARK}"/>`;
+      s+=`<text x="${x}" y="${mt+ch+14}" font-size="9" fill="${SOFT}" text-anchor="middle" font-family="${FF}">${p.l}</text>`;
+      if(isLast) s+=`<text x="${x}" y="${(ys(p.v)-9).toFixed(1)}" font-size="12.5" font-weight="800" fill="${RED}" text-anchor="end" font-family="${FF}">${p.v.toLocaleString()}</text>`;
+      if(isFirst) s+=`<text x="${x}" y="${(ys(p.v)-9).toFixed(1)}" font-size="10.5" font-weight="800" fill="${DARK}" text-anchor="start" font-family="${FF}">${p.v.toLocaleString()}</text>`;
+    });
+    s+=`</svg>`;
+    el(id).innerHTML=s;
+  }
+
+  lineChart('ch-1',[
+    {l:'2014',v:3275},{l:'2016',v:3390},{l:'2018',v:3350},
+    {l:'2020',v:3500},{l:'2022',v:3790},{l:'2024',v:3920}
+  ],{minV:2800,maxV:4200});
+
+  hBar('ch-2',[
+    {l:'1970s home', v:29, c:DARK, s:' min'},
+    {l:'Modern home', v:3.5, c:RED, s:' min'}
+  ],{max:30, lw:120});
+
+  vGroupBar('ch-3',[
+    {l:'Daytime', bars:[{l:'Fires',v:83,c:'#8a7455'},{l:'Deaths',v:59,c:DARK}]},
+    {l:'Nighttime', bars:[{l:'Fires',v:17,c:'#8a7455'},{l:'Deaths',v:41,c:RED}]}
+  ],{scaleMax:100});
+
+  hBar('ch-4',[
+    {l:'All ages', v:31, c:DARK},
+    {l:'Children\nunder 10', v:58, c:RED}
+  ],{max:65, lw:150, barH:30, gap:18});
+
+  hBar('ch-5',[
+    {l:'Door open', v:2, c:RED, s:' min'},
+    {l:'Door closed', v:12, c:DARK, s:' min'}
+  ],{max:14, lw:140});
+
+  hBar('ch-6',[
+    {l:'Households with\na smoke alarm', v:99, c:DARK},
+    {l:'Households with a fully\nfunctioning smoke alarm', v:81, c:RED}
+  ],{max:100, lw:190, barH:34, gap:18});
+
+  hBar('ch-7',[
+    {l:'Can discharge\ncorrectly', v:98, c:DARK},
+    {l:'Uses correct technique\n(aim, sweep)', v:74, c:'#8a5a2b'},
+    {l:'Actually extinguishes\nthe fire', v:5, c:RED}
+  ],{max:100, lw:205, barH:36, gap:20});
+
+  hBar('ch-8',[
+    {l:'General population', v:1.0, c:DARK, s:'×'},
+    {l:'Adults 65–74', v:1.8, c:'#8a5a2b', s:'×'},
+    {l:'Adults 75–84', v:2.6, c:'#8a5a2b', s:'×'},
+    {l:'Adults 85+', v:3.6, c:RED, s:'×'}
+  ],{max:4, lw:160});
+
+  hBar('ch-9',[
+    {l:'Fire rate', v:2.6, c:'#8a5a2b', s:'× gas'},
+    {l:'Death rate', v:3.4, c:RED, s:'× gas'}
+  ],{max:5.2, lw:110});
+
+  hBar('ch-10',[
+    {l:'Modern room\nflashover', v:3.5, c:RED, s:' min'},
+    {l:'National average\narrival', v:9, c:DARK, s:' min'}
+  ],{max:10, lw:190, barH:34, gap:18});
+
+});
 </script>
 </body>
 </html>
