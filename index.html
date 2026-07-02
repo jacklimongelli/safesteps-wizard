@@ -1037,7 +1037,7 @@ body{
     <div class="sec">
       <div class="fact-card">
         <div class="fact-ghost">01</div>
-        <div class="fact-eyebrow">01/10 // HOUSE FIRE DEATHS ARE RISING</div>
+        <div class="fact-eyebrow">HOUSE FIRE DEATHS ARE RISING</div>
         <div class="fact-stat threat">3,920</div>
         <div class="fact-desc">3,920 Americans died in home fires in 2024, the highest total in over a decade.</div>
         <div class="fact-chart">
@@ -1052,7 +1052,7 @@ body{
     <div class="sec">
       <div class="fact-card">
         <div class="fact-ghost">02</div>
-        <div class="fact-eyebrow">02/10 // MODERN HOMES REACH FLASHOVER MUCH FASTER</div>
+        <div class="fact-eyebrow">MODERN HOMES REACH FLASHOVER MUCH FASTER</div>
         <div class="fact-stat threat">3.5<span class="u">minutes</span></div>
         <div class="fact-desc">A home with furniture made from modern synthetic fabrics reaches flashover (the point at which a fire is completely unsurvivable) in about 3.5 minutes.</div>
         <div class="fact-chart">
@@ -1067,7 +1067,7 @@ body{
     <div class="sec">
       <div class="fact-card">
         <div class="fact-ghost">03</div>
-        <div class="fact-eyebrow">03/10 // NIGHTTIME FIRES ARE FAR MORE DEADLY</div>
+        <div class="fact-eyebrow">NIGHTTIME FIRES ARE FAR MORE DEADLY</div>
         <div class="fact-stat threat">41%</div>
         <div class="fact-desc">17% of home fires happen between 11pm and 7am, but that window accounts for 41% of all fire deaths.</div>
         <div class="fact-chart">
@@ -1082,7 +1082,7 @@ body{
     <div class="sec">
       <div class="fact-card">
         <div class="fact-ghost">04</div>
-        <div class="fact-eyebrow">04/10 // MOST CHILD FIRE DEATHS HAPPEN DURING SLEEP</div>
+        <div class="fact-eyebrow">MOST CHILD FIRE DEATHS HAPPEN DURING SLEEP</div>
         <div class="fact-stat threat">58%</div>
         <div class="fact-desc">58% of children under 10 who died in a home fire were asleep at the time, compared with 31% across all ages. Children are far less likely to self-evacuate.</div>
         <div class="fact-chart">
@@ -1097,7 +1097,7 @@ body{
     <div class="sec">
       <div class="fact-card">
         <div class="fact-ghost">05</div>
-        <div class="fact-eyebrow">05/10 // A CLOSED DOOR SIGNIFICANTLY EXTENDS SURVIVAL TIME</div>
+        <div class="fact-eyebrow">A CLOSED DOOR SIGNIFICANTLY EXTENDS SURVIVAL TIME</div>
         <div class="fact-stat threat">4×</div>
         <div class="fact-desc">When an adjacent room is on fire, a closed door can extend your room's survivable conditions from about 2 minutes to upwards of 12 minutes.</div>
         <div class="fact-chart">
@@ -1112,7 +1112,7 @@ body{
     <div class="sec">
       <div class="fact-card">
         <div class="fact-ghost">06</div>
-        <div class="fact-eyebrow">06/10 // SMOKE ALARMS ONLY WORK IF THEY ARE FUNCTIONING</div>
+        <div class="fact-eyebrow">SMOKE ALARMS ONLY WORK IF THEY ARE FUNCTIONING</div>
         <div class="fact-stat threat">~19%</div>
         <div class="fact-desc">Nearly 1 in 5 homes with a smoke alarm has at least one that doesn't actually work.</div>
         <div class="fact-chart">
@@ -1127,7 +1127,7 @@ body{
     <div class="sec">
       <div class="fact-card">
         <div class="fact-ghost">07</div>
-        <div class="fact-eyebrow">07/10 // FIRE EXTINGUISHERS DO NOT STOP HOUSE FIRES</div>
+        <div class="fact-eyebrow">FIRE EXTINGUISHERS DO NOT STOP HOUSE FIRES</div>
         <div class="fact-stat threat">5%</div>
         <div class="fact-desc">98% of people can operate a fire extinguisher, but only 74% use correct technique. Frighteningly, only 5% of home fires are actually put out by a fire extinguisher.</div>
         <div class="fact-chart">
@@ -1142,7 +1142,7 @@ body{
     <div class="sec">
       <div class="fact-card">
         <div class="fact-ghost">08</div>
-        <div class="fact-eyebrow">08/10 // OLDER ADULTS FACE A MUCH HIGHER FIRE DEATH RISK</div>
+        <div class="fact-eyebrow">OLDER ADULTS FACE A MUCH HIGHER FIRE DEATH RISK</div>
         <div class="fact-stat threat">3.6×</div>
         <div class="fact-desc">Adults 85 and older die in home fires at 3.6 times the rate of the general population, the highest of any age group.</div>
         <div class="fact-chart">
@@ -1157,7 +1157,7 @@ body{
     <div class="sec">
       <div class="fact-card">
         <div class="fact-ghost">09</div>
-        <div class="fact-eyebrow">09/10 // ELECTRIC RANGES ARE RISKIER THAN GAS RANGES</div>
+        <div class="fact-eyebrow">ELECTRIC RANGES ARE RISKIER THAN GAS RANGES</div>
         <div class="fact-stat threat">3.4×</div>
         <div class="fact-desc">Homes with electric ranges have a cooking fire death rate 3.4 times higher than homes with gas ranges.</div>
         <div class="fact-chart">
@@ -1172,7 +1172,7 @@ body{
     <div class="sec">
       <div class="fact-card">
         <div class="fact-ghost">10</div>
-        <div class="fact-eyebrow">10/10 // FIRE DEPARTMENTS OFTEN ARRIVE TOO LATE</div>
+        <div class="fact-eyebrow">FIRE DEPARTMENTS OFTEN ARRIVE TOO LATE</div>
         <div class="fact-stat threat">9<span class="u">min</span></div>
         <div class="fact-desc">The national average fire department arrival time is about 9 minutes, well after a modern room can already flash over at 3.5 minutes.</div>
         <div class="fact-chart">
@@ -2616,9 +2616,9 @@ document.addEventListener('DOMContentLoaded', function(){
   function el(id){ return document.getElementById(id); }
 
   function hBar(id, rows, opts){
-    const { max, suffix='%', barH=28, gap=16, lw=150, cw=null, fontSize=13 } = opts||{};
+    const { max, suffix='%', barH=44, gap=24, lw=150, cw=null, fontSize=13 } = opts||{};
     const M = max !== undefined ? max : Math.max(...rows.map(r=>r.v))*1.15;
-    const containerW = 560;
+    const containerW = 460;
     const CW = cw || (containerW - lw - 90);
     const scale = CW/M;
     const totalH = rows.length*(barH+gap)+8;
@@ -2644,7 +2644,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   function vGroupBar(id, groups, opts){
-    const { scaleMax=100, h=200, barW=56, innerGap=12, groupGap=64, mt=22, mb=48, ml=8, gridN=4 } = opts||{};
+    const { scaleMax=100, h=240, barW=56, innerGap=12, groupGap=64, mt=22, mb=48, ml=8, gridN=4 } = opts||{};
     const groupW = groups.map(g=>g.bars.length*barW+(g.bars.length-1)*innerGap);
     const totalW = ml + groupW.reduce((s,w)=>s+w,0) + (groups.length-1)*groupGap + 40;
     const ch = h-mt-mb;
@@ -2675,7 +2675,7 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   function lineChart(id, pts, opts){
-    const { minV=0, maxV, w=600, h=190, ml=44, mr=16, mt=20, mb=32, gridN=4 } = opts||{};
+    const { minV=0, maxV, w=600, h=260, ml=44, mr=16, mt=20, mb=32, gridN=4 } = opts||{};
     const maxVal = maxV || Math.max(...pts.map(p=>p.v));
     const cw=w-ml-mr, ch=h-mt-mb;
     const xs = i => ml+(i/(pts.length-1))*cw;
@@ -2722,7 +2722,7 @@ document.addEventListener('DOMContentLoaded', function(){
   hBar('ch-4',[
     {l:'All ages', v:31, c:DARK},
     {l:'Children\nunder 10', v:58, c:RED}
-  ],{max:65, lw:150, barH:30, gap:18});
+  ],{max:65, lw:150, barH:56, gap:24});
 
   hBar('ch-5',[
     {l:'Door open', v:2, c:RED, s:' min'},
@@ -2732,20 +2732,20 @@ document.addEventListener('DOMContentLoaded', function(){
   hBar('ch-6',[
     {l:'Households with\na smoke alarm', v:99, c:DARK},
     {l:'Households with a fully\nfunctioning smoke alarm', v:81, c:RED}
-  ],{max:100, lw:190, barH:34, gap:18});
+  ],{max:100, lw:190, barH:60, gap:24});
 
   hBar('ch-7',[
     {l:'Can discharge\ncorrectly', v:98, c:DARK},
     {l:'Uses correct technique\n(aim, sweep)', v:74, c:'#8a5a2b'},
     {l:'Actually extinguishes\nthe fire', v:5, c:RED}
-  ],{max:100, lw:205, barH:36, gap:20});
+  ],{max:100, lw:205, barH:56, gap:22});
 
   hBar('ch-8',[
     {l:'General population', v:1.0, c:DARK, s:'×'},
     {l:'Adults 65–74', v:1.8, c:'#8a5a2b', s:'×'},
     {l:'Adults 75–84', v:2.6, c:'#8a5a2b', s:'×'},
     {l:'Adults 85+', v:3.6, c:RED, s:'×'}
-  ],{max:4, lw:160});
+  ],{max:4, lw:160, barH:38, gap:18});
 
   hBar('ch-9',[
     {l:'Fire rate', v:2.6, c:'#8a5a2b', s:'× gas'},
@@ -2755,7 +2755,7 @@ document.addEventListener('DOMContentLoaded', function(){
   hBar('ch-10',[
     {l:'Modern room\nflashover', v:3.5, c:RED, s:' min'},
     {l:'National average\narrival', v:9, c:DARK, s:' min'}
-  ],{max:10, lw:190, barH:34, gap:18});
+  ],{max:10, lw:190, barH:60, gap:24});
 
 });
 </script>
