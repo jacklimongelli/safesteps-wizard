@@ -118,6 +118,98 @@ $w.onReady(async () => {
       }
     }
 
+    // ── Equipment Maintenance Tracker: EquipmentMaintenance + MasterEquipment ──
+    // EquipmentMaintenance fields (NEW collection — one row per physical item owned):
+    //   familyId, equipmentTitle, location, datePurchased, dateLastMaintenance, notes
+    // MasterEquipment fields used here (NEW fields added to existing collection):
+    //   specifications, maintenanceRequirement, maintenanceIntervalMonths, lifeSpanLabel, lifeSpanMonths
+    if (msg.type === 'GET_MAINTENANCE_ITEMS') {
+      try {
+        const itemsRes = await wixData.query('EquipmentMaintenance')
+          .eq('familyId', familyId)
+          .ascending('equipmentTitle')
+          .find();
+
+        const masterRes = await wixData.query('MasterEquipment').find();
+        const masterMap = {};
+        masterRes.items.forEach(m => {
+          if (m.title_fld) masterMap[m.title_fld.toLowerCase().trim()] = m;
+        });
+
+        const items = itemsRes.items.map(item => {
+          const master = masterMap[item.equipmentTitle?.toLowerCase().trim()] || {};
+          return {
+            _id: item._id,
+            equipmentTitle: item.equipmentTitle,
+            location: item.location || '',
+            datePurchased: item.datePurchased || null,
+            dateLastMaintenance: item.dateLastMaintenance || null,
+            notes: item.notes || '',
+            specifications: master.specifications || '',
+            maintenanceRequirement: master.maintenanceRequirement || '',
+            maintenanceIntervalMonths: master.maintenanceIntervalMonths ?? null,
+            lifeSpanLabel: master.lifeSpanLabel || '',
+            lifeSpanMonths: master.lifeSpanMonths ?? null
+          };
+        });
+
+        // Catalog list powers the "Add equipment" dropdown
+        const catalog = masterRes.items
+          .filter(m => m.title_fld)
+          .map(m => ({ title: m.title_fld }));
+
+        $w('#htmlPortal').postMessage({ type: 'MAINTENANCE_DATA', items, catalog });
+      } catch(e) {
+        $w('#htmlPortal').postMessage({ type: 'MAINTENANCE_DATA', items: [], catalog: [] });
+      }
+    }
+
+    // ── Add a physical equipment item to the tracker ──
+    if (msg.type === 'ADD_MAINTENANCE_ITEM') {
+      try {
+        const record = {
+          familyId,
+          equipmentTitle: msg.equipmentTitle,
+          location: msg.location || '',
+          datePurchased: msg.datePurchased || null,
+          dateLastMaintenance: null,
+          notes: ''
+        };
+        await wixData.insert('EquipmentMaintenance', record);
+        $w('#htmlPortal').postMessage({ type: 'ADD_MAINTENANCE_SUCCESS' });
+      } catch(e) {
+        $w('#htmlPortal').postMessage({ type: 'ADD_MAINTENANCE_ERROR' });
+      }
+    }
+
+    // ── Update an existing equipment item (location, dates, notes) ──
+    if (msg.type === 'UPDATE_MAINTENANCE_ITEM') {
+      try {
+        const existing = await wixData.get('EquipmentMaintenance', msg.recordId);
+        const updated = {
+          ...existing,
+          location: msg.location ?? existing.location,
+          datePurchased: msg.datePurchased || null,
+          dateLastMaintenance: msg.dateLastMaintenance || null,
+          notes: msg.notes ?? existing.notes
+        };
+        await wixData.update('EquipmentMaintenance', updated);
+        $w('#htmlPortal').postMessage({ type: 'UPDATE_MAINTENANCE_SUCCESS', recordId: msg.recordId });
+      } catch(e) {
+        $w('#htmlPortal').postMessage({ type: 'UPDATE_MAINTENANCE_ERROR', recordId: msg.recordId });
+      }
+    }
+
+    // ── Remove an equipment item from the tracker ──
+    if (msg.type === 'DELETE_MAINTENANCE_ITEM') {
+      try {
+        await wixData.remove('EquipmentMaintenance', msg.recordId);
+        $w('#htmlPortal').postMessage({ type: 'DELETE_MAINTENANCE_SUCCESS' });
+      } catch(e) {
+        $w('#htmlPortal').postMessage({ type: 'DELETE_MAINTENANCE_ERROR' });
+      }
+    }
+
     // ── Drill History: DrillScores collection ──
     // Fields: familyId, drillDate, planType, totalScore, maxScore, notes,
     //         ybr_q1..13 (BOOLEAN), alamo_q1..17 (BOOLEAN)
@@ -206,6 +298,31 @@ $w.onReady(async () => {
     videoUrl   — videoURL (URL)
     image      — Image (IMAGE)
 
+════════════════════════════════════════════════════════════════
+  LIVE IN WIX — created directly via the Wix Data API on
+  2026-07-06. Just paste the handlers above into Velo.
+════════════════════════════════════════════════════════════════
+
+  MasterEquipment — 5 fields added to the existing collection:
+    specifications             — TEXT   (e.g. "4 hrs illumination; nontoxic, nonflammable, waterproof")
+    maintenanceRequirement     — TEXT   (e.g. "Inspect adhesive backing annually; replace if peeling")
+    maintenanceIntervalMonths  — NUMBER (recurring check-up cycle in months; leave blank if none, e.g. single-use items)
+    lifeSpanLabel              — TEXT   (human-readable, e.g. "10 years from manufacture date", "Single-use", "Indefinite; replace if cracked")
+    lifeSpanMonths             — NUMBER (used to flag expired items; leave blank if indefinite/single-use)
+    NOTE: these are blank on all existing rows — fill them in via the
+    Wix CMS dashboard so overdue flagging and the tracker columns work.
+
+  EquipmentMaintenance (NEW collection, id: "EquipmentMaintenance"):
+    One row per physical item a family owns — e.g. 7 smoke alarms = 7 rows,
+    all with equipmentTitle "Smoke Alarm" but different locations.
+    familyId             — TEXT (Family ID) — required
+    equipmentTitle       — TEXT (must match MasterEquipment.title_fld for the join) — required
+    location             — TEXT
+    datePurchased        — DATE
+    dateLastMaintenance  — DATE
+    notes                — TEXT
+    _id, _createdDate, _updatedDate, _owner (system fields)
+
   DrillScores (id: "DrillScores"):
     familyId   — Family ID (TEXT)
     drillDate  — Drill Date (DATE)
@@ -260,7 +377,7 @@ body{
 /* NAV */
 .site-nav{position:sticky;top:0;z-index:200;background:#C3A97D;border-bottom:2px solid rgba(28,18,8,.28);display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:58px;gap:16px;}
 .nav-logo{font-family:Arial,sans-serif;font-size:1.35rem;letter-spacing:.05em;color:#1C1208;flex:0 0 auto;}
-.nav-menu-links{flex:1;display:flex;align-items:center;justify-content:center;gap:28px;}
+.nav-menu-links{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;gap:28px;}
 .nav-menu-links a{font-family:Arial,sans-serif;font-size:.9rem;letter-spacing:.03em;color:rgba(28,18,8,.65);cursor:pointer;text-decoration:none;transition:color .15s;padding:6px 0;border-bottom:2px solid transparent;white-space:nowrap;}
 .nav-menu-links a:hover,.nav-menu-links a.active{color:#1C1208;border-bottom-color:#1C1208;}
 .nav-right-welcome{flex:0 0 auto;text-align:right;}
@@ -382,6 +499,29 @@ body{
 .btn-watch-disabled{background:rgba(28,18,8,.15);color:var(--text-dim);cursor:default;}
 .btn-watch-disabled:hover{background:rgba(28,18,8,.15);}
 .equip-empty{text-align:center;padding:60px 20px;font-family:Arial,sans-serif;font-size:.78rem;letter-spacing:.06em;color:var(--text-dim);line-height:2;}
+
+/* ══ EQUIPMENT MAINTENANCE TRACKER ══ */
+.maint-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:960px;margin:0 auto;}
+.maint-table{width:100%;min-width:960px;border-collapse:collapse;border:1.5px solid var(--border-strong);}
+.maint-table thead th{background:var(--dark);color:rgba(195,169,125,.75);font-family:'Bebas Neue',sans-serif;font-size:.62rem;letter-spacing:.12em;padding:10px 10px;text-align:left;border-right:1px solid rgba(195,169,125,.12);white-space:nowrap;}
+.maint-table thead th:last-child{border-right:none;text-align:center;}
+.maint-table tbody td{padding:8px 10px;font-size:.78rem;color:var(--dark);border-right:1px solid var(--border);border-bottom:1px solid var(--border);vertical-align:top;background:#fff;min-width:130px;}
+.maint-table tbody td:first-child{min-width:110px;}
+.maint-table tbody tr:nth-child(odd) td{background:rgba(28,18,8,.03);}
+.maint-table tbody tr.row-overdue td{background:rgba(110,16,8,.07);}
+.maint-row-input{width:100%;border:1px solid rgba(28,18,8,.2);padding:5px 7px;font-family:Arial,sans-serif;font-size:.76rem;background:#fff;box-sizing:border-box;}
+.maint-static{font-size:.74rem;line-height:1.4;color:rgba(28,18,8,.75);}
+.maint-overdue-badge{display:inline-block;margin-top:4px;font-family:Arial,sans-serif;font-size:.58rem;letter-spacing:.05em;color:#fff;background:var(--red);padding:2px 6px;}
+.maint-actions{display:flex;flex-direction:column;gap:5px;align-items:stretch;min-width:90px;}
+.btn-maint-save{background:var(--dark);color:var(--tan);border:none;padding:6px 10px;font-family:'Bebas Neue',sans-serif;font-size:.6rem;letter-spacing:.12em;cursor:pointer;white-space:nowrap;}
+.btn-maint-save:hover{background:#2d1e0a;}
+.btn-maint-remove{background:transparent;color:var(--fail);border:1px solid rgba(122,26,26,.35);padding:5px 10px;font-family:'Bebas Neue',sans-serif;font-size:.6rem;letter-spacing:.12em;cursor:pointer;white-space:nowrap;}
+.btn-maint-remove:hover{background:rgba(122,26,26,.08);}
+.maint-add-row td{background:rgba(28,18,8,.06)!important;}
+.maint-add-row select{width:100%;border:1px solid rgba(28,18,8,.2);padding:5px 7px;font-family:Arial,sans-serif;font-size:.76rem;background:#fff;box-sizing:border-box;}
+.btn-maint-add{background:var(--dark);color:var(--tan);border:none;padding:8px 16px;font-family:'Bebas Neue',sans-serif;font-size:.66rem;letter-spacing:.14em;cursor:pointer;white-space:nowrap;width:100%;}
+.btn-maint-add:hover{background:#2d1e0a;}
+
 
 /* ══ SCORECARD SUB-TABS ══ */
 .sc-tabs{display:flex;gap:8px;padding:12px 16px;background:var(--dark);border-bottom:3px solid rgba(195,169,125,.4);}
@@ -509,7 +649,7 @@ body{
   .site-nav{padding:0 12px;height:auto;min-height:48px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap;}
   .nav-logo{order:1;}
   .nav-right-welcome{order:2;}
-  .nav-menu-links{order:3;flex-basis:100%;justify-content:center;gap:14px;margin-top:6px;}
+  .nav-menu-links{position:static;transform:none;order:3;flex-basis:100%;justify-content:center;gap:14px;margin-top:6px;}
   .nav-menu-links a{font-size:.78rem;}
   .nav-welcome-name{font-size:1rem;word-break:break-word;}
 
@@ -517,6 +657,10 @@ body{
   .doc-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .doc-table{width:100%;min-width:0;}
   .doc-td-type{font-size:.82rem;width:auto;}
+
+  /* MAINTENANCE TABLE — scrolls horizontally on small screens */
+  .maint-table-wrap{max-width:100%;}
+  .maint-table{min-width:820px;}
 
   /* PLAN DROPDOWN + READINESS — center and constrain */
   .plan-control-row{flex-direction:column;align-items:center;}
@@ -581,11 +725,26 @@ body{
     <div class="sv5-banner" style="text-align:left">
       <div class="sv5-banner-eyebrow">02 // EQUIPMENT</div>
       <div class="sv5-banner-title">BROWSE YOUR<br>EQUIPMENT</div>
-      <div class="sv5-banner-sub">Watch quick how-to videos for every piece of equipment included in your plan.</div>
+      <div class="sv5-banner-sub">Track maintenance on every item you own and watch quick how-to videos.</div>
     </div>
   </div>
-  <div class="dw-sec">
-    <div class="equip-grid" id="equipGrid"><div class="equip-empty">Loading equipment...</div></div>
+  <div class="sc-tabs">
+    <button class="sc-tab active" onclick="switchEqTab('tracker')">Equipment Maintenance Tracker</button>
+    <button class="sc-tab" onclick="switchEqTab('videos')">Demo Videos</button>
+  </div>
+
+  <!-- MAINTENANCE TRACKER -->
+  <div id="eq-tab-tracker">
+    <div class="dw-sec">
+      <div id="maintTableWrap"><div class="doc-empty">Loading your equipment...</div></div>
+    </div>
+  </div>
+
+  <!-- DEMO VIDEOS -->
+  <div id="eq-tab-videos" style="display:none;">
+    <div class="dw-sec">
+      <div class="equip-grid" id="equipGrid"><div class="equip-empty">Loading equipment...</div></div>
+    </div>
   </div>
 </div>
 
@@ -783,6 +942,13 @@ window.addEventListener('message',function(event){
   }
   if(msg.type==='DOCUMENTS_DATA'){renderDocuments(msg.documents||[], msg.fridgeUrl||null);}
   if(msg.type==='EQUIPMENT_DATA'){renderEquipment(msg.equipment||[]);}
+  if(msg.type==='MAINTENANCE_DATA'){renderMaintenanceTable(msg.items||[], msg.catalog||[]);}
+  if(msg.type==='ADD_MAINTENANCE_SUCCESS'){showToast('Equipment added');window.parent.postMessage({type:'GET_MAINTENANCE_ITEMS'},'*');}
+  if(msg.type==='ADD_MAINTENANCE_ERROR'){showToast('Could not add equipment. Please try again.',true);}
+  if(msg.type==='UPDATE_MAINTENANCE_SUCCESS'){showToast('Equipment updated');}
+  if(msg.type==='UPDATE_MAINTENANCE_ERROR'){showToast('Could not save changes. Please try again.',true);}
+  if(msg.type==='DELETE_MAINTENANCE_SUCCESS'){showToast('Equipment removed');window.parent.postMessage({type:'GET_MAINTENANCE_ITEMS'},'*');}
+  if(msg.type==='DELETE_MAINTENANCE_ERROR'){showToast('Could not remove item. Please try again.',true);}
   if(msg.type==='HISTORY_DATA'){allHistoryRecords=msg.records||[];updateReadinessBox();if(document.getElementById('sc-tab-history').style.display!=='none')buildHistoryView();}
   if(msg.type==='SAVE_SUCCESS'){showToast('Drill saved — '+msg.score+'/'+msg.max+' ('+msg.pct+'%)');resetForm();document.getElementById('submitBtn').disabled=false;document.getElementById('submitBtn').textContent='Save Drill Score';window.parent.postMessage({type:'GET_HISTORY'},'*');}
   if(msg.type==='SAVE_ERROR'){showToast('Save failed. Please try again.',true);document.getElementById('submitBtn').disabled=false;document.getElementById('submitBtn').textContent='Save Drill Score';}
@@ -792,13 +958,24 @@ window.addEventListener('message',function(event){
 });
 
 // ── MAIN TABS ──
+let eqTrackerLoaded=false, eqVideosLoaded=false;
 function switchMainTab(tab, skipPush){
   ['documents','equipment','rehearsal'].forEach(t=>{
     document.getElementById('tab-'+t).classList.toggle('active',t===tab);
     document.getElementById('mtab-'+t).classList.toggle('active',t===tab);
   });
-  if(tab==='equipment')window.parent.postMessage({type:'GET_EQUIPMENT'},'*');
+  if(tab==='equipment'&&!eqTrackerLoaded){eqTrackerLoaded=true;window.parent.postMessage({type:'GET_MAINTENANCE_ITEMS'},'*');}
   if(!skipPush) history.pushState({tab:tab},'','#'+tab);
+  notifyHeight();
+}
+
+// ── EQUIPMENT SUB-TABS ──
+function switchEqTab(tab){
+  ['tracker','videos'].forEach((t,i)=>{
+    document.getElementById('eq-tab-'+t).style.display=(t===tab)?'':'none';
+    document.querySelectorAll('#tab-equipment .sc-tab')[i].classList.toggle('active',t===tab);
+  });
+  if(tab==='videos'&&!eqVideosLoaded){eqVideosLoaded=true;window.parent.postMessage({type:'GET_EQUIPMENT'},'*');}
   notifyHeight();
 }
 
@@ -891,12 +1068,109 @@ function renderEquipment(items){
   notifyHeight();
 }
 
+// ── EQUIPMENT MAINTENANCE TRACKER ──
+let maintCatalog=[];
+function escAttr(s){return (s==null?'':String(s)).replace(/"/g,'&quot;');}
+function computeOverdue(item){
+  const today=new Date();
+  const reasons=[];
+  if(item.maintenanceIntervalMonths){
+    const base=item.dateLastMaintenance||item.datePurchased;
+    if(base){
+      const due=new Date(base+'T12:00:00');
+      due.setMonth(due.getMonth()+item.maintenanceIntervalMonths);
+      if(due<today)reasons.push('Maintenance due');
+    }
+  }
+  if(item.lifeSpanMonths&&item.datePurchased){
+    const exp=new Date(item.datePurchased+'T12:00:00');
+    exp.setMonth(exp.getMonth()+item.lifeSpanMonths);
+    if(exp<today)reasons.push('Past life span');
+  }
+  return {overdue:reasons.length>0, reasons};
+}
+function renderMaintenanceTable(items, catalog){
+  maintCatalog=catalog;
+  const wrap=document.getElementById('maintTableWrap');
+  const catalogOptions=catalog.map(c=>`<option value="${escAttr(c.title)}">${c.title}</option>`).join('');
+
+  const rows=items.map(item=>{
+    const {overdue,reasons}=computeOverdue(item);
+    const badge=overdue?`<div class="maint-overdue-badge">${reasons.join(' · ')}</div>`:'';
+    return`<tr class="${overdue?'row-overdue':''}" id="maint-row-${item._id}">
+      <td><div class="maint-static"><strong>${item.equipmentTitle||''}</strong></div></td>
+      <td><input class="maint-row-input" data-field="location" value="${escAttr(item.location)}"></td>
+      <td><div class="maint-static">${item.specifications||'—'}</div></td>
+      <td><div class="maint-static">${item.maintenanceRequirement||'—'}</div></td>
+      <td><div class="maint-static">${item.lifeSpanLabel||'—'}</div></td>
+      <td><input type="date" class="maint-row-input" data-field="datePurchased" value="${item.datePurchased||''}"></td>
+      <td><input type="date" class="maint-row-input" data-field="dateLastMaintenance" value="${item.dateLastMaintenance||''}">${badge}</td>
+      <td><input class="maint-row-input" data-field="notes" value="${escAttr(item.notes)}"></td>
+      <td><div class="maint-actions">
+        <button class="btn-maint-save" onclick="saveMaintenanceItem('${item._id}')">Save</button>
+        <button class="btn-maint-remove" onclick="removeMaintenanceItem('${item._id}')">Remove</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+
+  const addRow=`<tr class="maint-add-row">
+    <td><select id="maintAddTitle">${catalogOptions}</select></td>
+    <td><input id="maintAddLocation" class="maint-row-input" placeholder="e.g. Hallway, 2nd floor"></td>
+    <td colspan="2"><div class="maint-static">Specs and maintenance requirement fill in automatically once added.</div></td>
+    <td><div class="maint-static">—</div></td>
+    <td><input id="maintAddDatePurchased" type="date" class="maint-row-input"></td>
+    <td><div class="maint-static">—</div></td>
+    <td><div class="maint-static">—</div></td>
+    <td><button class="btn-maint-add" onclick="addMaintenanceItem()">+ Add</button></td>
+  </tr>`;
+
+  wrap.innerHTML=`<div class="maint-table-wrap"><table class="maint-table">
+    <thead><tr>
+      <th>Equipment</th><th>Location</th><th>Specifications</th><th>Maintenance Requirement</th>
+      <th>Life Span</th><th>Date of Purchase</th><th>Date of Last Maintenance</th><th>Notes</th><th>Actions</th>
+    </tr></thead>
+    <tbody>${rows}${addRow}</tbody>
+  </table></div>${items.length===0?'<div class="doc-empty" style="margin-top:10px;">No equipment tracked yet. Add your first item below.</div>':''}`;
+  notifyHeight();
+}
+function addMaintenanceItem(){
+  const titleEl=document.getElementById('maintAddTitle');
+  const title=titleEl?titleEl.value:'';
+  const location=document.getElementById('maintAddLocation').value.trim();
+  const datePurchased=document.getElementById('maintAddDatePurchased').value||null;
+  if(!title){showToast('Please select an equipment type.',true);return;}
+  window.parent.postMessage({type:'ADD_MAINTENANCE_ITEM',equipmentTitle:title,location,datePurchased},'*');
+}
+function saveMaintenanceItem(id){
+  const row=document.getElementById('maint-row-'+id);
+  const get=f=>row.querySelector(`[data-field="${f}"]`).value;
+  window.parent.postMessage({
+    type:'UPDATE_MAINTENANCE_ITEM',
+    recordId:id,
+    location:get('location'),
+    datePurchased:get('datePurchased')||null,
+    dateLastMaintenance:get('dateLastMaintenance')||null,
+    notes:get('notes')
+  },'*');
+}
+function removeMaintenanceItem(id){
+  const row=document.getElementById('maint-row-'+id);
+  const btn=row.querySelector('.btn-maint-remove');
+  if(!row.classList.contains('confirming')){
+    row.classList.add('confirming');
+    btn.textContent='Confirm?';
+    setTimeout(()=>{if(row.classList.contains('confirming')){row.classList.remove('confirming');btn.textContent='Remove';}},3000);
+    return;
+  }
+  window.parent.postMessage({type:'DELETE_MAINTENANCE_ITEM',recordId:id},'*');
+}
+
 // ── SCORECARD TABS ──
 let randLoaded=false;
 function switchScTab(tab){
   ['scorecard','history','scenario'].forEach((t,i)=>{
     document.getElementById('sc-tab-'+t).style.display=(t===tab)?'':'none';
-    document.querySelectorAll('.sc-tab')[i].classList.toggle('active',t===tab);
+    document.querySelectorAll('#tab-rehearsal .sc-tab')[i].classList.toggle('active',t===tab);
   });
   if(tab==='history'){document.getElementById('historyContent').innerHTML='<div class="history-empty">Loading...</div>';window.parent.postMessage({type:'GET_HISTORY'},'*');}
   if(tab==='scenario'&&!randLoaded){randLoaded=true;window.parent.postMessage({type:'RANDOMIZER_READY'},'*');}
