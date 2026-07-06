@@ -260,15 +260,28 @@ body{
 /* NAV */
 .site-nav{position:sticky;top:0;z-index:200;background:#C3A97D;border-bottom:2px solid rgba(28,18,8,.28);display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:58px;}
 .nav-logo{font-family:Arial,sans-serif;font-size:1.35rem;letter-spacing:.05em;color:#1C1208;}
-.nav-tagline{font-family:Arial,sans-serif;font-size:.52rem;letter-spacing:.05em;color:rgba(28,18,8,.65);}
-.nav-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
-.nav-welcome-label{font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.08em;color:rgba(28,18,8,.65);}
-.nav-welcome-name{font-family:Arial,sans-serif;font-size:1.35rem;letter-spacing:.03em;color:#1C1208;line-height:1;}
-/* DOCBAR — bigger, more prominent */
+.nav-tagline{font-family:Arial,sans-serif;font-size:.52rem;letter-spacing:.05em;color:rgba(28,18,8,.65);display:none;}
+.nav-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;display:none;}
+.nav-welcome-label{font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.08em;color:rgba(28,18,8,.65);display:none;}
+.nav-welcome-name{font-family:Arial,sans-serif;font-size:1.35rem;letter-spacing:.03em;color:#1C1208;line-height:1;display:none;}
+/* HERO SECTION */
+.portal-hero{
+  padding:36px 20px 32px;border-bottom:2px solid rgba(28,18,8,.16);
+  position:relative;
+}
+.portal-hero::before{content:'';position:absolute;top:10px;left:10px;width:20px;height:20px;border-top:2px solid rgba(28,18,8,.33);border-left:2px solid rgba(28,18,8,.33)}
+.portal-hero::after{content:'';position:absolute;bottom:10px;right:10px;width:20px;height:20px;border-bottom:2px solid rgba(28,18,8,.33);border-right:2px solid rgba(28,18,8,.33)}
+.portal-hero .wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 20px;}
+.portal-hero-tag{font-family:Arial,sans-serif;font-size:.82rem;letter-spacing:.08em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:12px}
+.portal-hero-tag::before{content:'';display:block;width:14px;height:1px;background:rgba(28,18,8,.55);flex-shrink:0}
+.portal-hero h1{
+  font-family:Arial,sans-serif;font-size:clamp(2.4rem,6vw,4.2rem);
+  line-height:1;letter-spacing:.03em;color:#1C1208;
+  margin-bottom:20px;
+}
+/* DOCBAR — hidden */
 .docbar{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px 20px;border-bottom:2px solid var(--border-strong);
-  background:rgba(28,18,8,.06);
+  display:none !important;
 }
 .docid{
   font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.18em;
@@ -580,11 +593,10 @@ body{
   </div>
 </nav>
 
-<div class="docbar">
-  <div class="docid" id="portalDocId">Safe Steps Portal</div>
-  <div class="dtg">
-    <span class="dtg-time" id="liveDtgTime">--:-- --</span>
-    <span class="dtg-label" id="liveDtgDate">--- -- // CLASSIFIED</span>
+<div class="portal-hero">
+  <div class="wrap">
+    <div class="portal-hero-tag">FAMILY PORTAL</div>
+    <h1 id="familyPortalTitle">Welcome</h1>
   </div>
 </div>
 
@@ -816,6 +828,7 @@ window.addEventListener('message',function(event){
     currentFamilyId=msg.familyId;
     const name=msg.familyLastName?msg.familyLastName+' Family':'Family Portal';
     document.getElementById('familyNameDisplay').textContent=name;
+    document.getElementById('familyPortalTitle').textContent=name;
     document.getElementById('portalDocId').textContent='Safe Steps Portal';
     document.getElementById('loadingOverlay').classList.add('hidden');
     window.parent.postMessage({type:'GET_DOCUMENTS'},'*');
