@@ -1,0 +1,92 @@
+[
+  {
+    "productName": "First Aid Kit",
+    "text": "A basic kit for treating minor cuts, scrapes, and injuries.",
+    "image": ""
+  },
+  {
+    "productName": "CPR Mask",
+    "text": "A barrier device used to perform rescue breathing safely.",
+    "image": ""
+  },
+  {
+    "productName": "Breathalyzer",
+    "text": "A device used to measure blood alcohol content (BAC) from a breath sample.",
+    "image": ""
+  },
+  {
+    "productName": "Narcan",
+    "text": "A nasal spray that reverses the effects of an opioid overdose.",
+    "image": ""
+  },
+  {
+    "productName": "Fentanyl Test Strips",
+    "text": "Test strips used to detect fentanyl contamination in a substance before use.",
+    "image": ""
+  },
+  {
+    "productName": "Door Security Bar/Jam",
+    "text": "A bar that wedges under a door to prevent it from being opened from outside.",
+    "image": ""
+  },
+  {
+    "productName": "Addalock",
+    "text": "A portable lock that secures a door without requiring hardware installation.",
+    "image": ""
+  },
+  {
+    "productName": "Compact Flashlight",
+    "text": "A small, adjustable flashlight for use in low-light or no-light situations.",
+    "image": ""
+  },
+  {
+    "productName": "Tactical Pen",
+    "text": "A pen that also functions as a self-defense tool and glass breaker.",
+    "image": ""
+  },
+  {
+    "productName": "AirTag",
+    "text": "A tracking device used to locate a bag, backpack, or set of keys.",
+    "image": ""
+  },
+  {
+    "productName": "Pepper Spray Gel",
+    "text": "A gel-based pepper spray with an adjustable, flip-top nozzle.",
+    "image": ""
+  },
+  {
+    "productName": "Escape Ladder",
+    "text": "A retractable ladder used to exit through an upper-floor window.",
+    "image": ""
+  },
+  {
+    "productName": "MOLLE Binder",
+    "text": "A multi-pocket binder used to organize and carry printed documents.",
+    "image": ""
+  },
+  {
+    "productName": "Safe Steps College Playbook",
+    "text": "The master guide with scenario-by-scenario instructions for each emergency covered in the plan.",
+    "image": ""
+  },
+  {
+    "productName": "Birdie Alarm",
+    "text": "A personal alarm that emits a loud siren and flashing light when activated.",
+    "image": ""
+  },
+  {
+    "productName": "Retractable Keychain",
+    "text": "A keychain with a retractable cord for keeping keys or small items within reach.",
+    "image": ""
+  },
+  {
+    "productName": "Fanny Pack",
+    "text": "A small bag used to carry smaller kit items securely.",
+    "image": ""
+  },
+  {
+    "productName": "Plastic Bin",
+    "text": "A storage bin used to organize and store the full kit.",
+    "image": ""
+  }
+]
