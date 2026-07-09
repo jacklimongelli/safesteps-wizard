@@ -862,7 +862,7 @@ body{
         <div class="sv5-name-row">
           <div class="sv5-name">OFF TO<br>COLLEGE</div>
         </div>
-        <div class="sv5-pkg-desc">A step-by-step response guide for the social emergencies most likely to happen in a college environment: alcohol poisoning, drug overdose, sexual assault, and mental health crisis, bundled with essential safety equipment.</div>
+        <div class="sv5-pkg-desc">Essential safety equipment for college life, covering alcohol poisoning, drug overdose, assault, and mental health crises, with a response guide included for each scenario.</div>
         <a class="sv5-view-link" onclick="nav('off-to-college')">VIEW PACKAGE →</a>
       </div>
 
@@ -2219,20 +2219,36 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
     <div class="dw-hero">
       <div class="dw-eyebrow"><a onclick="nav('services')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO SERVICES</a></div>
       <h1>OFF TO COLLEGE<br>PACKAGE</h1>
-      <div class="dw-body">PKG-C · $175 · Fire · Invasion · Medical</div>
+      <div class="dw-body">PKG-A · $175 · Alcohol Poisoning · Overdose · Assault · Mental Health · Break-In · Fire Escape</div>
     </div>
-    <div class="dw-sec">
-      <div class="dw-eyebrow">SCENARIO PLANS</div>
-      <div class="dw-title">INCLUDED PLANS</div>
-      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
-        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">PLAN PREVIEWS — IMAGE PLACEHOLDER</div>
-      </div>
-    </div>
-    <div class="dw-sec">
-      <div class="dw-eyebrow">WHAT'S INCLUDED</div>
-      <div class="dw-title">EQUIPMENT LIST</div>
-      <div style="background:rgba(28,18,8,.06);border:1px dashed rgba(28,18,8,.2);height:280px;display:flex;align-items:center;justify-content:center">
-        <div style="font-family:Arial,sans-serif;font-size:.7rem;letter-spacing:.08em;color:rgba(28,18,8,.3)">EQUIPMENT PHOTOS — IMAGE PLACEHOLDER</div>
+    <div class="dw-sec" style="padding-top:0;padding-bottom:0">
+      <div id="deliverables-loading-college" style="padding:26px 0;font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.1em;color:rgba(28,18,8,.35)">LOADING PACKAGE CONTENTS...</div>
+      <div id="deliverables-wrap-college" style="display:none;overflow:hidden">
+        <div style="border-bottom:2px solid rgba(28,18,8,.16);padding:14px 0 12px;background:transparent">
+          <div style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.08em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:4px">
+            <span style="display:block;width:12px;height:1px;background:rgba(28,18,8,.55)"></span>WHAT YOU GET
+          </div>
+          <div style="font-family:Arial,sans-serif;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:.04em;color:#1C1208;line-height:1">PACKAGE CONTENTS</div>
+        </div>
+        <div style="padding:10px 0 8px;background:rgba(28,18,8,.06);border-bottom:1px solid rgba(28,18,8,.1)" id="strip-scroll-college">
+          <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:4px" id="thumb-strip-college"></div>
+        </div>
+        <div id="deliv-detail-college" style="display:none;background:#1C1208">
+          <div style="padding:20px 0;background:#1C1208">
+            <div id="deliv-img-wrap-college" style="background:#2a2010;margin-bottom:16px;display:flex;align-items:center;justify-content:center;min-height:180px">
+              <img id="deliv-img-college" src="" alt="" style="width:100%;height:auto;display:block;max-height:320px;object-fit:contain">
+            </div>
+            <div style="border-left:2px solid rgba(195,169,125,.25);padding-left:12px;padding-right:12px">
+              <div id="deliv-title-college" style="font-family:Arial,sans-serif;font-size:1.2rem;letter-spacing:.04em;color:#C3A97D;margin-bottom:8px;line-height:1.1"></div>
+              <div id="deliv-desc-college" style="font-family:Arial,sans-serif;font-size:.8rem;line-height:1.65;color:rgba(195,169,125,.72)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;border-top:1px solid rgba(195,169,125,.1);padding-top:12px;padding-left:16px;padding-right:16px">
+              <button id="deliv-prev-college" onclick="delivNavCollege(-1)" style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.08em;color:#C3A97D;background:rgba(195,169,125,.1);border:1px solid rgba(195,169,125,.2);padding:6px 14px;cursor:pointer">← PREV</button>
+              <span id="deliv-count-college" style="font-family:Arial,sans-serif;font-size:.55rem;letter-spacing:.08em;color:rgba(195,169,125,.4)"></span>
+              <button id="deliv-next-college" onclick="delivNavCollege(1)" style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.08em;color:#C3A97D;background:rgba(195,169,125,.1);border:1px solid rgba(195,169,125,.2);padding:6px 14px;cursor:pointer">NEXT →</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
         <div class="dw-sec">
@@ -2512,98 +2528,139 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') csCloseBtn
 <script src="pdf-viewer.js"></script>
 <script>
 (function(){
-  var delivItems = [];
-  var delivCur = -1;
+  function createDeliverablesController(cfg) {
+    var delivItems = [];
+    var delivCur = -1;
 
-  function wixImageUrl(img) { return img || ''; }
+    function wixImageUrl(img) { return img || ''; }
 
-  function loadDeliverables() {
-    fetch('https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/deliverables-house-fire.json')
-    .then(function(r){ return r.json(); })
-    .then(function(items){
-      if (!items.length) { document.getElementById('deliverables-loading').textContent = 'NO CONTENT FOUND'; return; }
-      delivItems = items;
-      buildStrip();
-      delivOpen(0);
-      document.getElementById('deliverables-loading').style.display = 'none';
-      document.getElementById('deliverables-wrap').style.display = 'block';
-    })
-    .catch(function(){ document.getElementById('deliverables-loading').textContent = 'COULD NOT LOAD CONTENT'; });
-  }
-
-  function buildStrip() {
-    var strip = document.getElementById('thumb-strip');
-    strip.innerHTML = '';
-    delivItems.forEach(function(item, i) {
-      var thumb = document.createElement('div');
-      thumb.style.cssText = 'cursor:pointer;min-width:0';
-      thumb.id = 'dthumb-' + i;
-      var imgUrl = wixImageUrl(item.image);
-      thumb.innerHTML =
-        '<div id="dthumb-img-' + i + '" style="height:52px;background:#1C1208;border:2px solid transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .15s">' +
-          (imgUrl ? '<img src="' + imgUrl + '" style="width:100%;height:100%;object-fit:cover" alt="">' : '<span style="font-size:.32rem;letter-spacing:.04em;color:rgba(195,169,125,.3);text-align:center;padding:2px">' + (item.productName||'') + '</span>') +
-        '</div>' +
-        '<div id="dthumb-lbl-' + i + '" style="padding:3px 2px 0;font-family:Arial,sans-serif;font-size:.38rem;letter-spacing:.04em;color:rgba(28,18,8,.5);line-height:1.2;text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">' + (item.productName||'') + '</div>';
-      thumb.onclick = function(){ delivOpen(i); };
-      strip.appendChild(thumb);
-    });
-  }
-
-  window.delivOpen = function(i) {
-    delivItems.forEach(function(_, j){
-      var ti = document.getElementById('dthumb-img-' + j);
-      var tl = document.getElementById('dthumb-lbl-' + j);
-      if (ti) ti.style.borderColor = 'transparent';
-      if (tl) { tl.style.color = 'rgba(28,18,8,.55)'; tl.style.fontWeight = 'normal'; }
-    });
-    var ti = document.getElementById('dthumb-img-' + i);
-    var tl = document.getElementById('dthumb-lbl-' + i);
-    if (ti) ti.style.borderColor = '#1C1208';
-    if (tl) { tl.style.color = '#1C1208'; tl.style.fontWeight = 'bold'; }
-    delivCur = i;
-    var item = delivItems[i];
-    var imgUrl = wixImageUrl(item.image);
-    var imgEl = document.getElementById('deliv-img');
-    if (imgUrl) {
-      imgEl.src = imgUrl;
-      imgEl.style.display = 'block';
-    } else {
-      imgEl.style.display = 'none';
+    function loadDeliverables() {
+      fetch(cfg.jsonUrl)
+      .then(function(r){ return r.json(); })
+      .then(function(items){
+        if (!items.length) { document.getElementById(cfg.loadingId).textContent = 'NO CONTENT FOUND'; return; }
+        delivItems = items;
+        buildStrip();
+        delivOpen(0);
+        document.getElementById(cfg.loadingId).style.display = 'none';
+        document.getElementById(cfg.wrapId).style.display = 'block';
+      })
+      .catch(function(){ document.getElementById(cfg.loadingId).textContent = 'COULD NOT LOAD CONTENT'; });
     }
-    document.getElementById('deliv-title').textContent = item.productName || '';
-    document.getElementById('deliv-desc').textContent = item.text || '';
-    document.getElementById('deliv-count').textContent = (i+1) + ' / ' + delivItems.length;
-    document.getElementById('deliv-prev').disabled = i === 0;
-    document.getElementById('deliv-next').disabled = i === delivItems.length - 1;
-    document.getElementById('deliv-detail').style.display = 'block';
-  };
 
-  window.delivNav = function(dir) {
-    var next = delivCur + dir;
-    if (next >= 0 && next < delivItems.length) delivOpen(next);
-  };
-
-  function initDeliverables() {
-    var page = document.getElementById('page-plan-fire');
-    if (!page) return;
-    var observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(m) {
-        if (m.type === 'attributes' && m.attributeName === 'class') {
-          if (m.target.classList.contains('active') && delivItems.length === 0) {
-            loadDeliverables();
-          }
-        }
+    function buildStrip() {
+      var strip = document.getElementById(cfg.stripId);
+      strip.innerHTML = '';
+      delivItems.forEach(function(item, i) {
+        var thumb = document.createElement('div');
+        thumb.style.cssText = 'cursor:pointer;min-width:0';
+        thumb.id = cfg.idPrefix + 'thumb-' + i;
+        var imgUrl = wixImageUrl(item.image);
+        thumb.innerHTML =
+          '<div id="' + cfg.idPrefix + 'thumb-img-' + i + '" style="height:52px;background:#1C1208;border:2px solid transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .15s">' +
+            (imgUrl ? '<img src="' + imgUrl + '" style="width:100%;height:100%;object-fit:cover" alt="">' : '<span style="font-size:.32rem;letter-spacing:.04em;color:rgba(195,169,125,.3);text-align:center;padding:2px">' + (item.productName||'') + '</span>') +
+          '</div>' +
+          '<div id="' + cfg.idPrefix + 'thumb-lbl-' + i + '" style="padding:3px 2px 0;font-family:Arial,sans-serif;font-size:.38rem;letter-spacing:.04em;color:rgba(28,18,8,.5);line-height:1.2;text-align:center;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">' + (item.productName||'') + '</div>';
+        thumb.onclick = function(){ delivOpen(i); };
+        strip.appendChild(thumb);
       });
-    });
-    observer.observe(page, { attributes: true });
-    if (page.classList.contains('active')) loadDeliverables();
+    }
+
+    function delivOpen(i) {
+      delivItems.forEach(function(_, j){
+        var ti = document.getElementById(cfg.idPrefix + 'thumb-img-' + j);
+        var tl = document.getElementById(cfg.idPrefix + 'thumb-lbl-' + j);
+        if (ti) ti.style.borderColor = 'transparent';
+        if (tl) { tl.style.color = 'rgba(28,18,8,.55)'; tl.style.fontWeight = 'normal'; }
+      });
+      var ti = document.getElementById(cfg.idPrefix + 'thumb-img-' + i);
+      var tl = document.getElementById(cfg.idPrefix + 'thumb-lbl-' + i);
+      if (ti) ti.style.borderColor = '#1C1208';
+      if (tl) { tl.style.color = '#1C1208'; tl.style.fontWeight = 'bold'; }
+      delivCur = i;
+      var item = delivItems[i];
+      var imgUrl = wixImageUrl(item.image);
+      var imgEl = document.getElementById(cfg.imgId);
+      if (imgUrl) {
+        imgEl.src = imgUrl;
+        imgEl.style.display = 'block';
+      } else {
+        imgEl.style.display = 'none';
+      }
+      document.getElementById(cfg.titleId).textContent = item.productName || '';
+      document.getElementById(cfg.descId).textContent = item.text || '';
+      document.getElementById(cfg.countId).textContent = (i+1) + ' / ' + delivItems.length;
+      document.getElementById(cfg.prevId).disabled = i === 0;
+      document.getElementById(cfg.nextId).disabled = i === delivItems.length - 1;
+      document.getElementById(cfg.detailId).style.display = 'block';
+    }
+
+    function delivNav(dir) {
+      var next = delivCur + dir;
+      if (next >= 0 && next < delivItems.length) delivOpen(next);
+    }
+
+    function initDeliverables() {
+      var page = document.getElementById(cfg.pageId);
+      if (!page) return;
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+          if (m.type === 'attributes' && m.attributeName === 'class') {
+            if (m.target.classList.contains('active') && delivItems.length === 0) {
+              loadDeliverables();
+            }
+          }
+        });
+      });
+      observer.observe(page, { attributes: true });
+      if (page.classList.contains('active')) loadDeliverables();
+    }
+
+    if (cfg.navFnName) window[cfg.navFnName] = delivNav;
+    if (cfg.openFnName) window[cfg.openFnName] = delivOpen;
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initDeliverables);
+    } else {
+      initDeliverables();
+    }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDeliverables);
-  } else {
-    initDeliverables();
-  }
+  createDeliverablesController({
+    pageId: 'page-plan-fire',
+    jsonUrl: 'https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/deliverables-house-fire.json',
+    loadingId: 'deliverables-loading',
+    wrapId: 'deliverables-wrap',
+    stripId: 'thumb-strip',
+    detailId: 'deliv-detail',
+    imgId: 'deliv-img',
+    titleId: 'deliv-title',
+    descId: 'deliv-desc',
+    countId: 'deliv-count',
+    prevId: 'deliv-prev',
+    nextId: 'deliv-next',
+    idPrefix: 'd',
+    openFnName: 'delivOpen',
+    navFnName: 'delivNav'
+  });
+
+  createDeliverablesController({
+    pageId: 'page-off-to-college',
+    jsonUrl: 'https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/deliverables-off-to-college.json',
+    loadingId: 'deliverables-loading-college',
+    wrapId: 'deliverables-wrap-college',
+    stripId: 'thumb-strip-college',
+    detailId: 'deliv-detail-college',
+    imgId: 'deliv-img-college',
+    titleId: 'deliv-title-college',
+    descId: 'deliv-desc-college',
+    countId: 'deliv-count-college',
+    prevId: 'deliv-prev-college',
+    nextId: 'deliv-next-college',
+    idPrefix: 'c',
+    openFnName: 'delivOpenCollege',
+    navFnName: 'delivNavCollege'
+  });
 })();
 </script>
 <script>
