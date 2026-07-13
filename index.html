@@ -464,6 +464,34 @@ body{
 @media(max-width:580px){.sv5-solo-2col .sv5-card{width:100%}}
 @media(max-width:640px){.sv5-solo-3col .sv5-pkg-card{width:calc(50% - 1.5px)}}
 @media(max-width:380px){.sv5-solo-3col .sv5-pkg-card{width:100%}}
+
+/* ══════════════════════════
+   SERVICES PAGE v6 — TIER TABLE
+══════════════════════════ */
+.tier-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:2px solid #1C1208}
+.tier-table{width:100%;min-width:680px;border-collapse:collapse;background:transparent}
+.tier-table th,.tier-table td{padding:15px 16px;text-align:center;border-bottom:1px solid #1C1208;border-right:1px solid #1C1208;font-family:Arial,sans-serif}
+.tier-table th:last-child,.tier-table td:last-child{border-right:none}
+.tier-table thead th{background:#1C1208;color:#C3A97D;font-size:.78rem;letter-spacing:.05em;font-weight:bold;white-space:nowrap;border-right:1px solid rgba(195,169,125,.35)}
+.tier-table thead th:last-child{border-right:none}
+.tier-table td.feature,.tier-table th.feature{text-align:left;white-space:nowrap}
+.tier-table td.feature{font-size:.88rem;color:#1C1208;font-weight:bold}
+.tier-table td.check{font-size:1.2rem;color:#1C1208;font-weight:bold}
+.tier-table td.dash{color:rgba(28,18,8,.35);font-size:1rem}
+.tier-table tbody tr:nth-child(even){background:rgba(28,18,8,.06)}
+.tier-table tbody tr:last-child td{border-bottom:none}
+.tier-table tr.price-row td{background:#1C1208;color:#C3A97D;font-weight:bold;font-size:1.05rem;border-right:1px solid rgba(195,169,125,.35)}
+.tier-table tr.price-row td:last-child{border-right:none}
+.tier-table tr.price-row td.feature{color:#C3A97D;font-size:1.05rem;font-weight:bold}
+
+.sv5-pkg-price-badge{font-family:Arial,sans-serif;font-size:.8rem;font-weight:bold;letter-spacing:.03em;background:#1C1208;color:#C3A97D;padding:6px 10px;white-space:nowrap;flex-shrink:0}
+
+.extra-box{background:#1C1208;padding:26px 24px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.extra-box-eyebrow{font-family:Arial,sans-serif;font-size:.5rem;letter-spacing:.16em;color:rgba(195,169,125,.42)}
+.extra-box-title{font-family:Arial,sans-serif;font-size:1.15rem;font-weight:bold;letter-spacing:.03em;color:#C3A97D;line-height:1.3}
+.extra-box-desc{font-family:Arial,sans-serif;font-size:.78rem;line-height:1.6;color:rgba(195,169,125,.62);max-width:520px}
+.extra-box-link{display:inline-block;font-family:Arial,sans-serif;font-size:.66rem;letter-spacing:.08em;color:#1C1208;background:#C3A97D;border-radius:20px;padding:9px 16px;cursor:pointer;text-decoration:none;width:fit-content;margin-top:4px}
+
 .sv2-pkg-price{font-family:Arial,sans-serif;font-size:1rem;font-weight:bold;color:#1C1208;white-space:nowrap;flex-shrink:0}
 .sv2-pkg-price-featured{color:#1C1208}
 
@@ -537,6 +565,8 @@ body{
 
   .dw-btnp,.dw-btns{display:inline-block;width:auto;padding-left:40px;padding-right:40px}
   .dw-btns{margin-left:10px;margin-top:20px}
+
+  .extra-box{width:fit-content;max-width:420px}
 }
 
 @media(max-width:767px){
@@ -771,87 +801,67 @@ body{
 <div class="page" id="page-services">
   <div class="dw">
 
-    <!-- SCENARIOS BANNER -->
-    <div class="dw-sec" style="padding-top:24px;padding-bottom:0">
-      <div class="sv5-banner">
-        <div class="sv5-banner-eyebrow">01 // EMERGENCY PLANS</div>
-        <div class="sv5-banner-title">CHOOSE YOUR<br>SCENARIOS</div>
-        <div class="sv5-banner-sub">Custom-built for your home. Every plan is scenario-specific, delivered in a personalized tactical binder with quick sheets printed on waterproof, tear-proof paper. Add in-person training any time.</div>
-      </div>
+    <!-- HERO -->
+    <div class="dw-hero">
+      <div class="dw-eyebrow">SERVICES &amp; PRICING</div>
+      <h1>BUILD YOUR<br>PLAN.</h1>
     </div>
 
-    <!-- 2x2 SCENARIO CARDS -->
-    <div class="dw-sec" style="padding-top:0;padding-bottom:0">
-    <div class="sv5-pkg-grid-wrap">
-    <div class="sv5-pkg-grid">
-
-      <div class="sv5-pkg-card">
-        <div class="sv5-ghost">01</div>
-        <div class="sv5-card-top">
-          <div class="sv5-code">OPORD-01</div>
-        </div>
-        <div class="sv5-name-row">
-          <div class="sv5-name">HOUSE<br>FIRE</div>
-        </div>
-        <div class="sv5-pkg-desc">A fully customized set of sequenced tasks designed to ensure family accountability and survivability during a house fire.</div>
-        <a class="sv5-view-link" onclick="nav('plan-fire')">VIEW PLAN →</a>
-      </div>
-
-      <div class="sv5-pkg-card">
-        <div class="sv5-ghost">02</div>
-        <div class="sv5-card-top">
-          <div class="sv5-code">OPORD-02</div>
-        </div>
-        <div class="sv5-name-row">
-          <div class="sv5-name">HOME<br>INVASION</div>
-        </div>
-        <div class="sv5-pkg-desc">A fully customized defensive plan covering strong points, safe rooms, and law enforcement coordination to ensure family safety.</div>
-        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
-        <!-- <a class="sv5-view-link" onclick="nav('plan-invasion')">VIEW PLAN →</a> -->
-      </div>
-
-      <div class="sv5-pkg-card">
-        <div class="sv5-ghost">03</div>
-        <div class="sv5-card-top">
-          <div class="sv5-code">OPORD-03</div>
-        </div>
-        <div class="sv5-name-row">
-          <div class="sv5-name">MEDICAL<br>EMERGENCY</div>
-        </div>
-        <div class="sv5-pkg-desc">A household-specific response plan covering 911 scripts, role assignments, and documented medical information for every person under your roof.</div>
-        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
-        <!-- <a class="sv5-view-link" onclick="nav('plan-medical')">VIEW PLAN →</a> -->
-      </div>
-
-      <div class="sv5-pkg-card">
-        <div class="sv5-ghost">04</div>
-        <div class="sv5-card-top">
-          <div class="sv5-code">OPORD-04</div>
-        </div>
-        <div class="sv5-name-row">
-          <div class="sv5-name">WEATHER<br>EVENTS</div>
-        </div>
-        <div class="sv5-pkg-desc">A response plan covering shelter-in-place, evacuation, and supply protocols for snowstorms and hurricanes — including generator installation and maintenance.</div>
-        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
-        <!-- <a class="sv5-view-link" onclick="nav('plan-weather')">VIEW PLAN →</a> -->
-      </div>
-
-    </div>
-    </div>
-    </div><!-- end scenario dw-sec -->
-
-
-
-    <!-- PACKAGES BANNER -->
+    <!-- 01 // TIER SYSTEM BANNER -->
     <div class="dw-sec" style="padding-top:0;padding-bottom:0">
       <div class="sv5-banner">
-        <div class="sv5-banner-eyebrow">02 // LIFESTYLE PACKAGES</div>
-        <div class="sv5-banner-title">BUILT FOR YOUR<br>MOMENT IN LIFE</div>
-        <div class="sv5-banner-sub">Pre-built bundles matched to your life stage. Each package includes scenario plans, situation briefings, and a complete equipment package for every covered scenario.</div>
+        <div class="sv5-banner-eyebrow">01 // CHOOSE YOUR TIER</div>
+        <div class="sv5-banner-title">HOW DEEP DO<br>YOU WANT TO GO?</div>
+        <div class="sv5-banner-sub">Every tier builds on the one before it. Start with a standalone risk assessment, or step straight into full coverage with training, equipment, and portal access included.</div>
       </div>
     </div>
 
-    <!-- PACKAGES GRID -->
+    <!-- TIER COMPARISON TABLE -->
+    <div class="dw-sec">
+      <div class="tier-table-wrap">
+        <table class="tier-table">
+          <thead>
+            <tr>
+              <th class="feature">Deliverable</th>
+              <th>Assessment</th>
+              <th>Tier 1</th>
+              <th>Tier 2</th>
+              <th>Tier 3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="feature">Intel Brief</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td class="feature">Assessment</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td class="feature">Equipment Brief</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td class="feature">Equipment List</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td class="feature">Fire Plan</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td class="feature">In Person Training</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
+            <tr><td class="feature">New Equipment</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td class="feature">First Year Portal</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td class="feature">2 A La Carte Packages of your choice</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
+            <tr><td class="feature">First Year Equipment Check</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
+            <tr class="price-row">
+              <td class="feature">Price</td>
+              <td>$350</td>
+              <td>$1,150</td>
+              <td>$1,870</td>
+              <td>$3,620</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 02 // A LA CARTE PACKAGES BANNER -->
+    <div class="dw-sec" style="padding-top:0;padding-bottom:0">
+      <div class="sv5-banner">
+        <div class="sv5-banner-eyebrow">02 // A LA CARTE PACKAGES</div>
+        <div class="sv5-banner-title">ADD WHAT<br>YOU NEED</div>
+        <div class="sv5-banner-sub">Layer these onto any tier for risks specific to your household, or purchase standalone.</div>
+      </div>
+    </div>
+
+    <!-- A LA CARTE GRID -->
     <div class="dw-sec" style="padding-top:0;padding-bottom:0">
     <div class="sv5-pkg-grid-wrap">
     <div class="sv5-pkg-grid">
@@ -861,6 +871,7 @@ body{
         <div class="sv5-card-top"><div class="sv5-code">PKG-A</div></div>
         <div class="sv5-name-row">
           <div class="sv5-name">OFF TO<br>COLLEGE</div>
+          <div class="sv5-pkg-price-badge">$500</div>
         </div>
         <div class="sv5-pkg-desc">Essential safety equipment for college life, covering alcohol poisoning, drug overdose, assault, and mental health crises, with a response guide included for each scenario.</div>
         <a class="sv5-view-link" onclick="nav('off-to-college')">VIEW PACKAGE →</a>
@@ -870,18 +881,8 @@ body{
         <div class="sv5-ghost">B</div>
         <div class="sv5-card-top"><div class="sv5-code">PKG-B</div></div>
         <div class="sv5-name-row">
-          <div class="sv5-name">ELDERLY<br>PARENTS</div>
-        </div>
-        <div class="sv5-pkg-desc">A consultation to make an aging parent's home safer, more accessible, and easier to navigate independently.</div>
-        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
-        <!-- <a class="sv5-view-link" onclick="nav('elderly-parents')">VIEW PACKAGE →</a> -->
-      </div>
-
-      <div class="sv5-pkg-card">
-        <div class="sv5-ghost">C</div>
-        <div class="sv5-card-top"><div class="sv5-code">PKG-C</div></div>
-        <div class="sv5-name-row">
           <div class="sv5-name">NEW<br>DRIVER</div>
+          <div class="sv5-pkg-price-badge">$500</div>
         </div>
         <div class="sv5-pkg-desc">Step-by-step plans covering what to do in an accident, how to change a flat tire, jump a car, and other vital vehicle how-to's, bundled with essential safety equipment.</div>
         <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
@@ -889,21 +890,11 @@ body{
       </div>
 
       <div class="sv5-pkg-card">
-        <div class="sv5-ghost">D</div>
-        <div class="sv5-card-top"><div class="sv5-code">PKG-D</div></div>
+        <div class="sv5-ghost">C</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-C</div></div>
         <div class="sv5-name-row">
-          <div class="sv5-name">SOLO<br>TRAVELER</div>
-        </div>
-        <div class="sv5-pkg-desc">Essential safety equipment and information built around the specific risks of traveling alone.</div>
-        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
-        <!-- <a class="sv5-view-link" onclick="nav('solo-traveler')">VIEW PACKAGE →</a> -->
-      </div>
-
-      <div class="sv5-pkg-card">
-        <div class="sv5-ghost">E</div>
-        <div class="sv5-card-top"><div class="sv5-code">PKG-E</div></div>
-        <div class="sv5-name-row">
-          <div class="sv5-name">SOLO FEMALE<br>RUNNER</div>
+          <div class="sv5-name">SOLO<br>RUNNER</div>
+          <div class="sv5-pkg-price-badge">$500</div>
         </div>
         <div class="sv5-pkg-desc">Essential safety equipment designed for women who run, walk, or train outdoors alone.</div>
         <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
@@ -911,19 +902,62 @@ body{
       </div>
 
       <div class="sv5-pkg-card">
-        <div class="sv5-ghost">F</div>
-        <div class="sv5-card-top"><div class="sv5-code">PKG-F</div></div>
+        <div class="sv5-ghost">D</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-D</div></div>
         <div class="sv5-name-row">
           <div class="sv5-name">BABY<br>PROOFING</div>
+          <div class="sv5-pkg-price-badge">$500</div>
         </div>
         <div class="sv5-pkg-desc">Consultation and installation of key baby proofing concepts — covering hazard identification, room-by-room safety measures, and essential childproofing equipment for a safer home.</div>
         <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
         <!-- <a class="sv5-view-link" onclick="nav('baby-proofing')">VIEW PACKAGE →</a> -->
       </div>
 
+      <div class="sv5-pkg-card">
+        <div class="sv5-ghost">E</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-E</div></div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">ELDERLY<br>PARENTS</div>
+          <div class="sv5-pkg-price-badge">$500</div>
+        </div>
+        <div class="sv5-pkg-desc">A consultation to make an aging parent's home safer, more accessible, and easier to navigate independently.</div>
+        <a class="sv5-view-link" onclick="csOpen()">COMING SOON</a>
+        <!-- <a class="sv5-view-link" onclick="nav('elderly-parents')">VIEW PACKAGE →</a> -->
+      </div>
+
+      <div class="sv5-pkg-card">
+        <div class="sv5-ghost">F</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-F</div></div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">PORTAL<br>ACCESS</div>
+          <div class="sv5-pkg-price-badge">$120</div>
+        </div>
+        <div class="sv5-pkg-desc">Rehearsal tracking, after-action review, and plan updates, added on its own for any tier that doesn't already include it.</div>
+      </div>
+
+      <div class="sv5-pkg-card" style="grid-column:1 / -1">
+        <div class="sv5-ghost">G</div>
+        <div class="sv5-card-top"><div class="sv5-code">PKG-G</div></div>
+        <div class="sv5-name-row">
+          <div class="sv5-name">IN PERSON<br>TRAINING</div>
+          <div class="sv5-pkg-price-badge">$500</div>
+        </div>
+        <div class="sv5-pkg-desc">A hands-on family training session with a veteran instructor, added on its own for Assessment or Tier 1 customers.</div>
+      </div>
+
     </div>
     </div>
     </div><!-- end packages dw-sec -->
+
+    <!-- MULTI-HOUSE / HOA DISCOUNT BOX -->
+    <div class="dw-sec" style="padding-top:0;padding-bottom:0">
+      <div class="extra-box">
+        <div class="extra-box-eyebrow">MULTI-HOUSE</div>
+        <div class="extra-box-title">Neighborhood &amp; HOA discounts</div>
+        <div class="extra-box-desc">Signing up multiple households at once? Ask about discounted rates for neighborhoods and HOAs.</div>
+        <a class="extra-box-link" onclick="csOpen()">LEARN MORE →</a>
+      </div>
+    </div>
 
     <!-- CTA -->
     <div class="dw-sec">
