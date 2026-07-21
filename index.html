@@ -468,8 +468,17 @@ body{
 /* ══════════════════════════
    SERVICES PAGE v6 — TIER TABLE
 ══════════════════════════ */
-.tier-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:2px solid #1C1208}
-.tier-table{width:100%;min-width:680px;border-collapse:collapse;background:transparent}
+.tier-table-wrap{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  border:2px solid #1C1208;
+  scrollbar-width:thin;
+  scrollbar-color:#1C1208 #C3A97D;
+}
+.tier-table-wrap::-webkit-scrollbar{height:9px}
+.tier-table-wrap::-webkit-scrollbar-track{background:#C3A97D}
+.tier-table-wrap::-webkit-scrollbar-thumb{background:#1C1208;border-radius:5px}
+.tier-table{width:100%;min-width:680px;border-collapse:separate;border-spacing:0;background:transparent}
 .tier-table th,.tier-table td{padding:15px 16px;text-align:center;border-bottom:1px solid #1C1208;border-right:1px solid #1C1208;font-family:Arial,sans-serif}
 .tier-table th:last-child,.tier-table td:last-child{border-right:none}
 .tier-table thead th{background:#1C1208;color:#C3A97D;font-size:.78rem;letter-spacing:.05em;font-weight:bold;white-space:nowrap;border-right:1px solid rgba(195,169,125,.35)}
@@ -483,6 +492,45 @@ body{
 .tier-table tr.price-row td{background:#1C1208;color:#C3A97D;font-weight:bold;font-size:1.05rem;border-right:1px solid rgba(195,169,125,.35)}
 .tier-table tr.price-row td:last-child{border-right:none}
 .tier-table tr.price-row td.feature{color:#C3A97D;font-size:1.05rem;font-weight:bold}
+
+/* Freeze the Deliverable column so it stays put while the rest scrolls horizontally */
+.tier-table th.feature,.tier-table td.feature{
+  position:sticky;
+  left:0;
+  z-index:2;
+}
+.tier-table thead th.feature{z-index:3;background:#1C1208}
+.tier-table tbody tr:not(.price-row) td.feature{
+  background-image:
+    linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),
+    linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);
+  background-size:60px 60px,60px 60px,15px 15px,15px 15px;
+}
+.tier-table tbody tr:nth-child(odd) td.feature{background-color:#C3A97D}
+.tier-table tbody tr:nth-child(even) td.feature{background-color:#B9A076}
+.tier-table tbody tr.price-row td.feature{background-color:#1C1208}
+
+/* Mobile: skinny everything up so more of the table fits on screen at once */
+@media(max-width:640px){
+  .tier-table{min-width:0}
+  .tier-table th,.tier-table td{padding:8px 6px;font-size:.66rem}
+  .tier-table thead th{font-size:.58rem;letter-spacing:.02em;padding:8px 5px}
+  .tier-table th:not(.feature),.tier-table td:not(.feature){width:52px;max-width:52px}
+  .tier-table th.feature,.tier-table td.feature{
+    width:98px;
+    max-width:98px;
+    min-width:98px;
+    white-space:normal;
+    font-size:.66rem;
+    line-height:1.2;
+    padding:8px 8px 8px 10px;
+  }
+  .tier-table td.check{font-size:1rem}
+  .tier-table tr.price-row td{font-size:.72rem}
+  .tier-table tr.price-row td.feature{font-size:.66rem}
+}
 
 .sv5-pkg-price-badge{font-family:Arial,sans-serif;font-size:.8rem;font-weight:bold;letter-spacing:.03em;background:#1C1208;color:#C3A97D;padding:6px 10px;white-space:nowrap;flex-shrink:0}
 
@@ -874,7 +922,7 @@ body{
             <tr><td class="feature">New Equipment</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
             <tr><td class="feature">First Year Portal</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td><td class="check">✓</td></tr>
             <tr><td class="feature">In Person Training</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
-            <tr><td class="feature">2 A La Carte Packages of your choice</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
+            <tr><td class="feature">2 A La Carte Packages</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
             <tr><td class="feature">First Year Equipment Check</td><td class="dash">—</td><td class="dash">—</td><td class="dash">—</td><td class="check">✓</td></tr>
             <tr class="price-row">
               <td class="feature">Price</td>
