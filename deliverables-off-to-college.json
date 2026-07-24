@@ -35,16 +35,6 @@
     "image": "https://static.wixstatic.com/media/0c3bc8_5d31885f9c6541b4807a7ade1a295908~mv2.jpg"
   },
   {
-    "productName": "Door Security Bar/Jam",
-    "text": "A bar that wedges under a door to prevent it from being opened from outside.",
-    "image": "https://static.wixstatic.com/media/0c3bc8_9bb619507a94415daa68ffd51e65350e~mv2.jpg"
-  },
-  {
-    "productName": "Escape Ladder",
-    "text": "A retractable ladder used to exit through an upper-floor window.",
-    "image": "https://static.wixstatic.com/media/0c3bc8_74cbde91c69e4f2980e2e42c4545f8e5~mv2.jpg"
-  },
-  {
     "productName": "CPR Mask",
     "text": "A barrier device used to perform rescue breathing safely.",
     "image": "https://static.wixstatic.com/media/0c3bc8_8fc481cd503447319658fc284af6c2d1~mv2.jpg"
@@ -65,16 +55,41 @@
     "image": "https://static.wixstatic.com/media/0c3bc8_f73a9387a69f4c1db6d801aafbde7ee9~mv2.jpg"
   },
   {
-    "productName": "AirTag",
-    "text": "A tracking device used to locate a bag, backpack, or set of keys.",
-    "image": "https://static.wixstatic.com/media/0c3bc8_3e0b03329e5942ee8cf7177058ebc3cf~mv2.jpg"
+    "productName": "Safe Steps College Playbook",
+    "text": "Drug Overdase Playbook",
+    "image": "https://static.wixstatic.com/media/0c3bc8_2dae3a6cd1e447bf838cec4baad0769f~mv2.png"
   },
-  {
+   {
+    "productName": "Safe Steps College Playbook",
+    "text": "Alcohol Poisoning Playbook",
+    "image": "https://static.wixstatic.com/media/0c3bc8_1c376bc5756b45978eee741970722337~mv2.png"
+  },
+ {
+    "productName": "Safe Steps College Playbook",
+    "text": "Active Shooter Playbook",
+    "image": "https://static.wixstatic.com/media/0c3bc8_36ebf779fbdb4004b0a8cc20443fbeef~mv2.png"
+  },
+ {
+    "productName": "Safe Steps College Playbook",
+    "text": "Sexual Assault Playbook",
+    "image": "https://static.wixstatic.com/media/0c3bc8_3e901dbb8a224ebab8226f252224b39d~mv2.png"
+  },
+ {
     "productName": "Safe Steps College Playbook",
     "text": "The master guide with scenario-by-scenario instructions for each emergency covered in the plan.",
     "image": ""
   },
-  {
+ {
+    "productName": "Safe Steps College Playbook",
+    "text": "Party Best Practices",
+    "image": "https://static.wixstatic.com/media/0c3bc8_e3caa5ba3ab54bbf81b1163dd6dd8dcb~mv2.png"
+  },
+ {
+    "productName": "Safe Steps College Playbook",
+    "text": "Physical Assault Playbook",
+    "image": "https://static.wixstatic.com/media/0c3bc8_27761d17eab746a3ba88a7109f89f8ec~mv2.png"
+  },
+{
     "productName": "Retractable Keychain",
     "text": "A keychain with a retractable cord for keeping keys or small items within reach.",
     "image": "https://static.wixstatic.com/media/0c3bc8_e440403115834ac99f3ffcd01f1006c0~mv2.jpg"
