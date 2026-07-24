@@ -489,9 +489,15 @@ body{
 .tier-table td.dash{color:rgba(28,18,8,.35);font-size:1rem}
 .tier-table tbody tr:nth-child(even){background:rgba(28,18,8,.06)}
 .tier-table tbody tr:last-child td{border-bottom:none}
-.tier-table tr.price-row td{background:#1C1208;color:#C3A97D;font-weight:bold;font-size:1.05rem;border-right:1px solid rgba(195,169,125,.35)}
+.tier-table tr.price-row td{background:#1C1208;color:#C3A97D;font-weight:bold;font-size:1.05rem;border-right:1px solid rgba(195,169,125,.35);padding:15px 16px 6px}
 .tier-table tr.price-row td:last-child{border-right:none}
 .tier-table tr.price-row td.feature{color:#C3A97D;font-size:1.05rem;font-weight:bold}
+
+.tier-table tr.buy-row td{background:#1C1208;border-right:1px solid rgba(195,169,125,.35);padding:0 12px 8px}
+.tier-table tr.buy-row td:last-child{border-right:none}
+.tier-table tr.buy-row td.feature{background:#1C1208}
+.buy-btn{display:inline-block;font-family:Arial,sans-serif;font-size:.68rem;font-weight:bold;letter-spacing:.06em;background:#C3A97D;color:#1C1208;padding:6px 14px;text-decoration:none;white-space:nowrap;width:100%;box-sizing:border-box}
+.buy-btn:hover{background:#d4bd94}
 
 /* Freeze the Deliverable column so it stays put while the rest scrolls horizontally */
 .tier-table th.feature,.tier-table td.feature{
@@ -500,17 +506,10 @@ body{
   z-index:2;
 }
 .tier-table thead th.feature{z-index:3;background:#1C1208}
-.tier-table tbody tr:not(.price-row) td.feature{
-  background-image:
-    linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),
-    linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);
-  background-size:60px 60px,60px 60px,15px 15px,15px 15px;
-}
-.tier-table tbody tr:nth-child(odd) td.feature{background-color:#C3A97D}
-.tier-table tbody tr:nth-child(even) td.feature{background-color:#B9A076}
-.tier-table tbody tr.price-row td.feature{background-color:#1C1208}
+/* No background of its own here on purpose: the feature cell inherits the row's real background
+   (transparent on odd rows, rgba(28,18,8,.06) tint on even rows, solid dark on price rows) exactly
+   like the Assess/Tier columns do. That's the actual page texture showing through, not a redrawn
+   copy of it, so there's nothing that can drift out of alignment. */
 
 /* Mobile: skinny everything up so more of the table fits on screen at once */
 @media(max-width:640px){
@@ -528,8 +527,10 @@ body{
     padding:8px 8px 8px 10px;
   }
   .tier-table td.check{font-size:1rem}
-  .tier-table tr.price-row td{font-size:.72rem}
+  .tier-table tr.price-row td{font-size:.72rem;padding:8px 6px}
   .tier-table tr.price-row td.feature{font-size:.66rem}
+  .tier-table tr.buy-row td{padding:8px 4px}
+  .buy-btn{font-size:.56rem;padding:8px 4px;letter-spacing:.02em}
 }
 
 .sv5-pkg-price-badge{font-family:Arial,sans-serif;font-size:.8rem;font-weight:bold;letter-spacing:.03em;background:#1C1208;color:#C3A97D;padding:6px 10px;white-space:nowrap;flex-shrink:0}
@@ -930,6 +931,13 @@ body{
               <td>$1,150</td>
               <td>$1,850</td>
               <td>$2,950</td>
+            </tr>
+            <tr class="buy-row">
+              <td class="feature"></td>
+              <td><a class="buy-btn" href="https://buy.stripe.com/dRm7sL6qW4W2dX3beWbsc04" target="_blank" rel="noopener">BUY NOW</a></td>
+              <td><a class="buy-btn" href="https://buy.stripe.com/cNi8wP16Ccoug5b96Obsc05" target="_blank" rel="noopener">BUY NOW</a></td>
+              <td><a class="buy-btn" href="https://buy.stripe.com/8x200jeXs4W2dX35UCbsc06" target="_blank" rel="noopener">BUY NOW</a></td>
+              <td><a class="buy-btn" href="https://buy.stripe.com/5kQbJ1g1w606aKR96Obsc07" target="_blank" rel="noopener">BUY NOW</a></td>
             </tr>
           </tbody>
         </table>
