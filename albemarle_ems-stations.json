@@ -446,5 +446,89 @@
     "lat": 37.8948456,
     "lng": -78.87610839999999,
     "dept_type": "volunteer"
+  },
+  {
+    "name": "Western Albemarle Rescue Squad",
+    "address": "1265 Crozet Ave, Crozet, VA 22932",
+    "lat": 38.07071111443797,
+    "lng": -78.69985063,
+    "dept_type": "volunteer"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 2",
+    "address": "3501 Steamer Dr, Keswick, VA 22947",
+    "lat": 38.00640458,
+    "lng": -78.377995,
+    "dept_type": "career"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 3",
+    "address": "4907 Plank Rd, North Garden, VA 22959",
+    "lat": 37.95568424,
+    "lng": -78.65659374,
+    "dept_type": "career"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 4",
+    "address": "283 Reas Ford Rd, Earlysville, VA 22936",
+    "lat": 38.14613835,
+    "lng": -78.48961045,
+    "dept_type": "career"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 5",
+    "address": "5652 Three Notch'd Rd, Crozet, VA 22932",
+    "lat": 38.06902374,
+    "lng": -78.69473352,
+    "dept_type": "career"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 6",
+    "address": "3827 Stony Point Rd, Charlottesville, VA 22911",
+    "lat": 38.1111654,
+    "lng": -78.37237055,
+    "dept_type": "career"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 7",
+    "address": "141 Irish Rd, Scottsville, VA 24590",
+    "lat": 37.8078822,
+    "lng": -78.5057321,
+    "dept_type": "career"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 8",
+    "address": "3055 Berkmar Dr, Charlottesville, VA 22901",
+    "lat": 38.08292439,
+    "lng": -78.47925822,
+    "dept_type": "career"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 12",
+    "address": "3575 Lewis And Clark Dr, Charlottesville, VA 22911",
+    "lat": 38.13826981,
+    "lng": -78.43817392,
+    "dept_type": "career"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 15",
+    "address": "640 Kirtley Ln, Charlottesville, VA 22903",
+    "lat": 38.05265303,
+    "lng": -78.55015742,
+    "dept_type": "career"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 16",
+    "address": "648 Peter Jefferson Pkwy, Charlottesville, VA 22911",
+    "lat": 38.02300552,
+    "lng": -78.43803025,
+    "dept_type": "career"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 18",
+    "address": "3045 Berkmar Dr, Charlottesville, VA 22901",
+    "lat": 38.0826624,
+    "lng": -78.47926151,
+    "dept_type": "career"
   }
 ]
