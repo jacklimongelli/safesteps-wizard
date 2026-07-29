@@ -462,38 +462,18 @@
     "dept_type": "career"
   },
   {
-    "name": "Albemarle County Fire Rescue - Station 3",
-    "address": "4907 Plank Rd, North Garden, VA 22959",
-    "lat": 37.95568424,
-    "lng": -78.65659374,
-    "dept_type": "career"
-  },
-  {
     "name": "Albemarle County Fire Rescue - Station 4",
     "address": "283 Reas Ford Rd, Earlysville, VA 22936",
     "lat": 38.14613835,
     "lng": -78.48961045,
     "dept_type": "career"
   },
-  {
-    "name": "Albemarle County Fire Rescue - Station 5",
-    "address": "5652 Three Notch'd Rd, Crozet, VA 22932",
-    "lat": 38.06902374,
-    "lng": -78.69473352,
-    "dept_type": "career"
-  },
+
   {
     "name": "Albemarle County Fire Rescue - Station 6",
     "address": "3827 Stony Point Rd, Charlottesville, VA 22911",
     "lat": 38.1111654,
     "lng": -78.37237055,
-    "dept_type": "career"
-  },
-  {
-    "name": "Albemarle County Fire Rescue - Station 7",
-    "address": "141 Irish Rd, Scottsville, VA 24590",
-    "lat": 37.8078822,
-    "lng": -78.5057321,
     "dept_type": "career"
   },
   {
@@ -508,13 +488,6 @@
     "address": "3575 Lewis And Clark Dr, Charlottesville, VA 22911",
     "lat": 38.13826981,
     "lng": -78.43817392,
-    "dept_type": "career"
-  },
-  {
-    "name": "Albemarle County Fire Rescue - Station 15",
-    "address": "640 Kirtley Ln, Charlottesville, VA 22903",
-    "lat": 38.05265303,
-    "lng": -78.55015742,
     "dept_type": "career"
   },
   {
