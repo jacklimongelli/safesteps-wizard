@@ -459,22 +459,28 @@
     "address": "3501 Steamer Dr, Keswick, VA 22947",
     "lat": 38.00640458,
     "lng": -78.377995,
-    "dept_type": "career"
+    "dept_type": "volunteer"
   },
   {
     "name": "Albemarle County Fire Rescue - Station 4",
     "address": "283 Reas Ford Rd, Earlysville, VA 22936",
     "lat": 38.14613835,
     "lng": -78.48961045,
-    "dept_type": "career"
+    "dept_type": "volunteer"
   },
-
   {
     "name": "Albemarle County Fire Rescue - Station 6",
     "address": "3827 Stony Point Rd, Charlottesville, VA 22911",
     "lat": 38.1111654,
     "lng": -78.37237055,
-    "dept_type": "career"
+    "dept_type": "volunteer"
+  },
+  {
+    "name": "Albemarle County Fire Rescue - Station 8",
+    "address": "3055 Berkmar Dr, Charlottesville, VA 22901",
+    "lat": 38.08292439,
+    "lng": -78.47925822,
+    "dept_type": "volunteer"
   },
   {
     "name": "Albemarle County Fire Rescue - Station 12",
@@ -488,13 +494,13 @@
     "address": "648 Peter Jefferson Pkwy, Charlottesville, VA 22911",
     "lat": 38.02300552,
     "lng": -78.43803025,
-    "dept_type": "career"
+    "dept_type": "volunteer"
   },
   {
     "name": "Albemarle County Fire Rescue - Station 18",
     "address": "3045 Berkmar Dr, Charlottesville, VA 22901",
     "lat": 38.0826624,
     "lng": -78.47926151,
-    "dept_type": "career"
+    "dept_type": "volunteer"
   }
 ]
