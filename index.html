@@ -1613,27 +1613,36 @@ body{
     if(total <= 5){
       heading.textContent = 'Your Family Is Ahead Of Most.';
       heading.style.color = '#1C1208';
+      heading.style.fontSize = '1.6rem';
       indicator.style.borderLeftColor = 'rgba(28,18,8,.4)';
       indicator.style.background = 'rgba(28,18,8,.04)';
       dot.style.background = 'rgba(28,18,8,.4)';
       status.textContent = 'LOW RISK';
+      status.style.fontSize = '.6rem';
       blurb.textContent = "You've done more than most families ever will. A Safe Steps plan takes what you've started and solidifies it into a formal plan.";
+      blurb.style.fontSize = '.72rem';
     } else if(total <= 10){
       heading.textContent = 'Your Family Has Gaps.';
       heading.style.color = '#6e1008';
+      heading.style.fontSize = '1.6rem';
       indicator.style.borderLeftColor = '#6e1008';
       indicator.style.background = 'rgba(110,16,8,.06)';
       dot.style.background = '#6e1008';
       status.textContent = 'FALSE CONFIDENCE';
+      status.style.fontSize = '.6rem';
       blurb.textContent = "Thinking about a plan and having one aren't the same thing — and that gap is not your fault. Most families stop exactly where you are. We help you finish.";
+      blurb.style.fontSize = '.72rem';
     } else {
       heading.textContent = 'Your Family Is Not Ready.';
       heading.style.color = '#6e1008';
+      heading.style.fontSize = '1.9rem';
       indicator.style.borderLeftColor = '#6e1008';
       indicator.style.background = 'rgba(110,16,8,.06)';
       dot.style.background = '#6e1008';
       status.textContent = 'HIGH RISK';
+      status.style.fontSize = '.72rem';
       blurb.textContent = "Most families are exactly where you are — and it's not because they don't care. Life gets in the way, and emergency planning never feels urgent until it is. Safe Steps was built for families like yours. Let's change that.";
+      blurb.style.fontSize = '.86rem';
     }
     var card = document.getElementById('assess-card');
     if(card){ var top = card.getBoundingClientRect().top + window.pageYOffset - 70; window.scrollTo({top:top,behavior:'smooth'}); }
