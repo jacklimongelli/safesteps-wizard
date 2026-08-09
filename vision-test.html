@@ -12,7 +12,7 @@
   .sub{font-size:.8rem;color:#666;margin-bottom:20px}
   input[type=file]{display:none}
   .upload-btn{display:block;width:100%;padding:16px;background:#1c1208;color:#fff;
-    text-align:center;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:16px;border:none}
+    text-align:center;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:16px}
   .preview{width:100%;border-radius:8px;margin-bottom:16px;display:none}
   .status{font-size:.85rem;color:#666;margin-bottom:16px;display:none}
   .result{background:#fff;border-radius:8px;padding:14px;margin-bottom:10px;
@@ -30,14 +30,13 @@
 
   <button class="upload-btn" id="tinyTestBtn" style="background:#555">Run Tiny Test (no photo)</button>
 
-  <img class="preview" id="preview" alt="Uploaded device preview">
+  <img class="preview" id="preview">
   <div class="status" id="status">Analyzing...</div>
   <div class="error" id="error"></div>
   <div class="result" id="result"></div>
 </div>
 
 <script>
-// Update this to match your actual Wix site domain
 const PROXY = 'https://www.safestepsplansforms.com/_functions/geminiDetect';
 
 const photoInput = document.getElementById('photoInput');
@@ -68,9 +67,8 @@ document.getElementById('tinyTestBtn').addEventListener('click', async () => {
       body: JSON.stringify({ image: base64, mimeType: 'image/png' })
     });
 
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
-    
     renderResult(data);
 
   } catch (err) {
@@ -88,16 +86,13 @@ photoInput.addEventListener('change', async (e) => {
   errorEl.style.display = 'none';
   resultEl.style.display = 'none';
 
-  const objectUrl = URL.createObjectURL(file);
-  preview.src = objectUrl;
+  preview.src = URL.createObjectURL(file);
   preview.style.display = 'block';
   statusEl.style.display = 'block';
 
   try {
-    // Resize down to 800px max width for lightweight payloads
-    const base64 = await resizeAndEncode(file, 800);
+    const base64 = await resizeAndEncode(file, 1200);
     statusEl.textContent = 'Payload size: ' + Math.round(base64.length / 1024) + ' KB. Sending...';
-    
     const res = await fetch(PROXY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -107,17 +102,15 @@ photoInput.addEventListener('change', async (e) => {
       })
     });
 
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
-
     renderResult(data);
 
   } catch (err) {
-    errorEl.textContent = 'Error name: ' + err.name + ' | Message: ' + err.message;
+    errorEl.textContent = 'Error name: ' + err.name + ' | Message: ' + err.message + ' | Type: ' + typeof err;
     errorEl.style.display = 'block';
   } finally {
     statusEl.style.display = 'none';
-    URL.revokeObjectURL(objectUrl);
   }
 });
 
@@ -140,8 +133,7 @@ function resizeAndEncode(file, maxWidth) {
       canvas.height = height;
       canvas.getContext('2d').drawImage(img, 0, 0, width, height);
 
-      // 0.70 quality JPEG balances fast transfers with image detail
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.70);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
       resolve(dataUrl.split(',')[1]);
     };
     img.onerror = reject;
