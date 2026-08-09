@@ -56,13 +56,13 @@ photoInput.addEventListener('change', async (e) => {
   statusEl.style.display = 'block';
 
   try {
-    const base64 = await fileToBase64(file);
+    const base64 = await resizeAndEncode(file, 1200);
     const res = await fetch(PROXY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         image: base64,
-        mimeType: file.type || 'image/jpeg'
+        mimeType: 'image/jpeg'
         // referenceImages: [] — add labeled candidate images here later
         // to test real comparisons, e.g.:
         // referenceImages: [{ image: '<base64>', mimeType: 'image/jpeg', label: '9120B' }, ...]
@@ -81,11 +81,31 @@ photoInput.addEventListener('change', async (e) => {
   }
 });
 
-function fileToBase64(file) {
+function resizeAndEncode(file, maxWidth) {
   return new Promise((resolve, reject) => {
+    const img = new Image();
     const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
+
+    reader.onload = () => { img.src = reader.result; };
     reader.onerror = reject;
+
+    img.onload = () => {
+      let { width, height } = img;
+      if (width > maxWidth) {
+        height = Math.round(height * (maxWidth / width));
+        width = maxWidth;
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+
+      // 0.85 quality JPEG — small file, no visible detail loss for this use case
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      resolve(dataUrl.split(',')[1]);
+    };
+    img.onerror = reject;
+
     reader.readAsDataURL(file);
   });
 }
