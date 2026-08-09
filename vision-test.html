@@ -57,6 +57,7 @@ photoInput.addEventListener('change', async (e) => {
 
   try {
     const base64 = await resizeAndEncode(file, 1200);
+    statusEl.textContent = 'Payload size: ' + Math.round(base64.length / 1024) + ' KB. Sending...';
     const res = await fetch(PROXY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
