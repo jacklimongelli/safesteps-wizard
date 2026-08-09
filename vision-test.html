@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equipment ID Test</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Arial,sans-serif;background:#f4f1ea;padding:20px;color:#1c1208}
+  .wrap{max-width:480px;margin:0 auto}
+  h1{font-size:1.2rem;margin-bottom:4px}
+  .sub{font-size:.8rem;color:#666;margin-bottom:20px}
+  input[type=file]{display:none}
+  .upload-btn{display:block;width:100%;padding:16px;background:#1c1208;color:#fff;
+    text-align:center;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:16px}
+  .preview{width:100%;border-radius:8px;margin-bottom:16px;display:none}
+  .status{font-size:.85rem;color:#666;margin-bottom:16px;display:none}
+  .result{background:#fff;border-radius:8px;padding:14px;margin-bottom:10px;
+    border:1px solid rgba(0,0,0,.08);display:none}
+  .result h2{font-size:.9rem;margin-bottom:8px}
+  .entity{padding:8px 0;border-bottom:1px solid rgba(0,0,0,.06);font-size:.85rem}
+  .entity:last-child{border-bottom:none}
+  .entity .score{color:#888;font-size:.75rem}
+  .match-img{width:60px;height:60px;object-fit:cover;border-radius:4px;margin-right:8px;vertical-align:middle}
+  .error{color:#b00020;font-size:.85rem;padding:10px;background:#fce8e8;border-radius:6px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Equipment ID Test</h1>
+  <div class="sub">Take a photo of an installed device to test Google Vision Web Detection.</div>
+
+  <label class="upload-btn" for="photoInput">Take / Upload Photo</label>
+  <input type="file" id="photoInput" accept="image/*" capture="environment">
+
+  <img class="preview" id="preview">
+  <div class="status" id="status">Analyzing...</div>
+  <div class="error" id="error"></div>
+
+  <div class="result" id="webEntities">
+    <h2>Web Entities (Google's best guesses)</h2>
+    <div id="entitiesList"></div>
+  </div>
+
+  <div class="result" id="fullMatches">
+    <h2>Matching Images Found</h2>
+    <div id="matchesList"></div>
+  </div>
+
+  <div class="result" id="bestGuess">
+    <h2>Best Guess Label</h2>
+    <div id="bestGuessList"></div>
+  </div>
+</div>
+
+<script>
+// Point this at your Wix backend proxy once deployed
+const PROXY = 'https://www.safestepsplansforms.com/_functions/visionDetect';
+
+const photoInput = document.getElementById('photoInput');
+const preview = document.getElementById('preview');
+const statusEl = document.getElementById('status');
+const errorEl = document.getElementById('error');
+
+photoInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  errorEl.style.display = 'none';
+  document.getElementById('webEntities').style.display = 'none';
+  document.getElementById('fullMatches').style.display = 'none';
+  document.getElementById('bestGuess').style.display = 'none';
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  statusEl.style.display = 'block';
+
+  try {
+    const base64 = await fileToBase64(file);
+    const res = await fetch(PROXY, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: base64 })
+    });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    renderResults(data);
+
+  } catch (err) {
+    errorEl.textContent = 'Error: ' + err.message;
+    errorEl.style.display = 'block';
+  } finally {
+    statusEl.style.display = 'none';
+  }
+});
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderResults(data) {
+  const annotation = data.responses && data.responses[0] && data.responses[0].webDetection;
+  if (!annotation) {
+    errorEl.textContent = 'No web detection results returned.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  // Web entities
+  if (annotation.webEntities && annotation.webEntities.length) {
+    const list = document.getElementById('entitiesList');
+    list.innerHTML = annotation.webEntities
+      .filter(e => e.description)
+      .map(e => `<div class="entity">${e.description} <span class="score">(score: ${(e.score||0).toFixed(2)})</span></div>`)
+      .join('');
+    document.getElementById('webEntities').style.display = 'block';
+  }
+
+  // Full matching images
+  if (annotation.fullMatchingImages && annotation.fullMatchingImages.length) {
+    const list = document.getElementById('matchesList');
+    list.innerHTML = annotation.fullMatchingImages
+      .slice(0, 8)
+      .map(img => `<img class="match-img" src="${img.url}" onerror="this.style.display='none'">`)
+      .join('');
+    document.getElementById('fullMatches').style.display = 'block';
+  }
+
+  // Best guess labels
+  if (annotation.bestGuessLabels && annotation.bestGuessLabels.length) {
+    const list = document.getElementById('bestGuessList');
+    list.innerHTML = annotation.bestGuessLabels
+      .map(l => `<div class="entity">${l.label}</div>`)
+      .join('');
+    document.getElementById('bestGuess').style.display = 'block';
+  }
+}
+</script>
+</body>
+</html>
