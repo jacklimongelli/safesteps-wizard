@@ -28,6 +28,8 @@
   <label class="upload-btn" for="photoInput">Take / Upload Photo</label>
   <input type="file" id="photoInput" accept="image/*">
 
+  <button class="upload-btn" id="tinyTestBtn" style="background:#555">Run Tiny Test (no photo)</button>
+
   <img class="preview" id="preview">
   <div class="status" id="status">Analyzing...</div>
   <div class="error" id="error"></div>
@@ -43,6 +45,40 @@ const preview = document.getElementById('preview');
 const statusEl = document.getElementById('status');
 const errorEl = document.getElementById('error');
 const resultEl = document.getElementById('result');
+
+document.getElementById('tinyTestBtn').addEventListener('click', async () => {
+  errorEl.style.display = 'none';
+  resultEl.style.display = 'none';
+  statusEl.style.display = 'block';
+  statusEl.textContent = 'Running tiny test...';
+
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = 50; canvas.height = 50;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'white'; ctx.fillRect(0,0,50,50);
+    ctx.fillStyle = 'black'; ctx.fillRect(10,10,30,30);
+    const base64 = canvas.toDataURL('image/png').split(',')[1];
+
+    statusEl.textContent = 'Tiny payload: ' + base64.length + ' bytes. Sending...';
+
+    const res = await fetch(PROXY, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: base64, mimeType: 'image/png' })
+    });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    renderResult(data);
+
+  } catch (err) {
+    errorEl.textContent = 'Tiny test failed — Error name: ' + err.name + ' | Message: ' + err.message;
+    errorEl.style.display = 'block';
+  } finally {
+    statusEl.style.display = 'none';
+  }
+});
 
 photoInput.addEventListener('change', async (e) => {
   const file = e.target.files[0];
