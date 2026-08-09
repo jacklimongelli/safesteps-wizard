@@ -12,7 +12,7 @@
   .sub{font-size:.8rem;color:#666;margin-bottom:20px}
   input[type=file]{display:none}
   .upload-btn{display:block;width:100%;padding:16px;background:#1c1208;color:#fff;
-    text-align:center;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:16px}
+    text-align:center;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:16px;border:none}
   .preview{width:100%;border-radius:8px;margin-bottom:16px;display:none}
   .status{font-size:.85rem;color:#666;margin-bottom:16px;display:none}
   .result{background:#fff;border-radius:8px;padding:14px;margin-bottom:10px;
@@ -30,7 +30,7 @@
 
   <button class="upload-btn" id="tinyTestBtn" style="background:#555">Run Tiny Test (no photo)</button>
 
-  <img class="preview" id="preview">
+  <img class="preview" id="preview" alt="Uploaded device preview">
   <div class="status" id="status">Analyzing...</div>
   <div class="error" id="error"></div>
   <div class="result" id="result"></div>
@@ -68,8 +68,9 @@ document.getElementById('tinyTestBtn').addEventListener('click', async () => {
       body: JSON.stringify({ image: base64, mimeType: 'image/png' })
     });
 
-    if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
+    
     renderResult(data);
 
   } catch (err) {
@@ -87,34 +88,36 @@ photoInput.addEventListener('change', async (e) => {
   errorEl.style.display = 'none';
   resultEl.style.display = 'none';
 
-  preview.src = URL.createObjectURL(file);
+  const objectUrl = URL.createObjectURL(file);
+  preview.src = objectUrl;
   preview.style.display = 'block';
   statusEl.style.display = 'block';
 
   try {
-    const base64 = await resizeAndEncode(file, 1200);
+    // Resize down to 800px max width for lightweight payloads
+    const base64 = await resizeAndEncode(file, 800);
     statusEl.textContent = 'Payload size: ' + Math.round(base64.length / 1024) + ' KB. Sending...';
+    
     const res = await fetch(PROXY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         image: base64,
         mimeType: 'image/jpeg'
-        // referenceImages: [] — add labeled candidate images here later
-        // to test real comparisons, e.g.:
-        // referenceImages: [{ image: '<base64>', mimeType: 'image/jpeg', label: '9120B' }, ...]
       })
     });
 
-    if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
+
     renderResult(data);
 
   } catch (err) {
-    errorEl.textContent = 'Error name: ' + err.name + ' | Message: ' + err.message + ' | Type: ' + typeof err;
+    errorEl.textContent = 'Error name: ' + err.name + ' | Message: ' + err.message;
     errorEl.style.display = 'block';
   } finally {
     statusEl.style.display = 'none';
+    URL.revokeObjectURL(objectUrl);
   }
 });
 
@@ -137,8 +140,8 @@ function resizeAndEncode(file, maxWidth) {
       canvas.height = height;
       canvas.getContext('2d').drawImage(img, 0, 0, width, height);
 
-      // 0.85 quality JPEG — small file, no visible detail loss for this use case
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      // 0.70 quality JPEG balances fast transfers with image detail
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.70);
       resolve(dataUrl.split(',')[1]);
     };
     img.onerror = reject;
