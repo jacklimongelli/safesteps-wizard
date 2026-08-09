@@ -75,7 +75,7 @@ photoInput.addEventListener('change', async (e) => {
     renderResult(data);
 
   } catch (err) {
-    errorEl.textContent = 'Error: ' + err.message;
+    errorEl.textContent = 'Error name: ' + err.name + ' | Message: ' + err.message + ' | Type: ' + typeof err;
     errorEl.style.display = 'block';
   } finally {
     statusEl.style.display = 'none';
