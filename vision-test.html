@@ -25,8 +25,11 @@
   <h1>Equipment ID Test — Gemini</h1>
   <div class="sub">Take a photo of an installed device to test Gemini identification (grounded search).</div>
 
-  <label class="upload-btn" for="photoInput">Take / Upload Photo</label>
-  <input type="file" id="photoInput" accept="image/*">
+  <label class="upload-btn" for="cameraInput">Take Photo</label>
+  <input type="file" id="cameraInput" accept="image/*" capture="environment">
+
+  <label class="upload-btn" for="uploadInput" style="background:#555">Upload Photo</label>
+  <input type="file" id="uploadInput" accept="image/*">
 
   <img class="preview" id="preview">
   <div class="status" id="status">Analyzing...</div>
@@ -37,14 +40,14 @@
 <script>
 const GROUNDED_WORKER_URL = 'https://restless-king-cbcd.jack-limongelli.workers.dev';
 
-const photoInput = document.getElementById('photoInput');
+const cameraInput = document.getElementById('cameraInput');
+const uploadInput = document.getElementById('uploadInput');
 const preview = document.getElementById('preview');
 const statusEl = document.getElementById('status');
 const errorEl = document.getElementById('error');
 const resultEl = document.getElementById('result');
 
-photoInput.addEventListener('change', async (e) => {
-  const file = e.target.files[0];
+async function handlePhoto(file) {
   if (!file) return;
 
   errorEl.style.display = 'none';
@@ -77,7 +80,10 @@ photoInput.addEventListener('change', async (e) => {
   } finally {
     statusEl.style.display = 'none';
   }
-});
+}
+
+cameraInput.addEventListener('change', (e) => handlePhoto(e.target.files[0]));
+uploadInput.addEventListener('change', (e) => handlePhoto(e.target.files[0]));
 
 function resizeAndEncode(file, maxWidth) {
   return new Promise((resolve, reject) => {
