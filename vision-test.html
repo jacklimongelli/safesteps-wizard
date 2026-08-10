@@ -9,7 +9,8 @@
   body{font-family:Arial,sans-serif;background:#f4f1ea;padding:20px;color:#1c1208}
   .wrap{max-width:480px;margin:0 auto}
   h1{font-size:1.2rem;margin-bottom:4px}
-  .sub{font-size:.8rem;color:#666;margin-bottom:20px}
+  .sub{font-size:.8rem;color:#666;margin-bottom:16px}
+  select{width:100%;padding:12px;margin-bottom:16px;border-radius:8px;border:1px solid #ccc;font-size:1rem}
   input[type=file]{display:none}
   .upload-btn{display:block;width:100%;padding:16px;background:#1c1208;color:#fff;
     text-align:center;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:16px}
@@ -18,12 +19,18 @@
   .result{background:#fff;border-radius:8px;padding:14px;margin-bottom:10px;
     border:1px solid rgba(0,0,0,.08);display:none;white-space:pre-wrap;font-size:.85rem;line-height:1.5}
   .error{color:#b00020;font-size:.85rem;padding:10px;background:#fce8e8;border-radius:6px;display:none}
+  .count{font-size:.75rem;color:#888;margin-bottom:16px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Equipment ID Test — Gemini</h1>
-  <div class="sub">Take a photo of an installed device to test Gemini identification.</div>
+  <div class="sub">Pick a category to narrow the comparison set, then take a photo of an installed device.</div>
+
+  <select id="categorySelect">
+    <option value="">Loading categories...</option>
+  </select>
+  <div class="count" id="countDisplay"></div>
 
   <label class="upload-btn" for="photoInput">Take / Upload Photo</label>
   <input type="file" id="photoInput" accept="image/*">
@@ -38,425 +45,60 @@
 
 <script>
 const PROXY = 'https://www.safestepsplansforms.com/_functions/geminiDetect';
+const REFERENCE_JSON_URL = 'https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images.json';
 
+const categorySelect = document.getElementById('categorySelect');
+const countDisplay = document.getElementById('countDisplay');
 const photoInput = document.getElementById('photoInput');
 const preview = document.getElementById('preview');
 const statusEl = document.getElementById('status');
 const errorEl = document.getElementById('error');
 const resultEl = document.getElementById('result');
 
-const referenceImages = [
-  {
-    "brand": "First Alert",
-    "model": "0827B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/0827B_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "1042135",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/1042135_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "1042135",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/1042135_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "1042135",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/1042135_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "1042135",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/1042135_4.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "1042135",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/1042135_5.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "1042135",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/1042135_6.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "1042135",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/1042135_7.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "1042135",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/1042135_8.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "1042135",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/1042135_9.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "3120B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/3120B_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "3120B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/3120B_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "3120B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/3120B_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "3120B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/3120B_4.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "3120B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/3120B_5.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7010BSL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7010BSL_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7010B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7010B_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7010B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7010B_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7010B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7010B_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7010B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7010B_4.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7010B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7010B_5.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7010",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7010_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7020BSL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7020BSL_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7020BSL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7020BSL_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7020BSL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7020BSL_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7020B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7020B_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7030BSL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7030BSL_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7030BSL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7030BSL_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7030BSL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7030BSL_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "7030BSL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/7030BSL_4.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B-48B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B-48B_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B-48B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B-48B_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B-48P",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B-48P_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B-BUNDLE6",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B-Bundle6_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B-BUNDLE6",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B-Bundle6_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B-BUNDLE6",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B-Bundle6_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B-BUNDLE6",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B-Bundle6_4.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B-BUNDLE6",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B-Bundle6_5.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B_4.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120B",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120B_5.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120LBL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120LBL_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120LBL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120LBL_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120LBL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120LBL_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120LBL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120LBL_4.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120LBL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120LBL_5.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120LBL",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120LBL_6.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "9120",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/9120_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "AC10-500",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/AC10-500_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "AC10-500",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/AC10-500_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "AF400-AUTO",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/AF400-AUTO_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "AF400-AUTO",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/AF400-AUTO_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "AF400-AUTO",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/AF400-AUTO_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "AF400-CAMP",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/AF400-CAMP_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "AF400",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/AF400_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "AF400",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/AF400_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "AF400",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/AF400_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SM210M",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SM210M_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100-AC",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100-AC_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100-AC",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100-AC_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100-AC",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100-AC_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100-AC",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100-AC_4.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100-AC",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100-AC_5.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100-AC",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100-AC_6.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100-AC",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100-AC_7.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100RV",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100RV_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100RV",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100RV_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100RV",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100RV_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100RV",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100RV_4.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100RV",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100RV_5.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100RV",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100RV_6.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100RV",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100RV_7.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100_1.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100_2.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100_3.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100_4.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100_5.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100_6.jpg"
-  },
-  {
-    "brand": "First Alert",
-    "model": "SMI100",
-    "imageUrl": "https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/reference-images/SMI100_7.jpg"
+let allReferenceImages = [];
+let categoryGroups = {};
+
+// Load the full reference set once, group by Equipment Type, populate dropdown
+async function loadReferenceImages() {
+  try {
+    const res = await fetch(REFERENCE_JSON_URL);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    allReferenceImages = await res.json();
+
+    categoryGroups = {};
+    for (const img of allReferenceImages) {
+      const key = img.equipmentType || 'Unknown';
+      if (!categoryGroups[key]) categoryGroups[key] = [];
+      categoryGroups[key].push(img);
+    }
+
+    const sortedKeys = Object.keys(categoryGroups).sort(
+      (a, b) => categoryGroups[b].length - categoryGroups[a].length
+    );
+
+    categorySelect.innerHTML = sortedKeys
+      .map(key => `<option value="${key}">${key} (${categoryGroups[key].length} images)</option>`)
+      .join('');
+
+    updateCountDisplay();
+  } catch (err) {
+    categorySelect.innerHTML = '<option value="">Failed to load reference set</option>';
+    errorEl.textContent = 'Could not load reference-images.json — Error: ' + err.message;
+    errorEl.style.display = 'block';
   }
-];
+}
+
+function updateCountDisplay() {
+  const selected = categorySelect.value;
+  const count = categoryGroups[selected] ? categoryGroups[selected].length : 0;
+  countDisplay.textContent = count
+    ? `Will compare against ${count} reference image(s) in "${selected}".`
+    : '';
+}
+
+categorySelect.addEventListener('change', updateCountDisplay);
+
+loadReferenceImages();
 
 document.getElementById('tinyTestBtn').addEventListener('click', async () => {
   errorEl.style.display = 'none';
@@ -496,6 +138,15 @@ photoInput.addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
+  const selectedCategory = categorySelect.value;
+  const referenceImages = categoryGroups[selectedCategory] || [];
+
+  if (!referenceImages.length) {
+    errorEl.textContent = 'Pick a category first, no reference images selected.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
   errorEl.style.display = 'none';
   resultEl.style.display = 'none';
 
@@ -505,14 +156,19 @@ photoInput.addEventListener('change', async (e) => {
 
   try {
     const base64 = await resizeAndEncode(file, 1200);
-    statusEl.textContent = 'Payload size: ' + Math.round(base64.length / 1024) + ' KB. Sending...';
+    statusEl.textContent = 'Payload size: ' + Math.round(base64.length / 1024) + ' KB. Comparing against ' + referenceImages.length + ' reference images. Sending...';
+
     const res = await fetch(PROXY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         image: base64,
         mimeType: 'image/jpeg',
-        referenceImages: referenceImages
+        referenceImages: referenceImages.map(r => ({
+          brand: r.brand,
+          model: r.model,
+          imageUrl: r.imageUrl
+        }))
       })
     });
 
