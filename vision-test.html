@@ -2,92 +2,167 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Equipment ID Test — Gemini</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Equipment ID — Safe Steps</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Arial,sans-serif;background:#f4f1ea;padding:20px;color:#1c1208}
-  .wrap{max-width:480px;margin:0 auto}
-  h1{font-size:1.2rem;margin-bottom:4px}
-  .sub{font-size:.8rem;color:#666;margin-bottom:20px}
-  input[type=file]{display:none}
-  .upload-btn{display:block;width:100%;padding:16px;background:#1c1208;color:#fff;
-    text-align:center;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:16px}
-  .preview{width:100%;border-radius:8px;margin-bottom:16px;display:none}
-  .status{font-size:.85rem;color:#666;margin-bottom:16px;display:none}
-  .error{color:#b00020;font-size:.85rem;padding:10px;background:#fce8e8;border-radius:6px;display:none}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden;max-width:100vw}
+img{max-width:100%;height:auto}
 
-  .matches{display:none;margin-top:8px}
-  .matches-label{font-size:.9rem;font-weight:bold;margin-bottom:10px}
+:root{
+  --tan:#C3A97D;
+  --dark:#1C1208;
+  --red:#6e1008;
+}
 
-  .room-field{margin-bottom:14px}
-  .room-field label{display:block;font-size:.8rem;color:#666;margin-bottom:4px}
-  .room-field input{width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:.9rem}
+body{
+  font-family:Arial,sans-serif;
+  background-color:var(--tan);
+  background-image:
+    linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),
+    linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);
+  background-size:60px 60px,60px 60px,15px 15px,15px 15px;
+  color:var(--dark);
+  overflow-x:hidden;
+  max-width:100vw;
+}
 
-  .match-card{background:#fff;border-radius:8px;padding:12px;margin-bottom:10px;
-    border:2px solid rgba(0,0,0,.08)}
-  .match-card.selected{border-color:#1c1208;background:#faf8f4}
-  .match-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-  .match-card img{width:64px;height:64px;object-fit:contain;border-radius:6px;background:#f4f1ea;flex-shrink:0}
-  .match-info{flex:1}
-  .match-info .model{font-weight:bold;font-size:.95rem}
-  .match-info .brand{font-size:.8rem;color:#666}
-  .match-info .score{font-size:.75rem;color:#999;margin-top:2px}
+.wrap{max-width:480px;margin:0 auto;padding:0 20px}
 
-  .specs{font-size:.78rem;color:#444;line-height:1.6;margin-bottom:10px;
-    background:#f9f7f3;border-radius:6px;padding:8px}
-  .specs .spec-row{display:flex;justify-content:space-between;gap:8px}
-  .specs .spec-label{color:#888}
-  .specs a{color:#1c1208}
-  .specs .unavailable{color:#999;font-style:italic}
+/* ── NAV (matches site) ── */
+.site-nav{
+  position:sticky;top:0;z-index:200;
+  background-color:var(--tan);
+  border-bottom:2px solid rgba(28,18,8,.28);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;height:58px;
+}
+.nav-logo{font-size:1.35rem;letter-spacing:.05em;color:var(--dark);text-decoration:none}
 
-  .add-btn{width:100%;padding:10px;background:#1c1208;color:#fff;border:none;
-    border-radius:6px;font-size:.85rem;cursor:pointer}
-  .add-btn:disabled{background:#ccc;cursor:not-allowed}
-  .add-btn.added{background:#2e7d32}
+/* ── HERO STRIP ── */
+.hero{padding:28px 0 20px;border-bottom:2px solid rgba(28,18,8,.16);position:relative}
+.sit-tag{font-size:.78rem;letter-spacing:.08em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:10px}
+.sit-tag::before{content:'';display:block;width:14px;height:1px;background:rgba(28,18,8,.55);flex-shrink:0}
+.hero h1{font-size:clamp(1.7rem,6vw,2.4rem);line-height:1.05;letter-spacing:.02em;color:var(--dark);margin-bottom:10px}
+.bodytxt{font-size:.85rem;line-height:1.6;color:rgba(28,18,8,.8);border-left:3px solid rgba(28,18,8,.36);padding-left:12px;max-width:520px}
 
-  .running-list{margin-top:24px}
-  .running-list h2{font-size:1rem;margin-bottom:10px}
-  .list-item{background:#fff;border-radius:8px;padding:12px;margin-bottom:10px;
-    border:1px solid rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-  .list-item-info{font-size:.85rem;line-height:1.5}
-  .list-item-info .model{font-weight:bold}
-  .list-item-info .room{color:#666}
-  .delete-btn{background:#fce8e8;color:#b00020;border:none;border-radius:6px;
-    padding:8px 12px;font-size:.8rem;cursor:pointer;flex-shrink:0}
-  .empty-list{font-size:.85rem;color:#999;font-style:italic}
+/* ── SECTIONS ── */
+.sec{padding:22px 0;border-bottom:2px solid rgba(28,18,8,.13)}
+
+input[type=file]{display:none}
+.btnp{
+  display:flex;align-items:center;justify-content:center;width:100%;
+  font-family:Arial,sans-serif;font-size:.95rem;letter-spacing:.04em;
+  background:var(--dark);color:var(--tan);height:52px;box-sizing:border-box;
+  border:2px solid transparent;cursor:pointer;text-decoration:none;margin-bottom:10px;
+}
+.btns{
+  display:flex;align-items:center;justify-content:center;width:100%;
+  font-family:Arial,sans-serif;font-size:.95rem;letter-spacing:.04em;
+  background:transparent;color:var(--dark);height:52px;box-sizing:border-box;
+  border:2px solid rgba(28,18,8,.33);cursor:pointer;text-decoration:none;margin-bottom:10px;
+}
+
+.preview{width:100%;border:2px solid rgba(28,18,8,.28);margin-bottom:16px;display:none}
+.status{font-size:.82rem;color:rgba(28,18,8,.65);margin-bottom:16px;display:none}
+.error{color:#fff;font-size:.82rem;padding:10px 12px;background:var(--red);margin-bottom:16px;display:none;border-left:3px solid var(--dark)}
+
+.matches{display:none}
+.matches-label{font-size:.78rem;letter-spacing:.08em;color:var(--dark);display:flex;align-items:center;gap:7px;margin-bottom:14px;text-transform:uppercase;font-weight:bold}
+.matches-label::before{content:'';display:block;width:12px;height:1px;background:rgba(28,18,8,.55)}
+
+.room-field{margin-bottom:16px}
+.room-field label{display:block;font-size:.72rem;letter-spacing:.05em;color:rgba(28,18,8,.7);margin-bottom:6px;text-transform:uppercase}
+.room-field input{
+  width:100%;background:rgba(28,18,8,.07);border:1px solid rgba(28,18,8,.3);
+  padding:12px 10px;font-family:Arial,sans-serif;font-size:.85rem;color:var(--dark);outline:none;
+}
+.room-field input::placeholder{color:rgba(28,18,8,.4)}
+
+.match-card{background:rgba(28,18,8,.05);border:1px solid rgba(28,18,8,.28);padding:14px;margin-bottom:12px}
+.match-card.selected{border-color:var(--dark);border-width:2px;background:rgba(28,18,8,.09)}
+.match-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.match-card img{width:64px;height:64px;object-fit:contain;background:var(--tan);border:1px solid rgba(28,18,8,.2);flex-shrink:0}
+.match-info{flex:1}
+.match-info .model{font-weight:bold;font-size:.95rem;color:var(--dark)}
+.match-info .brand{font-size:.78rem;color:rgba(28,18,8,.65)}
+.match-info .score{font-size:.7rem;color:rgba(28,18,8,.5);margin-top:2px}
+
+.specs{font-size:.75rem;color:rgba(28,18,8,.75);line-height:1.7;margin-bottom:12px;
+  background:rgba(28,18,8,.04);border:1px solid rgba(28,18,8,.14);padding:10px}
+.specs .spec-row{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(28,18,8,.08);padding:3px 0}
+.specs .spec-row:last-child{border-bottom:none}
+.specs .spec-label{color:rgba(28,18,8,.5);flex-shrink:0}
+.specs a{color:var(--dark);font-weight:bold}
+.specs .unavailable{color:rgba(28,18,8,.4);font-style:italic}
+
+.add-btn{
+  width:100%;padding:11px;background:var(--dark);color:var(--tan);border:none;
+  font-family:Arial,sans-serif;font-size:.82rem;letter-spacing:.04em;cursor:pointer;
+}
+.add-btn:disabled{background:rgba(28,18,8,.25);color:rgba(28,18,8,.5);cursor:not-allowed}
+.add-btn.added{background:var(--dark);color:var(--tan)}
+
+.sec-tag{font-size:.78rem;letter-spacing:.08em;color:var(--dark);display:flex;align-items:center;gap:7px;margin-bottom:12px;text-transform:uppercase;font-weight:bold}
+.sec-tag::before{content:'';display:block;width:12px;height:1px;background:rgba(28,18,8,.55)}
+
+.list-item{background:rgba(28,18,8,.05);border:1px solid rgba(28,18,8,.28);padding:12px 14px;
+  margin-bottom:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.list-item-info{font-size:.83rem;line-height:1.5}
+.list-item-info .model{font-weight:bold;color:var(--dark)}
+.list-item-info .room{color:rgba(28,18,8,.65)}
+.delete-btn{
+  background:transparent;color:var(--red);border:1px solid var(--red);
+  padding:8px 12px;font-family:Arial,sans-serif;font-size:.72rem;letter-spacing:.03em;
+  cursor:pointer;flex-shrink:0;text-transform:uppercase;
+}
+.empty-list{font-size:.82rem;color:rgba(28,18,8,.5);font-style:italic}
 </style>
 </head>
 <body>
+
+<div class="site-nav">
+  <span class="nav-logo">SAFE STEPS</span>
+</div>
+
 <div class="wrap">
-  <h1>Equipment ID Test — Gemini</h1>
-  <div class="sub">Take a photo of an installed device to identify it.</div>
 
-  <label class="upload-btn" for="cameraInput">Take Photo</label>
-  <input type="file" id="cameraInput" accept="image/*" capture="environment">
-
-  <label class="upload-btn" for="uploadInput" style="background:#555">Upload Photo</label>
-  <input type="file" id="uploadInput" accept="image/*">
-
-  <img class="preview" id="preview">
-  <div class="status" id="status">Analyzing...</div>
-  <div class="error" id="error"></div>
-
-  <div class="matches" id="matches">
-    <div class="matches-label">Which one is correct?</div>
-
-    <div class="room-field">
-      <label for="roomInput">Room this device is in</label>
-      <input type="text" id="roomInput" placeholder="e.g. Kitchen, Hallway, Master Bedroom">
-    </div>
-
-    <div id="matchList"></div>
+  <div class="hero">
+    <div class="sit-tag">EQUIPMENT IDENTIFICATION</div>
+    <h1>Identify Your Equipment</h1>
+    <div class="bodytxt">Take a photo of an installed smoke or CO alarm to identify the exact model and log it to your home inventory.</div>
   </div>
 
-  <div class="running-list">
-    <h2>Recorded Equipment</h2>
+  <div class="sec">
+    <label class="btnp" for="cameraInput">TAKE PHOTO</label>
+    <input type="file" id="cameraInput" accept="image/*" capture="environment">
+
+    <label class="btns" for="uploadInput">UPLOAD PHOTO</label>
+    <input type="file" id="uploadInput" accept="image/*">
+
+    <img class="preview" id="preview">
+    <div class="status" id="status">Analyzing...</div>
+    <div class="error" id="error"></div>
+
+    <div class="matches" id="matches">
+      <div class="matches-label">Which one is correct?</div>
+
+      <div class="room-field">
+        <label for="roomInput">Room this device is in</label>
+        <input type="text" id="roomInput" placeholder="e.g. Kitchen, Hallway, Master Bedroom">
+      </div>
+
+      <div id="matchList"></div>
+    </div>
+  </div>
+
+  <div class="sec" style="border-bottom:none">
+    <div class="sec-tag">Recorded Equipment</div>
     <div id="runningList"></div>
   </div>
+
 </div>
 
 <script>
@@ -105,10 +180,9 @@ const matchListEl = document.getElementById('matchList');
 const runningListEl = document.getElementById('runningList');
 
 let productSpecs = {};
-let recordedEquipment = []; // { id, room, brand, model, equipmentType, sensorType, voiceNoVoice, powerSource, interconnectedness, url }
-let addedForCurrentSearch = false; // enforces "only 1 of the 3" per photo
+let recordedEquipment = [];
+let addedForCurrentSearch = false;
 
-// Load product specs once on page load
 async function loadProductSpecs() {
   try {
     const res = await fetch(PRODUCT_SPECS_URL);
@@ -239,7 +313,7 @@ function renderResult(data) {
         </div>
       </div>
       <div class="specs">${specsHtml}</div>
-      <button type="button" class="add-btn">Add to List</button>
+      <button type="button" class="add-btn">ADD TO LIST</button>
     `;
 
     const addBtn = card.querySelector('.add-btn');
@@ -252,7 +326,7 @@ function renderResult(data) {
 }
 
 function addToRunningList(cardEl, btnEl, match, specs) {
-  if (addedForCurrentSearch) return; // only 1 of the 3 allowed per photo
+  if (addedForCurrentSearch) return;
 
   const room = roomInput.value.trim() || '(room not specified)';
 
@@ -274,11 +348,10 @@ function addToRunningList(cardEl, btnEl, match, specs) {
 
   addedForCurrentSearch = true;
 
-  // Lock all three cards' Add buttons for this search
   document.querySelectorAll('.match-card .add-btn').forEach(b => {
     b.disabled = true;
   });
-  btnEl.textContent = 'Added';
+  btnEl.textContent = 'ADDED';
   btnEl.classList.add('added');
   cardEl.classList.add('selected');
 }
@@ -304,7 +377,7 @@ function renderRunningList() {
         <div class="model">${entry.brand} ${entry.model}</div>
         <div class="room">${entry.room}</div>
       </div>
-      <button type="button" class="delete-btn">Delete</button>
+      <button type="button" class="delete-btn">DELETE</button>
     `;
     item.querySelector('.delete-btn').addEventListener('click', () => removeFromRunningList(entry.id));
     runningListEl.appendChild(item);
