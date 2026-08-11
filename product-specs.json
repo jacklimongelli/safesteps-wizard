@@ -1,0 +1,3122 @@
+{
+  "BRACKET10": {
+    "equipmentType": "Accessory (Bracket)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/heavy-duty-bracket-for-10-pound-fire-extinguisher"
+  },
+  "BRACKET2": {
+    "equipmentType": "Accessory (Bracket)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/small-fire-extinguisher-mounting-bracket"
+  },
+  "BRACKET5": {
+    "equipmentType": "Accessory (Bracket)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/replacement-fire-extinguisher-bracket"
+  },
+  "CO3-B01": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-carbon-monoxide-alarm-1"
+  },
+  "CO3-B01D": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-carbon-monoxide-alarm-with-backlit-digital-display-1"
+  },
+  "CO3-P01": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/plug-in-carbon-monoxide-alarm-with-battery-backup"
+  },
+  "CO3-P01D": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/plug-in-carbon-monoxide-alarm-with-battery-backup-digital-display"
+  },
+  "CO400": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/smoke-and-carbon-monoxide-detector-combo-pack"
+  },
+  "CO5-B10D": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/carbon-monoxide-alarm-with-10-year-battery-digital-temperature-display"
+  },
+  "CO606": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-smoke-alarm-plug-in-co-alarm-with-battery-backup-value-pack"
+  },
+  "CO615": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/dual-power-carbon-monoxide-plug-in-alarm-with-battery-backup-and-digital-display"
+  },
+  "CO710": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/carbon-monoxide-alarm-with-10-year-battery-and-digital-temperature-display"
+  },
+  "GCO1": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/combination-explosive-gas-and-carbon-monoxide-alarm-with-backlit-digital-display"
+  },
+  "CO250T": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/battery-operated-travel-carbon-monoxide-alarm-co250t.htm"
+  },
+  "CO400CN2": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/carbon-monoxide-detector-twin-pack.htm"
+  },
+  "CO511B": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.firstalert.com/products/wireless-interconnected-carbon-monoxide-alarm-with-voice-and-location"
+  },
+  "CO910": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-10-year-carbon-monoxide-alarm-co910.htm"
+  },
+  "CO910V": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-10-year-carbon-monoxide-alarm-with-voice-co910v.htm"
+  },
+  "FCD4CN-3": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RbrEAE/fcd4cn-fcd4cn3"
+  },
+  "SC2-B01": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-combination-smoke-carbon-monoxide-alarm"
+  },
+  "SC2-B10": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-combination-smoke-carbon-monoxide-alarm"
+  },
+  "SC2-W01": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwire-combination-smoke-carbon-monoxide-alarm-with-battery-backup"
+  },
+  "SC2-W10": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwire-combination-smoke-carbon-monoxide-alarm-with-10-year-battery-backup"
+  },
+  "SMCO100": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-2-in-1-smoke-carbon-monoxide-alarm"
+  },
+  "SMCO100V-AC": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Interconnect (type per listing)",
+    "url": "https://www.firstalert.com/products/interconnect-hardwire-2-in-1-smoke-co-alarm-with-battery-backup-voice-alerts"
+  },
+  "SMCO110V-AC": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3JVs000000ufi1MAA/smco110vac"
+  },
+  "SMCO200": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-2-in-1-smoke-carbon-monoxide-alarm-with-slim-profile-design"
+  },
+  "SMCO200V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-2-in-1-smoke-carbon-monoxide-alarm-with-voice-alerts"
+  },
+  "SMCO210": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-2-in-1-smoke-carbon-monoxide-alarm-with-slim-profile-design"
+  },
+  "SMCO210V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-2-in-1-smoke-carbon-monoxide-alarm-with-voice-alerts"
+  },
+  "SMCO410": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/z-wave-plus-smart-smoke-carbon-monoxide-alarm-works-with-ring"
+  },
+  "SMCO500V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - Interconnect (type per listing)",
+    "url": "https://www.firstalert.com/products/interconnect-battery-operated-2-in-1-smoke-co-alarm-with-voice-alerts"
+  },
+  "SMCO600NV": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/sc5-battery-smart-smoke-carbon-monoxide-alarm"
+  },
+  "SMCO600NV-AC": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/sc5-hardwire-smart-smoke-carbon-monoxide-alarm"
+  },
+  "SMICO100": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-2-in-1-smoke-carbon-monoxide-alarm-1"
+  },
+  "SMICO100-AC": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Interconnect (type per listing)",
+    "url": "https://www.firstalert.com/products/interconnect-hardwire-2-in-1-smoke-carbon-monoxide-alarm-with-battery-backup"
+  },
+  "SMICO105-AC": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "Yes - Interconnect (type per listing)",
+    "url": "https://www.firstalert.com/products/interconnect-hardwire-2-in-1-smoke-co-alarm-with-10-year-battery-backup"
+  },
+  "SMICO110": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-2-in-1-smoke-carbon-monoxide-alarm"
+  },
+  "1039102": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RXjEAM/1039102-discontinued"
+  },
+  "1042135": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/onelink-generation-3-smart-smoke-and-co-alarm-hardwired-1042135.htm"
+  },
+  "1042136": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RXqEAM/1042136-discontinued"
+  },
+  "7030BSL": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/hardwired-smoke-and-carbon-monoxide-strobe-light-alarm-7030bsl.htm"
+  },
+  "AC10-500": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/onelink-wi-fi-hardwired-smoke-and-carbon-monoxide-alarm-ac10-500.htm"
+  },
+  "DC10-500": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/onelink-wi-fi-smoke-and-carbon-monoxide-alarm-10-year-battery-dc10-500.htm"
+  },
+  "FAS-SMOKE-CO-BUNDLE": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/fas-smoke-co-bundle.htm"
+  },
+  "PC900": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-photoelectric-smoke-and-co-combo-alarm-pc900.htm"
+  },
+  "PC900V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-photoelectric-smoke-and-co-combo-alarm-with-voice-pc900v.htm"
+  },
+  "PC910": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-10-year-photoelectric-combo-smoke-and-co-alarm-pc910.htm"
+  },
+  "PC910V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-10-year-photoelectric-combo-smoke-and-co-alarm-voice--pc910v.htm"
+  },
+  "PRC700": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-smoke-and-carbon-monoxide-alarm"
+  },
+  "PRC700V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-smoke-and-carbon-monoxide-alarm-with-voice-and-location"
+  },
+  "PRC710": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/combination-photoelectric-smoke-and-carbon-monoxide-alarm-with-10-year-battery"
+  },
+  "PRC710V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/combo-photoelectric-smoke-and-carbon-monoxide-alarm-with-10-year-battery-and-voice-and-location"
+  },
+  "SC7010B": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwired-combination-photoelectric-smoke-and-carbon-monoxide-alarm-with-battery-backup"
+  },
+  "SC7010BV": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwired-talking-photoelectric-smoke-and-carbon-monoxide-alarm"
+  },
+  "SC9120B": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Ionization (smoke) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwired-smoke-and-carbon-monoxide-alarm-with-battery-backup"
+  },
+  "SC9120LBL": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/brk-brands-hardwire-combo-smoke-carbon-monoxide-alarm-sc9120lbl.htm"
+  },
+  "SCO403": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/smoke-and-carbon-monoxide-detector-combo-pack"
+  },
+  "SCO501B2": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/sco501b2-onelink-wireless-talking-battery-operated-smoke-and-co-alarm-2pk.htm"
+  },
+  "SCO501CN-3ST": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.firstalert.com/products/wireless-interconnected-photoelectric-smoke-and-carbon-monoxide-combo-alarm-with-voice-and-location"
+  },
+  "SCO5CN": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-combination-smoke-and-carbon-moxide-alarm"
+  },
+  "SCO5CN-BUNDLE": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-combination-smoke-and-carbon-moxide-alarm"
+  },
+  "SCO7CN": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-combination-smoke-and-carbon-monoxide-alarm-with-voice-and-location"
+  },
+  "SCO7CN-C": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/voice-location-combination-smoke-and-carbon-monoxide-alarm-sco7cn-c.htm"
+  },
+  "SCO7CN-C2": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/voice-location-combination-smoke-and-carbon-monoxide-alarm-2pack-sco7cn-c2.htm"
+  },
+  "ZCOMBO-G": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RYAEA2/zcombo-zcombog"
+  },
+  "AF400": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/ez-fire-spray"
+  },
+  "FE10GR (GARAGE)": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/rechargeable-garage-fire-extinguisher-ul-rated-10-b-c"
+  },
+  "FE10GR (MARINE)": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/rechargeable-marine-auto-fire-extinguisher-ul-rated-10-b-c"
+  },
+  "FE1A10GR": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/rechargeable-home-fire-extinguisher-ul-rated-1-a-10-b-c-1"
+  },
+  "FE1A10GR (MARINE)": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/rechargeable-marine-fire-extinguisher-ul-rated-1-a-10-b-c"
+  },
+  "FE2A10GR": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020Rb2EAE/home2"
+  },
+  "FE3A40GR": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RayEAE/pro5"
+  },
+  "FE4A60BC": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/rechargeable-commercial-fire-extinguisher-ul-rated-4-a-60-b-c"
+  },
+  "FE5GR": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RazEAE/rec5"
+  },
+  "FESA5": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/auto-fire-extinguisher-ul-rated-5-b-c"
+  },
+  "KFE2S5": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/First-Alert-Kitchen-Fire-Extinguisher-KITCHEN5.htm"
+  },
+  "FE20A120B": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/First-Alert-Rechargeable-Heavy-Duty-Commercial-Fire-Extinguisher-FE20A120B.htm"
+  },
+  "AF400-AUTO": {
+    "equipmentType": "Fire Extinguisher (Spray)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/ez-fire-spray"
+  },
+  "AF400-CAMP": {
+    "equipmentType": "Fire Extinguisher (Spray)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/ez-fire-spray"
+  },
+  "SM100V-AC": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Interconnect (type per listing)",
+    "url": "https://www.firstalert.com/products/interconnect-hardwire-smoke-alarm-with-battery-backup-voice-alerts"
+  },
+  "SM2-B01": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-smoke-alarm-1"
+  },
+  "SM2-B10": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-smoke-alarm-1"
+  },
+  "SM2-W01": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwire-smoke-alarm-with-battery-backup"
+  },
+  "SM2-W10": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwire-smoke-alarm-with-10-year-battery-backup"
+  },
+  "SM200": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-smoke-alarm-with-slim-profile-design"
+  },
+  "SM210": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-smoke-alarm-battery-operated-carbon-monoxide-alarm-value-pack"
+  },
+  "SM210L": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-smoke-alarm-with-safety-path-light"
+  },
+  "SM210M": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-micro-smoke-alarm"
+  },
+  "SM210V": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-smoke-alarm-with-voice-alerts"
+  },
+  "SM310": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Dual Sensor (Photoelectric + Ionization)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-sealed-battery-dual-sensor-smoke-alarm"
+  },
+  "SMI100": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-operated-smoke-alarm"
+  },
+  "SMI100-AC": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Interconnect (type per listing)",
+    "url": "https://www.firstalert.com/products/interconnect-hardwire-smoke-alarm-with-battery-backup"
+  },
+  "SMI100RV": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/rv-approved-battery-operated-smoke-alarm"
+  },
+  "SMI105-AC": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "Yes - Interconnect (type per listing)",
+    "url": "https://www.firstalert.com/products/interconnect-hardwire-smoke-alarm-with-10-year-battery-backup"
+  },
+  "SMI110": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-smoke-alarm"
+  },
+  "0827B": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Ionization",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/sealed-ionization-smoke-alarm-with-10-year-lithium-battery"
+  },
+  "3120B": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Dual Sensor (Photoelectric + Ionization)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwire-dual-photoelectric-and-ionization-sensor-smoke-alarm-with-battery-backup"
+  },
+  "7010": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/120-volt-ac-photoelectric-smoke-alarm-7010.htm"
+  },
+  "7010B": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwired-photoelectric-smoke-alarm-with-battery-backup"
+  },
+  "7010BSL": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/hardwired-photoelectric-smoke-detector-7010bsl.htm"
+  },
+  "7020B": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Hardwire Interconnect",
+    "url": "https://www.firstalertstore.com/store/products/hardwired-interconnectable-smoke-detector-with-escape-light-7020b.htm"
+  },
+  "7020BSL": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/hardwired-led-strobe-light-for-hearing-impaired.htm"
+  },
+  "9120": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/hardwired-interconnected-smoke-alarm-9120.htm"
+  },
+  "9120B": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwired-ionization-smoke-alarm-with-battery-backup"
+  },
+  "9120B-48B": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/hardwired-smoke-alarm-bulk-48-pack.htm"
+  },
+  "9120B-48P": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/hardwired-smoke-alarm-boxed-48-pack.htm"
+  },
+  "9120B-BUNDLE6": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/hardwired-ionization-smoke-alarm-with-battery-backup"
+  },
+  "9120LBL": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/brk-brands-hardwire-smoke-alarm-with-10-year-sealed-battery-9120lbl.htm"
+  },
+  "P1000": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-atom-photoelectric-smoke-alarm-antique-copper-finish-p1000-ac-3.htm"
+  },
+  "P1000-AC-3": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-atom-photoelectric-smoke-alarm-antique-copper-finish-p1000-ac-3.htm"
+  },
+  "P1000-CH-3": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-atom-photoelectric-smoke-alarm-cherry-wood-finish-p1000-ch-3.htm"
+  },
+  "P1000-PN-3": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-atom-photoelectric-smoke-alarm-polished-nickel-p1000-pn-3.htm"
+  },
+  "P1010": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-10-year-atom-photoelectric-smoke-and-fire-alarm-p1010.htm"
+  },
+  "P900": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-photoelectric-smoke-alarm-p900.htm"
+  },
+  "P900E": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-photoelectric-smoke-alarm-with-led-escape-light-p900e.htm"
+  },
+  "P910": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-10-year-photoelectric-smoke-alarm-p910.htm"
+  },
+  "P910E": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-10-year-photoelectric-smoke-alarm-with-escape-light-p910e.htm"
+  },
+  "PR700": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/slim-battery-operated-photoelectric-smoke-alarm"
+  },
+  "PR710": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/slim-photoelectric-smoke-alarm-with-10-year-battery"
+  },
+  "SA100B": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RcQEAU/100s-sa100b-sa100s"
+  },
+  "SA300CN2": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Ionization",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/battery-operated-ionization-smoke-alarm-2-pack-sa300cn2.htm"
+  },
+  "SA300CN3": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Ionization",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/battery-operated-ionization-smoke-alarm-sa300cn3.htm"
+  },
+  "SA303CN3": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/sa303cn3-basic-smoke-alarm.htm"
+  },
+  "SA304CN3": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/smoke-alarm-with-escape-light"
+  },
+  "SA304LCN": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/lithium-battery-operated-smoke-alarm-with-escape-light-sa304lcn.htm"
+  },
+  "SA305CN3": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/sa305cn3-10-year-battery-smoke-alarm.htm"
+  },
+  "SA320CN": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Dual Sensor (Photoelectric + Ionization)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/battery-powered-ultimate-protection-smoke-alarm"
+  },
+  "SA3210": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Dual Sensor (Photoelectric + Ionization)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalert.com/products/10-year-battery-ultimate-protection-smoke-alarm"
+  },
+  "SA340CN": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RcIEAU/sa340cn"
+  },
+  "SA501CN-3ST": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.firstalertstore.com/store/products/sa501cn-3st-onelink-wireless-battery-operated-smoke-alarm.htm"
+  },
+  "SA501CN2-3ST": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.firstalertstore.com/store/products/sa501cn2-3st-onelink-wireless-battery-operated-smoke-alarm-twin-pack.htm"
+  },
+  "SA511B": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RYSEA2/sa511cn23st-sa511-sa511b"
+  },
+  "SA511CN2-3ST": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.firstalert.com/products/battery-operated-interconnected-wireless-smoke-alarm-with-voice-location"
+  },
+  "SA520B": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.firstalertstore.com/store/products/first-alert-hardwired-smoke-alarm-with-wireless-interconnect-sa520b.htm"
+  },
+  "SA521CN-3ST": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.firstalert.com/products/interconnected-smoke-alarm-with-hardwire-adapter-included"
+  },
+  "SA710CN": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RYGEA2/sa710-sa710cn"
+  },
+  "SA710LCN": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/sa710lcn-photoelectric-sensor-smoke-alarm.htm"
+  },
+  "SA720CN": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://support.firstalert.com/s/active-product/a3J4x0000020RcKEAU/sa720cn"
+  },
+  "SA9120BCN": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/sa9120bcn-120vac-hardwired-smoke-alarm-with-battery-backup.htm"
+  },
+  "SA9120BCN-BUNDLE3": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/sa9120bcn-120vac-hardwired-smoke-alarm-with-battery-backup.htm"
+  },
+  "SA9120BPCN": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.firstalertstore.com/store/products/hardwired-ionization-smoke-alarm-with-adapter-plugs-sa9120bpcn.htm"
+  },
+  "SM500V": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.firstalert.com/products/interconnect-battery-operated-smoke-alarm-with-voice-alerts"
+  },
+  "CO120X": {
+    "equipmentType": "Accessory",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/safety-accessories/carbon-monoxide-relay-module"
+  },
+  "KA-B": {
+    "equipmentType": "Accessory",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/safety-accessories/quick-convert-adapter-ka-b2"
+  },
+  "KA-F": {
+    "equipmentType": "Accessory",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/ac-plug-adapter-retro-fit-firex-kidde.kdd-9000149025.1.html"
+  },
+  "KA-F2": {
+    "equipmentType": "Accessory",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/safety-accessories/quick-convert-adapter-ka-f2"
+  },
+  "SLED177I": {
+    "equipmentType": "Accessory",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Hardwire Interconnect",
+    "url": "https://www.kidde.com/products/safety-accessories/strobe-smoke-alarm"
+  },
+  "SM120X": {
+    "equipmentType": "Accessory",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/safety-accessories/smoke-alarm-relay-module"
+  },
+  "466401": {
+    "equipmentType": "Accessory (Bracket)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://canada.shopkidde.com/kidde-466401-vehicle-bracket-for-fire-extinguishers"
+  },
+  "KL-2S": {
+    "equipmentType": "Accessory (Escape Ladder)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/safety-accessories/2-story-fire-escape-ladder"
+  },
+  "KL-3S": {
+    "equipmentType": "Accessory (Escape Ladder)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/safety-accessories/3-story-fire-escape-ladder"
+  },
+  "HD135F": {
+    "equipmentType": "Accessory (Heat Detector)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/safety-accessories/heat-alarm"
+  },
+  "442020": {
+    "equipmentType": "Accessory (Test Kit)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/safety-accessories/radon-gas-detection-kit"
+  },
+  "442057": {
+    "equipmentType": "Accessory (Test Kit)",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/safety-accessories/mold-detection-kit"
+  },
+  "C3010": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/10-year-battery-power-carbon-monoxide-alarm"
+  },
+  "C3010D": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/10-year-battery-power-carbon-monoxide-alarm-with-digital-display"
+  },
+  "COB": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/carbon-monoxide-alarm-aa-battery-powered-cob"
+  },
+  "COB10": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/carbon-monoxide-alarm-10-year-battery-powered-cob10"
+  },
+  "COBD": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/carbon-monoxide-alarm-aa-battery-powered-cobd"
+  },
+  "COBD10": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/carbon-monoxide-alarm-10-year-battery-powered-cobd10"
+  },
+  "COBDL": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/carbon-monoxide-alarm-aa-battery-powered-cobdl"
+  },
+  "COBDL10": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/carbon-monoxide-alarm-10-year-battery-powered-cobdl10"
+  },
+  "COP": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/carbon-monoxide-alarm-plug-in-with-aa-backup-battery-cop"
+  },
+  "COPD": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/carbon-monoxide-alarm-plug-in-with-aa-backup-battery-copd"
+  },
+  "COPDLG": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/explosive-gas-and-carbon-monoxide-alarm-plug-in-with-aa-backup-battery-copdlg"
+  },
+  "COPDLQW": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/smart-carbon-monoxide-alarm-with-indoor-air-quality-monitor-plug-in-with-aa-backup-battery-copdlqw"
+  },
+  "COPDW": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/smart-carbon-monoxide-alarm-plug-in-with-aa-backup-battery-copdw"
+  },
+  "KN-COB-B-LP": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/nighthawk-battery-carbon-monoxide-alarm"
+  },
+  "KN-COB-B-LPM": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/battery-carbon-monoxide-alarm"
+  },
+  "KN-COB-DP-LS": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/nighthawk-ac-plug-in-carbon-monoxide-alarm"
+  },
+  "KN-COB-DP2": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/ac-plugin-carbon-monoxide-alarm-with-battery-backup"
+  },
+  "KN-COB-IC": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/ac-hardwired-carbon-monoxide-alarm"
+  },
+  "KN-COB-LCB-A": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/ac-plug-in-carbon-monoxide-alarm"
+  },
+  "KN-COB-LP2": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/battery-carbon-monoxide-alarm-with-hush"
+  },
+  "KN-COEG-3": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/ac-plug-in-carbon-monoxide-and-explosive-gas-alarm-with-digital-display"
+  },
+  "KN-COP-DP-10YB": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Plug-in (AC) + Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/worry-free-bedroom-carbon-monoxide-alarm-with-10-year-battery-backup-digital-display-and-voice-alarm"
+  },
+  "KN-COP-DP-10YH": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC) + Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/worry-free-hallway-carbon-monoxide-alarm-with-10-year-battery-backup-digital-display-and-escape-night-light"
+  },
+  "KN-COP-DP-10YL": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC) + Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/worry-free-living-area-carbon-monoxide-alarm-with-10-year-battery-backup-and-digital-display"
+  },
+  "KN-COP-DP-10YL-AQ-WF": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smart/carbon-monoxide-alarm-with-indoor-air-quality-monitor"
+  },
+  "KN-COP-DP-B": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/ac-plugin-carbon-monoxide-alarm-with-digital-display"
+  },
+  "KN-COP-DP-LS": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/ac-plug-in-carbon-monoxide-alarm-with-digital-display-and-test-button"
+  },
+  "KN-COP-IC": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/ac-hardwired-carbon-monoxide-alarm-with-digital-display"
+  },
+  "KN-COPF-I": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/silhouette-ac-hardwired-carbon-monoxide-alarm-with-digital-display"
+  },
+  "KN-COPP-3": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/ac-plug-in-carbon-monoxide-alarm-with-digital-display"
+  },
+  "KN-COPP-B": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/battery-with-digital-display-carbon-monoxide-alarm"
+  },
+  "KN-COPP-B-LP": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/carbon-monoxide-alarm-with-digital-display"
+  },
+  "KN-COPP-B-LPM": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/battery-carbon-monoxide-alarm-with-digital-display"
+  },
+  "KN-COU-B": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/carbon-monoxide-alarms/ultra-sensitive-battery-powered-carbon-monoxide-monitor"
+  },
+  "900-0143-LPM-US": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/battery-operated-carbon-monoxide-alarm-rv-listed-clamshell.kdd-21026855.1.html"
+  },
+  "9CO5-LP2": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/kidde-battery-operated-carbon-monoxide-alarm.kdd-21026458.1.html"
+  },
+  "KN-COB-B-LS": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/nighthawk-battery-operated-carbon-monoxide-alarm-basic.kdd-21007268.1.html"
+  },
+  "KN-COPP-B-LS": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/nighthawk-battery-operated-carbon-monoxide-alarm-digital-display-clamshell.kdd-21007267.1.html"
+  },
+  "30CUA10": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/hardwired-combo-alarm-with-10-year-backup-battery"
+  },
+  "30CUA10-V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/hardwired-combo-alarm-with-10-year-backup-battery-and-voice-alerts"
+  },
+  "30CUAR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/hardwired-combo-alarm-with-aa-backup-battery"
+  },
+  "30CUAR-V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "AA Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/hardwired-combo-alarm-with-aa-backup-battery-and-voice-alerts"
+  },
+  "30CUAR-VRF": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Hardwired (120V AC)",
+    "interconnectedness": "Yes - Wire-Free Interconnect",
+    "url": "https://www.kidde.com/products/combo-alarms/smoke-co-alarm-hardwired-with-aa-backup-battery"
+  },
+  "30CUAR-W": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smart/smart-combo-smoke-co-alarm-hardwired-aa-backup-battery"
+  },
+  "30CUD10": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/10-year-battery-powered-combo-alarm"
+  },
+  "30CUD10-V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/10-year-battery-powered-combo-alarm-with-voice-alerts"
+  },
+  "30CUDR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/aa-battery-powered-combo-alarm"
+  },
+  "30CUDR-V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "AA Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/aa-battery-powered-combo-alarm-with-voice-alerts"
+  },
+  "30CUDR-VRF": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery",
+    "interconnectedness": "Yes - Wire-Free Interconnect",
+    "url": "https://www.kidde.com/products/combo-alarms/smoke-co-alarm-wire-free-interconnect-aa-battery-powered"
+  },
+  "900-CUAR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/self-testing-hardwired-smoke-carbon-monoxide-alarm"
+  },
+  "900-CUAR-V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/self-testing-hardwired-smoke-carbon-monoxide-voice-alarm"
+  },
+  "900-CUDR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/self-testing-battery-combo-alarm"
+  },
+  "900-CUDR-V": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/self-testing-battery-combo-alarm-with-voice"
+  },
+  "KN-COPE-D": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/battery-photoelectric-combo-alarm-with-voice"
+  },
+  "KN-COPE-IC": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/firex-photoelectric-combo-alarm"
+  },
+  "KN-COSM-B-RF": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.kidde.com/products/combo-alarms/battery-interconnectable-wireless-combo-alarm"
+  },
+  "KN-COSM-BA": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/battery-combo-alarm-with-hush"
+  },
+  "KN-COSM-IBA": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/hardwired-combo-alarm"
+  },
+  "KN-COSM-XTR-BA": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/intelligent-alarm-battery-combination-smoke-carbon-monoxide-alarm"
+  },
+  "P3010CU": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/worry-free-combo-alarm-with-10-year-battery"
+  },
+  "P3010K-CO": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/worry-free-kitchen-combo-alarm-with-10-year-battery"
+  },
+  "P4010ACLEDSCO-2": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/hardwired-combo-alarm-with-strobe"
+  },
+  "P4010ACSCO": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/ac-hardwired-combo-alarm"
+  },
+  "P4010ACSCO-W": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "Yes - Wire-Free Interconnect",
+    "url": "https://www.kidde.com/products/combo-alarms/hardwired-combination-smoke-and-carbon-monoxide-alarm"
+  },
+  "P4010ACSCO-WF": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smart/smoke-and-carbon-monoxide-alarm-with-smart-features"
+  },
+  "P4010ACSCOAQ-WF": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smart/smoke-carbon-monoxide-alarm-with-indoor-air-quality-monitor"
+  },
+  "P4010DCSCO-W": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "Yes - Wire-Free Interconnect",
+    "url": "https://www.kidde.com/products/combo-alarms/battery-powered-combination-smoke-and-carbon-monoxide-alarm"
+  },
+  "RGCUAR-RW": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smart/ring-smart-smoke-co-alarm"
+  },
+  "I12010SCO": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC) + Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/combo-alarms/worry-free-hardwired-combo-alarm-with-10-year-battery-backup"
+  },
+  "2070-VASCR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "9V Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/120v-acdc-powered-smoke-co-alarm-wmulti-criteria-smoke-sensor-9v-battery-backup.kdd-21028500.1.html"
+  },
+  "2070-VDSCR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "9V Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/9v-dc-battery-powered-combo-smoke-carbon-monoxide-alarm-wvoice.kdd-21028499.1.html"
+  },
+  "KN-COPE-I": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/acdc-wire-photoelectric-smokeco-alarm-voice-warning.kdd-21007624.1.html"
+  },
+  "KN-COSM-XRT-BA": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/battery-operated-combination-ionization-cosmoke-alarm-front-load-battery-and-voice-warning-boxed.kdd-21008700.1.html"
+  },
+  "FA10G": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/basic-10-fire-extinguisher"
+  },
+  "FA110G": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/basic-110-fire-extinguisher"
+  },
+  "FA5G": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/basic-5-fire-extinguisher"
+  },
+  "FX210R": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/red-living-area-fire-extinguisher"
+  },
+  "FX210W": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/white-living-area-fire-extinguisher"
+  },
+  "FX340GW-2": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/garage-fire-extinguisher"
+  },
+  "FX340SC-2": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/full-home-fire-extinguisher"
+  },
+  "KAP-14K": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/residential-fire-extinguishers/flame-out"
+  },
+  "KD57-5BC": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/basic-fire-extinguisher"
+  },
+  "KD57W-5BC": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/mariner-pwc-fire-extinguisher"
+  },
+  "KD82-110ABC": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/residential-fire-extinguishers/recreational-fire-extinguisher"
+  },
+  "M10G": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/auto-10-fire-extinguisher"
+  },
+  "M110G": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/110-fire-extinguisher"
+  },
+  "M5G": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/auto-5-fire-extinguisher"
+  },
+  "MAR10": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/mariner-10-fire-extinguisher"
+  },
+  "MAR110": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/mariner-110-fire-extinguisher"
+  },
+  "MAR210": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/mariner-210-fire-extinguisher"
+  },
+  "MAR340": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/mariner-340-fire-extinguisher"
+  },
+  "MAR5": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/mariner-5-fire-extinguisher"
+  },
+  "PLS-2.5MP-1": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-plus-25-mp-fire-extinguisher"
+  },
+  "PRO 2.5 WM-2": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-2-5-wm2-water-fire-extinguisher"
+  },
+  "PRO CD50 CDM-2": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/50lb-self-expelling"
+  },
+  "PRO-10MP-1": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-460-fire-extinguisher"
+  },
+  "PRO-2.5MP-1": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-110-fire-extinguisher"
+  },
+  "PRO-2.75BC-1": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-10-fire-extinguisher"
+  },
+  "PRO-4MP-1": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-210-fire-extinguisher"
+  },
+  "PRO-5MP-1": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-340-fire-extinguisher"
+  },
+  "PRO 10 CDM-4": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/carbon-dioxide-fire-extinguisher-carbon-dioxide-10-cd"
+  },
+  "PRO 15 CDM-4": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/carbon-dioxide-fire-extinguisher-carbon-dioxide-15-cd"
+  },
+  "PRO 20 CDM-4": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/carbon-dioxide-fire-extinguisher-carbon-dioxide-pls-20cd-1"
+  },
+  "PRO 5 CDM-4": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/carbon-dioxide-fire-extinguisher-carbon-dioxide-5-co2"
+  },
+  "PRO PLUS 150 MP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/wheeled-extinguisher-125lb-abc-dry-chemical"
+  },
+  "PRO PLUS 50 MP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/wheeled-extinguisher-50lb-abc-dry-chemical"
+  },
+  "PRO PLUS PLS-10MP-1": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-plus-pls-10mp-1-fire-extinguisher"
+  },
+  "PRO PLUS PLS-20MP-1": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-plus-20-mp-fire-extinguisher"
+  },
+  "PRO PLUS PLS-5MP-1": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-plus-pls-5mp-1-fire-extinguisher"
+  },
+  "RESSP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/kitchen-fire-extinguisher"
+  },
+  "WC-100-1 KS PRO": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/6-liter-class-k-wet-chemical-fire-extinguisher"
+  },
+  "21006204N": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/service-lite-multi-purpose-dry-chemical-fire-extinguisher-abc-type.kdd-21006204n.1.html"
+  },
+  "21006287N": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/specialty-disposable-regular-dry-chemical-fire-extinguisher.kdd-21006287n.1.html"
+  },
+  "21008173N": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/kitchen-fire-extinguisher.kdd-21008173n.1.html"
+  },
+  "25074": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/kitchen-class-k-fire-extinguishers.kdd-25074.1.html"
+  },
+  "440161N": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/29-lb-fire-control-10-fx-fire-extinguisher.kdd-440161n.1.html"
+  },
+  "466112": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/abc-type-multipurpose-dry-chemical-fire-extinguisher.kdd-466112.1.html"
+  },
+  "466112-01": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/multi-purpose-tri-classic-abc-fire-extinguisher.kdd-46611201.1.html"
+  },
+  "466141": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/kitchen-and-garage-fire-extinguisher-rated-10-bc-29-nylon-strap-bracket-disposable.kdd-466141.1.html"
+  },
+  "466141N": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/3-lb-class-b-and-c-kitchengarage-fire-extinguisher.kdd-466141n.1.html"
+  },
+  "AUTO FX 5 II": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/auto"
+  },
+  "FA110": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://shopkidde.com/kidde-fa110-multi-purpose-fire-extinguisher-1a10bc"
+  },
+  "FA110/RESSP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://shopkidde.com/kidde-fa110-multi-purpose-fire-extinguisher-1a10bc"
+  },
+  "FA5B": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/basic-fire-extinguisher-pressure-gauge-and-nylon-strap-bracket-disposable.kdd-21005944.1.html"
+  },
+  "FX340SC": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/fire-extinguishers/full-home-fire-extinguisher"
+  },
+  "KG PLUS": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/kitchen-and-garage-fire-extinguisher.kdd-466141mtl.1.html"
+  },
+  "KK2": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/sodium-bicarbonate-kitchen-kk2-fire-extinguisher.kdd-21006206.1.html"
+  },
+  "PRO10CD": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/10lb-proline-carbon-dioxide-fire-extinguishers-bc-type.kdd-466181.1.html"
+  },
+  "PRO10MP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/proline-10-lb-multi-purpose-dry-chemical-fire-extinguisher.kdd-466204.1.html"
+  },
+  "PRO15CD": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/10-bc-15-fire-extinguisher-wall-hook-rechargeable.kdd-466182.1.html"
+  },
+  "PRO2.5MP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/proline-abc-type-multi-purpose-dry-chemical-fire-extinguisher.kdd-466227.1.html"
+  },
+  "PRO2.5MP-V": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/proline-multi-purpose-dry-chemical-fire-extinguishers-abc-type.kdd-46622701.1.html"
+  },
+  "PRO20CD": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/10-bc-20-fire-extinguisher-wall-hook-rechargeable.kdd-466183.1.html"
+  },
+  "PRO20MP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/multi-purpose-dry-chemical-fire-extinguisher.kdd-466206.1.html"
+  },
+  "PRO5CD": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/5-lb-pro-5-carbon-dioxide-fire-extinguisher.kdd-466180.1.html"
+  },
+  "PRO 110": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-110-fire-extinguisher"
+  },
+  "PRO 210": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-210-fire-extinguisher"
+  },
+  "PRO 340": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/commercial-fire-extinguishers/pro-340-fire-extinguisher"
+  },
+  "PRO2.5W": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/2-12-gallon-proline-water-fire-extinguisher.kdd-466403.1.html"
+  },
+  "PROPLUS10H": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/1-10-bc-11-fire-extinguisher-wall-hook-rechargeable.kdd-466729.1.html"
+  },
+  "PROPLUS10MP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/4-80-bc-10-fire-extinguisher-wall-hook-rechargeable.kdd-468002.1.html"
+  },
+  "PROPLUS15.5H": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/2-10-bc-155-fire-extinguisher-wall-hook-rechargeable.kdd-466730.1.html"
+  },
+  "PROPLUS2.5 MP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/proplus-multi-purpose-dry-chemical-fire-extinguishers.kdd-468000.1.html"
+  },
+  "PROPLUS2.5H": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/halotron-i-class-b-and-c-fires-fire-extinguishers.kdd-466727.1.html"
+  },
+  "PROPLUS20MP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/proplus-multi-purpose-dry-chemical-fire-extinguisher.kdd-468003.1.html"
+  },
+  "PROPLUS5H": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/100-psi-halotron-i-fire-extinguishers.kdd-466728.1.html"
+  },
+  "PROPLUS5MP": {
+    "equipmentType": "Fire Extinguisher",
+    "sensorType": null,
+    "voiceNoVoice": "No Voice",
+    "powerSource": "N/A (manual/pressurized agent)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/3-40-bc-5-fire-extinguisher-wall-hook-rechargeable.kdd-468001.1.html"
+  },
+  "10SDR": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/4in-smoke-alarm-aa-battery-powered"
+  },
+  "20SA10": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/smoke-alarm-hardwired-with-10-year-backup-battery"
+  },
+  "20SA10-V": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "10-Year Sealed Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/smoke-alarm-hardwired-with-10-year-backup-battery-with-voice"
+  },
+  "20SAR": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/smoke-alarm-hardwired-with-aa-backup-battery"
+  },
+  "20SAR-VRF": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Hardwired (120V AC)",
+    "interconnectedness": "Yes - Wire-Free Interconnect",
+    "url": "https://www.kidde.com/products/smart/smart-smoke-alarm-hardwired-aa-battery-backup"
+  },
+  "20SAR-W": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smart/smart-smoke-alarm-hardwired-aa-battery-backup"
+  },
+  "20SD10": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/smoke-alarm-10-year-battery-powered"
+  },
+  "20SD10-V": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/smoke-alarm-10-year-battery-powered-and-voice-alerts"
+  },
+  "20SDR": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/detect/smoke-alarm-aa-battery-powered"
+  },
+  "20SDR-VRF": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery",
+    "interconnectedness": "Yes - Wire-Free Interconnect",
+    "url": "https://www.kidde.com/products/smart/smart-smoke-alarm-hardwired-aa-battery-backup"
+  },
+  "P12040": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Hardwire Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/ac-hardwired-interconnect-photoelectric-smoke-alarm-with-hush"
+  },
+  "P3010B": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/worry-free-bedroom-10-year-battery-powered-smoke-alarm"
+  },
+  "P3010H": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/worry-free-hallway-10-year-battery-powered-smoke-alarm"
+  },
+  "P3010L": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/worry-free-living-area-10-year-battery-powered-smoke-alarm"
+  },
+  "P4010ACLEDS-2": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/smoke-alarm-with-strobe"
+  },
+  "P4010ACS": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/ac-hardwired-photoelectric-smoke-alarm"
+  },
+  "P4010ACS-W": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Wire-Free Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/wire-free-interconnected-ac-hardwired-smoke-alarm"
+  },
+  "P4010ACS-WF": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smart/smoke-alarm-with-smart-features"
+  },
+  "P4010ACSAQ-WF": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smart/smoke-alarm-with-indoor-air-quality-monitor"
+  },
+  "P4010DCS-W": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "Yes - Wire-Free Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/wire-free-interconnected-battery-powered-smoke-alarm"
+  },
+  "P4010LACS-W": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Wire-Free Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/wire-free-interconnected-hardwired-smoke-alarm-with-egress-light"
+  },
+  "P4010LDCS-W": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Battery Powered",
+    "interconnectedness": "Yes - Wire-Free Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/wire-free-interconnected-battery-powered-smoke-alarm-with-egress-light"
+  },
+  "P9040": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/battery-4inch-photoelectric-smoke-alarm"
+  },
+  "P9050": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/battery-photoelectric-smoke-alarm"
+  },
+  "PI2010": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Dual Sensor (Photoelectric + Ionization)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Hardwire Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/dual-sensor-ac-hardwired-interconnect-smoke-alarm"
+  },
+  "PI9010": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Dual Sensor (Photoelectric + Ionization)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/dual-sensor-battery-smoke-alarm"
+  },
+  "RF-SM-ACDC": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/ac-hardwired-wireless-interconnect-smoke-alarm"
+  },
+  "RF-SM-DC": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/battery-wireless-interconnect-smoke-alarm"
+  },
+  "RGSAR-RW": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "AA Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smart/ring-smart-smoke-alarm"
+  },
+  "I1040": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/micro-10-year-battery-smoke-alarm"
+  },
+  "I12010S": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC) + Sealed Lithium Battery",
+    "interconnectedness": "Yes - Hardwire Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/worry-free-hardwired-interconnect-smoke-alarm-10-year-battery-backup"
+  },
+  "I12020": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/hardwired-smoke-alarm"
+  },
+  "I12040": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Ionization",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Hardwire Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/ac-hardwired-interconnect-smoke-alarm-with-hush"
+  },
+  "I12060": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/ac-hardwired-smoke-alarm"
+  },
+  "I12080": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Hardwire Interconnect",
+    "url": "https://www.kidde.com/products/smoke-alarms/ac-hardwired-interconnect-smoke-alarm-with-safety-light"
+  },
+  "I4618AC": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/firex-hardwired-smoke-alarm"
+  },
+  "I4718": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/smoke-alarm-with-led"
+  },
+  "I5000": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/firex-ac-hardwired-smoke-alarm-ten-year-warranty"
+  },
+  "I9010": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Sealed Lithium Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/10-year-battery-powered-smoke-alarm"
+  },
+  "I9030": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/fyrewatch-battery-smoke-alarm"
+  },
+  "I9040": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/fire-sentry-battery-4inch-smoke-alarm"
+  },
+  "I9050": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/battery-smoke-alarm"
+  },
+  "I9060": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/battery-smoke-alarm-with-hush"
+  },
+  "I9070": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/front-load-battery-smoke-alarm"
+  },
+  "I9080": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/hallway-battery-smoke-alarm"
+  },
+  "2070-VASR": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "9V Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/120v-acdc-powered-smoke-alarm-wvoice-9v-battery-backup.kdd-21028502.1.html"
+  },
+  "2070-VDSR": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "9V Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/9v-dc-battery-powered-smoke-alarm-wvoice-battery-backup.kdd-21028501.1.html"
+  },
+  "RF-SM-AC": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Ionization",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Interconnect (type per listing)",
+    "url": "https://www.homelectrical.com/120v-ac-hardwired-wireless-smoke-alarm-interconnected-3pc-pdq.kdd-12799999.1.html"
+  },
+  "I12060-A": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/ac-hardwired-smoke-alarm"
+  },
+  "I4618": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Ionization",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "9V Battery + Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.kidde.com/products/smoke-alarms/firex-hardwired-smoke-alarm"
+  },
+  "I4618-A": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Ionization",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "9V Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.homelectrical.com/120v-acdc-slide-load-smoke-alarm-alkaline-battery-6-pack.kdd-21007583.1.html"
+  },
+  "RC01 PRO": {
+    "equipmentType": "Accessory",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/rc01-remote-controller-for-smoke-alarm"
+  },
+  "SBS50": {
+    "equipmentType": "Accessory",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - Base Station (App)",
+    "url": "https://www.x-sense.com/products/x-sense-sbs50-base-station-your-complete-home-safety-hub"
+  },
+  "XC01-M": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - Base Station (App)",
+    "url": "https://www.x-sense.com/products/xc01-m-smart-carbon-monoxide-alarm"
+  },
+  "XC01-R": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/xc01-carbon-monoxide-detector"
+  },
+  "XC01-WR": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.x-sense.com/products/xc01-wr-wireless-interconnected-carbon-monoxide-detector"
+  },
+  "XC0C-MR": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - Base Station (App)",
+    "url": "https://www.x-sense.com/products/xc0c-mr-interconnected-smart-carbon-monoxide-alarm"
+  },
+  "XC0C-SA": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Plug-in (AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/x-sense-plug-in-carbon-monoxide-detector-xc0c-sa"
+  },
+  "XC0C-SR": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/x-sense-portable-carbon-monoxide-detector-with-digital-display-xc0c-sr"
+  },
+  "XC0C-IR": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/x-sense-smart-carbon-monoxide-detector-xc0c-ir"
+  },
+  "XC0K-SN": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/pages/summer-sale"
+  },
+  "XC0M-SR": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/xc0m-sr-standalone-carbon-monoxide-alarm"
+  },
+  "XC0M-IR": {
+    "equipmentType": "CO Alarm",
+    "sensorType": "Electrochemical",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/xc0m-ir-smart-carbon-monoxide-alarm"
+  },
+  "SC01": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/sc01-w-wireless-interconnected-smoke-and-co-alarm"
+  },
+  "SC01-W": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.x-sense.com/products/sc01-w-wireless-interconnected-smoke-and-co-alarm"
+  },
+  "SC06": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/sc06-w-wireless-interconnected-smoke-and-co-alarm"
+  },
+  "SC06-W": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.x-sense.com/products/sc06-w-wireless-interconnected-smoke-and-co-alarm"
+  },
+  "SC07": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/x-sense-sc07-mr-combo-smoke-and-co-detector"
+  },
+  "SC07-MR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - Base Station (App)",
+    "url": "https://www.x-sense.com/products/x-sense-sc07-mr-combo-smoke-and-co-detector"
+  },
+  "SC07-W": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.x-sense.com/products/sc07-w-wireless-interconnected-combination-smoke-and-carbon-monoxide-detector"
+  },
+  "SC07-WX": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/smart-smoke-detector-carbon-monoxide-detector-combo-sc07-wx"
+  },
+  "XP02-AR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Hardwire Interconnect",
+    "url": "https://www.x-sense.com/products/x-sense-smoke-detector-carbon-monoxide-detector-combo-xp02-ar"
+  },
+  "XP04": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Hardwire Interconnect",
+    "url": "https://www.x-sense.com/products/xp04-hardwired-combination-smoke-and-carbon-monoxide-detector"
+  },
+  "XP0A-MR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - Base Station (App)",
+    "url": "https://www.x-sense.com/products/interlinked-smart-wi-fi-smoke-and-carbon-monoxide-detector-with-voice-alerts-x-sense-xp0a-mr31"
+  },
+  "XP0A-SR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/combination-detector-xp0a-sr"
+  },
+  "XP0A-IR": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/x-sense-wifi-smoke-and-co-detector-xp0a-ir"
+  },
+  "XP0J-SA": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "Yes - Hardwire Interconnect",
+    "url": "https://www.x-sense.com/products/xp0j-sa-ac-hardwired-smoke-and-co-alarm-with-voice-alerts"
+  },
+  "XP0J-IA": {
+    "equipmentType": "Combination Smoke+CO Alarm",
+    "sensorType": "Photoelectric (smoke, typical) + Electrochemical (CO)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Hardwired (120V AC)",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/xp0j-ia-smart-hardwired-smoke-and-co-alarm-with-voice-alerts"
+  },
+  "SD19-MN": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - Base Station (App)",
+    "url": "https://www.x-sense.com/products/sd19-mn-interconnected-smart-smoke-alarm"
+  },
+  "SD19-W": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.x-sense.com/products/sd19-w-wireless-interconnected-smoke-detector"
+  },
+  "SD20-W": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.x-sense.com/pages/summer-sale"
+  },
+  "SD2J0AX": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/x-sense-10-year-battery-smoke-detector-sd2j0ax"
+  },
+  "XS01": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "10-Year Sealed Battery",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/fs31-smoke-alarm-kit"
+  },
+  "XS01-M": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - Base Station (App)",
+    "url": "https://www.x-sense.com/products/fs31-smoke-alarm-kit"
+  },
+  "XS01-WR": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - RF Wireless Interconnect",
+    "url": "https://www.x-sense.com/products/x-sense-wireless-interconnected-smoke-alarm-xs01-wr"
+  },
+  "XS01-WX": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "No Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/xs01-wx-wi-fi-smoke-alarm"
+  },
+  "XS0B-MR": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "Yes - Base Station (App)",
+    "url": "https://www.x-sense.com/products/smart-wireless-interconnected-smoke-detector"
+  },
+  "XS0B-IR": {
+    "equipmentType": "Smoke Alarm",
+    "sensorType": "Photoelectric (typical for this line)",
+    "voiceNoVoice": "Voice",
+    "powerSource": "Not specified in listing",
+    "interconnectedness": "No / Standalone",
+    "url": "https://www.x-sense.com/products/xs0b-ir-smart-smoke-alarm"
+  }
+}
