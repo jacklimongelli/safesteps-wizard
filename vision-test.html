@@ -18,6 +18,19 @@
   .result{background:#fff;border-radius:8px;padding:14px;margin-bottom:10px;
     border:1px solid rgba(0,0,0,.08);display:none;white-space:pre-wrap;font-size:.85rem;line-height:1.5}
   .error{color:#b00020;font-size:.85rem;padding:10px;background:#fce8e8;border-radius:6px;display:none}
+  .matches{display:none;margin-top:8px}
+  .matches-label{font-size:.9rem;font-weight:bold;margin-bottom:10px}
+  .match-card{display:flex;align-items:center;gap:12px;background:#fff;border-radius:8px;
+    padding:10px;margin-bottom:10px;border:2px solid rgba(0,0,0,.08);cursor:pointer;
+    text-align:left;width:100%}
+  .match-card img{width:64px;height:64px;object-fit:contain;border-radius:6px;background:#f4f1ea;flex-shrink:0}
+  .match-info{flex:1}
+  .match-info .model{font-weight:bold;font-size:.95rem}
+  .match-info .brand{font-size:.8rem;color:#666}
+  .match-info .score{font-size:.75rem;color:#999;margin-top:2px}
+  .match-card.selected{border-color:#1c1208;background:#faf8f4}
+  .selected-confirm{display:none;background:#e8f5e9;color:#1b5e20;padding:10px;
+    border-radius:6px;font-size:.85rem;margin-top:10px}
 </style>
 </head>
 <body>
@@ -34,7 +47,11 @@
   <img class="preview" id="preview">
   <div class="status" id="status">Analyzing...</div>
   <div class="error" id="error"></div>
-  <div class="result" id="result"></div>
+  <div class="matches" id="matches">
+    <div class="matches-label">Which one is correct?</div>
+    <div id="matchList"></div>
+  </div>
+  <div class="selected-confirm" id="selectedConfirm"></div>
 </div>
 
 <script>
@@ -45,13 +62,16 @@ const uploadInput = document.getElementById('uploadInput');
 const preview = document.getElementById('preview');
 const statusEl = document.getElementById('status');
 const errorEl = document.getElementById('error');
-const resultEl = document.getElementById('result');
+const matchesEl = document.getElementById('matches');
+const matchListEl = document.getElementById('matchList');
+const selectedConfirmEl = document.getElementById('selectedConfirm');
 
 async function handlePhoto(file) {
   if (!file) return;
 
   errorEl.style.display = 'none';
-  resultEl.style.display = 'none';
+  matchesEl.style.display = 'none';
+  selectedConfirmEl.style.display = 'none';
 
   preview.src = URL.createObjectURL(file);
   preview.style.display = 'block';
@@ -120,19 +140,44 @@ function renderResult(data) {
     return;
   }
 
-  const matches = data.matches;
-  if (!matches || !matches.length) {
+  const matches = (data.matches || []).slice(0, 3);
+  if (!matches.length) {
     errorEl.textContent = 'No matches returned. Raw response: ' + JSON.stringify(data).slice(0, 500);
     errorEl.style.display = 'block';
     return;
   }
 
-  const lines = matches.map((m, i) =>
-    `${i + 1}. Brand: ${m.brand} | Model: ${m.model} | Similarity: ${m.similarityScore}`
-  );
+  matchListEl.innerHTML = '';
 
-  resultEl.textContent = lines.join('\n');
-  resultEl.style.display = 'block';
+  matches.forEach((m, i) => {
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'match-card';
+    card.innerHTML = `
+      <img src="${m.imageUrl}" alt="${m.model}">
+      <div class="match-info">
+        <div class="model">${m.model}</div>
+        <div class="brand">${m.brand}</div>
+        <div class="score">Similarity: ${m.similarityScore}</div>
+      </div>
+    `;
+    card.addEventListener('click', () => selectMatch(card, m));
+    matchListEl.appendChild(card);
+  });
+
+  matchesEl.style.display = 'block';
+}
+
+function selectMatch(cardEl, match) {
+  document.querySelectorAll('.match-card').forEach(c => c.classList.remove('selected'));
+  cardEl.classList.add('selected');
+
+  selectedConfirmEl.textContent = `Selected: ${match.brand} ${match.model}`;
+  selectedConfirmEl.style.display = 'block';
+
+  // Hook point: this is where you'd send the confirmed selection onward
+  // (e.g. to fetch capabilities/maintenance info, or log for accuracy tracking).
+  // console.log('User confirmed match:', match);
 }
 
 </script>
