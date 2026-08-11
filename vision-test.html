@@ -17,13 +17,7 @@ img{max-width:100%;height:auto}
 
 body{
   font-family:Arial,sans-serif;
-  background-color:var(--tan);
-  background-image:
-    linear-gradient(rgba(28,18,8,.12) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(28,18,8,.12) 1px,transparent 1px),
-    linear-gradient(rgba(28,18,8,.05) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(28,18,8,.05) 1px,transparent 1px);
-  background-size:60px 60px,60px 60px,15px 15px,15px 15px;
+  background:transparent;
   color:var(--dark);
   overflow-x:hidden;
   max-width:100vw;
@@ -31,18 +25,8 @@ body{
 
 .wrap{max-width:480px;margin:0 auto;padding:0 20px}
 
-/* ── NAV (matches site) ── */
-.site-nav{
-  position:sticky;top:0;z-index:200;
-  background-color:var(--tan);
-  border-bottom:2px solid rgba(28,18,8,.28);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 20px;height:58px;
-}
-.nav-logo{font-size:1.35rem;letter-spacing:.05em;color:var(--dark);text-decoration:none}
-
 /* ── HERO STRIP ── */
-.hero{padding:28px 0 20px;border-bottom:2px solid rgba(28,18,8,.16);position:relative}
+.hero{padding:20px 0 16px;border-bottom:2px solid rgba(28,18,8,.16);position:relative}
 .sit-tag{font-size:.78rem;letter-spacing:.08em;color:rgba(28,18,8,.72);display:flex;align-items:center;gap:7px;margin-bottom:10px}
 .sit-tag::before{content:'';display:block;width:14px;height:1px;background:rgba(28,18,8,.55);flex-shrink:0}
 .hero h1{font-size:clamp(1.7rem,6vw,2.4rem);line-height:1.05;letter-spacing:.02em;color:var(--dark);margin-bottom:10px}
@@ -123,17 +107,7 @@ input[type=file]{display:none}
 </head>
 <body>
 
-<div class="site-nav">
-  <span class="nav-logo">SAFE STEPS</span>
-</div>
-
 <div class="wrap">
-
-  <div class="hero">
-    <div class="sit-tag">EQUIPMENT IDENTIFICATION</div>
-    <h1>Identify Your Equipment</h1>
-    <div class="bodytxt">Take a photo of an installed smoke or CO alarm to identify the exact model and log it to your home inventory.</div>
-  </div>
 
   <div class="sec">
     <label class="btnp" for="cameraInput">TAKE PHOTO</label>
@@ -385,6 +359,14 @@ function renderRunningList() {
 }
 
 renderRunningList();
+
+// ── IFRAME AUTO-RESIZE: report height to parent page whenever content changes ──
+function reportHeight() {
+  const h = document.documentElement.scrollHeight;
+  window.parent.postMessage({ action: 'resize', height: h }, '*');
+}
+new ResizeObserver(reportHeight).observe(document.body);
+window.addEventListener('load', reportHeight);
 </script>
 </body>
 </html>
