@@ -114,20 +114,27 @@ function resizeAndEncode(file, maxWidth) {
 }
 
 function renderResult(data) {
-  const candidate = data.candidates && data.candidates[0];
-  const text = candidate && candidate.content && candidate.content.parts
-    ? candidate.content.parts.map(p => p.text).filter(Boolean).join('\n')
-    : null;
-
-  if (!text) {
-    errorEl.textContent = 'No response text returned. Raw response: ' + JSON.stringify(data).slice(0, 500);
+  if (data.error) {
+    errorEl.textContent = 'Worker error: ' + data.error;
     errorEl.style.display = 'block';
     return;
   }
 
-  resultEl.textContent = text;
+  const matches = data.matches;
+  if (!matches || !matches.length) {
+    errorEl.textContent = 'No matches returned. Raw response: ' + JSON.stringify(data).slice(0, 500);
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  const lines = matches.map((m, i) =>
+    `${i + 1}. Brand: ${m.brand} | Model: ${m.model} | Similarity: ${m.similarityScore}`
+  );
+
+  resultEl.textContent = lines.join('\n');
   resultEl.style.display = 'block';
 }
+
 </script>
 </body>
 </html>
