@@ -15,28 +15,53 @@
     text-align:center;border-radius:8px;font-size:1rem;cursor:pointer;margin-bottom:16px}
   .preview{width:100%;border-radius:8px;margin-bottom:16px;display:none}
   .status{font-size:.85rem;color:#666;margin-bottom:16px;display:none}
-  .result{background:#fff;border-radius:8px;padding:14px;margin-bottom:10px;
-    border:1px solid rgba(0,0,0,.08);display:none;white-space:pre-wrap;font-size:.85rem;line-height:1.5}
   .error{color:#b00020;font-size:.85rem;padding:10px;background:#fce8e8;border-radius:6px;display:none}
+
   .matches{display:none;margin-top:8px}
   .matches-label{font-size:.9rem;font-weight:bold;margin-bottom:10px}
-  .match-card{display:flex;align-items:center;gap:12px;background:#fff;border-radius:8px;
-    padding:10px;margin-bottom:10px;border:2px solid rgba(0,0,0,.08);cursor:pointer;
-    text-align:left;width:100%}
+
+  .room-field{margin-bottom:14px}
+  .room-field label{display:block;font-size:.8rem;color:#666;margin-bottom:4px}
+  .room-field input{width:100%;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:.9rem}
+
+  .match-card{background:#fff;border-radius:8px;padding:12px;margin-bottom:10px;
+    border:2px solid rgba(0,0,0,.08)}
+  .match-card.selected{border-color:#1c1208;background:#faf8f4}
+  .match-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
   .match-card img{width:64px;height:64px;object-fit:contain;border-radius:6px;background:#f4f1ea;flex-shrink:0}
   .match-info{flex:1}
   .match-info .model{font-weight:bold;font-size:.95rem}
   .match-info .brand{font-size:.8rem;color:#666}
   .match-info .score{font-size:.75rem;color:#999;margin-top:2px}
-  .match-card.selected{border-color:#1c1208;background:#faf8f4}
-  .selected-confirm{display:none;background:#e8f5e9;color:#1b5e20;padding:10px;
-    border-radius:6px;font-size:.85rem;margin-top:10px}
+
+  .specs{font-size:.78rem;color:#444;line-height:1.6;margin-bottom:10px;
+    background:#f9f7f3;border-radius:6px;padding:8px}
+  .specs .spec-row{display:flex;justify-content:space-between;gap:8px}
+  .specs .spec-label{color:#888}
+  .specs a{color:#1c1208}
+  .specs .unavailable{color:#999;font-style:italic}
+
+  .add-btn{width:100%;padding:10px;background:#1c1208;color:#fff;border:none;
+    border-radius:6px;font-size:.85rem;cursor:pointer}
+  .add-btn:disabled{background:#ccc;cursor:not-allowed}
+  .add-btn.added{background:#2e7d32}
+
+  .running-list{margin-top:24px}
+  .running-list h2{font-size:1rem;margin-bottom:10px}
+  .list-item{background:#fff;border-radius:8px;padding:12px;margin-bottom:10px;
+    border:1px solid rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .list-item-info{font-size:.85rem;line-height:1.5}
+  .list-item-info .model{font-weight:bold}
+  .list-item-info .room{color:#666}
+  .delete-btn{background:#fce8e8;color:#b00020;border:none;border-radius:6px;
+    padding:8px 12px;font-size:.8rem;cursor:pointer;flex-shrink:0}
+  .empty-list{font-size:.85rem;color:#999;font-style:italic}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Equipment ID Test — Gemini</h1>
-  <div class="sub">Take a photo of an installed device to test Gemini identification (grounded search).</div>
+  <div class="sub">Take a photo of an installed device to identify it.</div>
 
   <label class="upload-btn" for="cameraInput">Take Photo</label>
   <input type="file" id="cameraInput" accept="image/*" capture="environment">
@@ -47,15 +72,27 @@
   <img class="preview" id="preview">
   <div class="status" id="status">Analyzing...</div>
   <div class="error" id="error"></div>
+
   <div class="matches" id="matches">
     <div class="matches-label">Which one is correct?</div>
+
+    <div class="room-field">
+      <label for="roomInput">Room this device is in</label>
+      <input type="text" id="roomInput" placeholder="e.g. Kitchen, Hallway, Master Bedroom">
+    </div>
+
     <div id="matchList"></div>
   </div>
-  <div class="selected-confirm" id="selectedConfirm"></div>
+
+  <div class="running-list">
+    <h2>Recorded Equipment</h2>
+    <div id="runningList"></div>
+  </div>
 </div>
 
 <script>
-const GROUNDED_WORKER_URL = 'https://restless-king-cbcd.jack-limongelli.workers.dev';
+const WORKER_URL = 'https://restless-king-cbcd.jack-limongelli.workers.dev';
+const PRODUCT_SPECS_URL = 'https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/product-specs.json';
 
 const cameraInput = document.getElementById('cameraInput');
 const uploadInput = document.getElementById('uploadInput');
@@ -63,15 +100,34 @@ const preview = document.getElementById('preview');
 const statusEl = document.getElementById('status');
 const errorEl = document.getElementById('error');
 const matchesEl = document.getElementById('matches');
+const roomInput = document.getElementById('roomInput');
 const matchListEl = document.getElementById('matchList');
-const selectedConfirmEl = document.getElementById('selectedConfirm');
+const runningListEl = document.getElementById('runningList');
+
+let productSpecs = {};
+let recordedEquipment = []; // { id, room, brand, model, equipmentType, sensorType, voiceNoVoice, powerSource, interconnectedness, url }
+let addedForCurrentSearch = false; // enforces "only 1 of the 3" per photo
+
+// Load product specs once on page load
+async function loadProductSpecs() {
+  try {
+    const res = await fetch(PRODUCT_SPECS_URL);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    productSpecs = await res.json();
+  } catch (err) {
+    console.error('Failed to load product-specs.json:', err.message);
+    productSpecs = {};
+  }
+}
+loadProductSpecs();
 
 async function handlePhoto(file) {
   if (!file) return;
 
   errorEl.style.display = 'none';
   matchesEl.style.display = 'none';
-  selectedConfirmEl.style.display = 'none';
+  addedForCurrentSearch = false;
+  roomInput.value = '';
 
   preview.src = URL.createObjectURL(file);
   preview.style.display = 'block';
@@ -79,9 +135,9 @@ async function handlePhoto(file) {
 
   try {
     const base64 = await resizeAndEncode(file, 1200);
-    statusEl.textContent = 'Payload size: ' + Math.round(base64.length / 1024) + ' KB. Running grounded search...';
+    statusEl.textContent = 'Payload size: ' + Math.round(base64.length / 1024) + ' KB. Identifying...';
 
-    const res = await fetch(GROUNDED_WORKER_URL, {
+    const res = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -133,6 +189,13 @@ function resizeAndEncode(file, maxWidth) {
   });
 }
 
+function specRow(label, value) {
+  if (!value) {
+    return `<div class="spec-row"><span class="spec-label">${label}</span><span class="unavailable">Not available</span></div>`;
+  }
+  return `<div class="spec-row"><span class="spec-label">${label}</span><span>${value}</span></div>`;
+}
+
 function renderResult(data) {
   if (data.error) {
     errorEl.textContent = 'Worker error: ' + data.error;
@@ -149,37 +212,106 @@ function renderResult(data) {
 
   matchListEl.innerHTML = '';
 
-  matches.forEach((m, i) => {
-    const card = document.createElement('button');
-    card.type = 'button';
+  matches.forEach((m) => {
+    const specs = productSpecs[m.model.toUpperCase()] || null;
+
+    const card = document.createElement('div');
     card.className = 'match-card';
+
+    const specsHtml = specs
+      ? `
+        ${specRow('Equipment Type', specs.equipmentType)}
+        ${specRow('Sensor Type', specs.sensorType)}
+        ${specRow('Voice/No Voice', specs.voiceNoVoice)}
+        ${specRow('Power Source', specs.powerSource)}
+        ${specRow('Interconnectedness', specs.interconnectedness)}
+        ${specRow('Product Page', specs.url ? `<a href="${specs.url}" target="_blank" rel="noopener">View</a>` : null)}
+      `
+      : `<div class="unavailable">Spec data not available for this model.</div>`;
+
     card.innerHTML = `
-      <img src="${m.imageUrl}" alt="${m.model}">
-      <div class="match-info">
-        <div class="model">${m.model}</div>
-        <div class="brand">${m.brand}</div>
-        <div class="score">Similarity: ${m.similarityScore}</div>
+      <div class="match-top">
+        <img src="${m.imageUrl}" alt="${m.model}">
+        <div class="match-info">
+          <div class="model">${m.model}</div>
+          <div class="brand">${m.brand}</div>
+          <div class="score">Similarity: ${m.similarityScore}</div>
+        </div>
       </div>
+      <div class="specs">${specsHtml}</div>
+      <button type="button" class="add-btn">Add to List</button>
     `;
-    card.addEventListener('click', () => selectMatch(card, m));
+
+    const addBtn = card.querySelector('.add-btn');
+    addBtn.addEventListener('click', () => addToRunningList(card, addBtn, m, specs));
+
     matchListEl.appendChild(card);
   });
 
   matchesEl.style.display = 'block';
 }
 
-function selectMatch(cardEl, match) {
-  document.querySelectorAll('.match-card').forEach(c => c.classList.remove('selected'));
+function addToRunningList(cardEl, btnEl, match, specs) {
+  if (addedForCurrentSearch) return; // only 1 of the 3 allowed per photo
+
+  const room = roomInput.value.trim() || '(room not specified)';
+
+  const entry = {
+    id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+    room,
+    brand: match.brand,
+    model: match.model,
+    equipmentType: specs ? specs.equipmentType : null,
+    sensorType: specs ? specs.sensorType : null,
+    voiceNoVoice: specs ? specs.voiceNoVoice : null,
+    powerSource: specs ? specs.powerSource : null,
+    interconnectedness: specs ? specs.interconnectedness : null,
+    url: specs ? specs.url : null
+  };
+
+  recordedEquipment.push(entry);
+  renderRunningList();
+
+  addedForCurrentSearch = true;
+
+  // Lock all three cards' Add buttons for this search
+  document.querySelectorAll('.match-card .add-btn').forEach(b => {
+    b.disabled = true;
+  });
+  btnEl.textContent = 'Added';
+  btnEl.classList.add('added');
   cardEl.classList.add('selected');
-
-  selectedConfirmEl.textContent = `Selected: ${match.brand} ${match.model}`;
-  selectedConfirmEl.style.display = 'block';
-
-  // Hook point: this is where you'd send the confirmed selection onward
-  // (e.g. to fetch capabilities/maintenance info, or log for accuracy tracking).
-  // console.log('User confirmed match:', match);
 }
 
+function removeFromRunningList(id) {
+  recordedEquipment = recordedEquipment.filter(e => e.id !== id);
+  renderRunningList();
+}
+
+function renderRunningList() {
+  if (!recordedEquipment.length) {
+    runningListEl.innerHTML = '<div class="empty-list">No equipment recorded yet.</div>';
+    return;
+  }
+
+  runningListEl.innerHTML = '';
+
+  recordedEquipment.forEach(entry => {
+    const item = document.createElement('div');
+    item.className = 'list-item';
+    item.innerHTML = `
+      <div class="list-item-info">
+        <div class="model">${entry.brand} ${entry.model}</div>
+        <div class="room">${entry.room}</div>
+      </div>
+      <button type="button" class="delete-btn">Delete</button>
+    `;
+    item.querySelector('.delete-btn').addEventListener('click', () => removeFromRunningList(entry.id));
+    runningListEl.appendChild(item);
+  });
+}
+
+renderRunningList();
 </script>
 </body>
 </html>
