@@ -1130,12 +1130,12 @@ body{
 
       <div class="sv5-pkg-card">
         <div class="sv5-ghost">04</div>
-        <div class="sv5-card-top"><div class="sv5-code">TOOL-04 // CHECKLIST</div></div>
+        <div class="sv5-card-top"><div class="sv5-code">TOOL-04 // IDENTIFIER</div></div>
         <div class="sv5-name-row">
-          <div class="sv5-name">HOME HARDENING<br>CHECKLIST</div>
+          <div class="sv5-name">EQUIPMENT<br>IDENTIFIER</div>
         </div>
-        <div class="sv5-pkg-desc">A comprehensive inspection checklist. Know exactly where your home is at risk.</div>
-        <a class="sv5-view-link">COMING SOON →</a>
+        <div class="sv5-pkg-desc">Take a photo of your smoke or CO alarm to identify the exact model, then log it to your home equipment list.</div>
+        <a class="sv5-view-link" onclick="nav('equipment')">USE TOOL →</a>
       </div>
 
     </div>
@@ -1699,7 +1699,7 @@ window.addEventListener('message', function(e) {
   if (e.data && e.data.action === 'resize') h = e.data.height;
   if (e.data && e.data.type === 'resize') h = e.data.height;
   if (!h) return;
-  ['calc-frame','fridge-frame','accident-frame'].forEach(function(id){
+  ['calc-frame','fridge-frame','accident-frame','equipment-frame'].forEach(function(id){
     var f = document.getElementById(id);
     if (f && e.source === f.contentWindow) f.style.height = h + 'px';
   });
@@ -2545,6 +2545,30 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
     </div>
     <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13);display:flex;justify-content:center">
       <iframe id="accident-frame" src="accident-card.html" style="width:100%;max-width:960px;border:none;display:block;min-height:900px;" scrolling="no" title="Car Accident Response Card"></iframe>
+    </div>
+    <div class="dw-sec" style="background:rgba(28,18,8,.04)">
+      <div class="dw-eyebrow">READY FOR MORE?</div>
+      <a class="dw-btnp" onclick="nav('assessment')">TAKE ASSESSMENT</a>
+    </div>
+    <div class="dw-footer">
+      <div class="dw-footer-tag">© 2026 SAFE STEPS PLANS LLC<br>VETERAN-FOUNDED &amp; OPERATED<br>safestepsplans@gmail.com</div>
+      <div class="dw-footer-decals" style="display:flex;align-items:center;gap:12px;margin-left:auto;">
+        <img src="https://github.com/jacklimongelli/safesteps-wizard/blob/main/Service-Disabled%20Veteran-Owned-Certified.png?raw=true" alt="Service-Disabled Veteran-Owned Certified" loading="lazy" style="height:48px;width:auto;">
+        <img src="https://github.com/jacklimongelli/safesteps-wizard/blob/main/Veteran-Owned%20Certified.png?raw=true" alt="Veteran-Owned Certified" loading="lazy" style="height:48px;width:auto;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-equipment">
+  <div class="dw">
+    <div class="dw-hero">
+      <div class="dw-eyebrow"><a onclick="nav('tools')" style="cursor:pointer;color:inherit;text-decoration:none">← BACK TO FREE TOOLS</a></div>
+      <h1>EQUIPMENT<br>IDENTIFIER</h1>
+      <div class="dw-body">Take a photo of your smoke or CO alarm to identify the exact model, then log it to your home equipment list.</div>
+    </div>
+    <div style="padding:0;border-bottom:2px solid rgba(28,18,8,.13);display:flex;justify-content:center">
+      <iframe id="equipment-frame" src="vision-test.html" style="width:100%;max-width:960px;border:none;display:block;min-height:900px;" scrolling="no" title="Equipment Identifier"></iframe>
     </div>
     <div class="dw-sec" style="background:rgba(28,18,8,.04)">
       <div class="dw-eyebrow">READY FOR MORE?</div>
