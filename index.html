@@ -263,6 +263,10 @@ body{
 .heq-cert-table td{font-family:Arial,sans-serif;font-size:.72rem;color:#1C1208;padding:9px 6px;border-bottom:1px solid rgba(28,18,8,.12);white-space:normal;word-break:break-word}
 .heq-cert-table tr:last-child td{border-bottom:none}
 .heq-cert-table th.heq-wrap,.heq-cert-table td.heq-wrap{white-space:normal}
+@media(max-width:640px){
+  .heq-cert-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .heq-cert-table{min-width:900px}
+}
 .heq-scope{font-family:Arial,sans-serif;font-size:.9rem;color:#1C1208;margin-top:6px;font-style:normal;line-height:1.6}
 .heq-cert-head{background:#1C1208;color:#C3A97D;padding:16px 20px}
 .heq-cert-head .t1{font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.14em;opacity:.6;margin-bottom:4px}
@@ -2929,7 +2933,7 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$100</span>
         </div>
         <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
-          <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;white-space:nowrap">SCHEDULE MY INSPECTION</a>
+          <a onclick="nav('assessment')" style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;text-align:center">SCHEDULE MY INSPECTION</a>
         </div>
       </div>
     </div>
