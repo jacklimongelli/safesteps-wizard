@@ -1756,12 +1756,18 @@ window.addEventListener('popstate',function(e){
 });
 
 // Restore page from hash on load
-(function(){
+// Deferred to DOMContentLoaded: several page divs (home-equipment, equipment,
+// accident, fridge, calc, baby-proofing, and others) are defined further down
+// the document than this script tag. Running this check immediately meant
+// getElementById returned null for those pages before the parser reached them,
+// silently falling back to 'home'. Waiting for DOMContentLoaded guarantees the
+// full DOM, including those later pages, exists before we look anything up.
+document.addEventListener('DOMContentLoaded', function(){
   var hash = window.location.hash.replace('#','');
   var startPage = (hash && document.getElementById('page-'+hash)) ? hash : 'home';
   history.replaceState({page:startPage},'','#'+startPage);
   if(startPage !== 'home') nav(startPage, true);
-})();
+});
 
 // ── IFRAME AUTO-RESIZE ──
 window.addEventListener('message', function(e) {
