@@ -165,7 +165,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
   body{background:#fff;padding:0}
   .wrap{max-width:100%;padding:0}
   .view{display:none!important}
-  .view.printing{display:block!important}
+  .view.active{display:block!important}
   table.report-table{min-width:0;font-size:9px}
 }
 
@@ -338,6 +338,13 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
   <!-- ══════════ VIEW: REPORT ══════════ -->
   <section class="view" id="view-report">
     <div class="card no-print">
+      <div class="card-title">REPORT DATE</div>
+      <div class="hint">Defaults to the inspection date you entered on the Job tab. Change it here if this specific report should show a different date.</div>
+      <label for="r-date">Inspection Date (on report)</label>
+      <input type="date" id="r-date">
+    </div>
+
+    <div class="card no-print">
       <div class="card-title">INSPECTOR SIGNATURE</div>
       <div class="hint">Sign with your finger. This gets embedded into the report below.</div>
       <canvas id="signature-canvas" width="600" height="180" style="width:100%;height:auto;background:#fff;border:1.5px solid var(--line);touch-action:none;margin-top:8px;display:block"></canvas>
@@ -367,7 +374,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
 
   // ── STATE ──
   var state = {
-    job: { customer:'', address:'', date:'', inspector:'' },
+    job: { customer:'', address:'', date:'', inspector:'', reportDate:'', inspectorSignature:null },
     items: [],       // {id, room, type, brand, model, modelName, sensor, power, interconnect, status, mfgDate, battery, detTest, group, notes, photo}
     groupNames: {},  // groupId -> label
     groupResults: {},// groupId -> 'Pass' | 'Fail' | null
@@ -397,7 +404,10 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     $('view-'+view).classList.add('active');
     document.querySelector('.step-btn[data-view="'+view+'"]').classList.add('active');
     if(view==='groups') renderGroups();
-    if(view==='report') renderReport();
+    if(view==='report'){
+      $('r-date').value = state.job.reportDate || state.job.date || '';
+      renderReport();
+    }
     window.scrollTo(0,0);
   }
   document.querySelectorAll('.step-btn').forEach(function(b){
@@ -414,6 +424,12 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     });
   });
   $('btn-start-inspection').addEventListener('click', function(){ nav('inspect'); });
+
+  $('r-date').addEventListener('input', function(){
+    state.job.reportDate = $('r-date').value;
+    saveLocal();
+    renderReport();
+  });
 
   // ── LOCATION & TIMESTAMP TOGGLE ──
   var lastKnownPosition = null; // {lat, lng, at: timestamp} - kept fresh in the background
@@ -1085,6 +1101,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
 
   function renderReport(){
     var c = $('report-container');
+    var reportDate = state.job.reportDate || state.job.date || '';
     var rows = state.items.map(function(item){
       var conn = connTestLabel(item);
       var connClass = conn==='Fail' ? 'rpt-fail' : (conn==='Pass' ? 'rpt-pass' : '');
@@ -1122,7 +1139,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       '</div>' +
       '<div class="report-meta">' +
         '<div><b>Customer</b>'+esc(state.job.customer||'—')+'</div>' +
-        '<div><b>Inspection Date</b>'+esc(state.job.date||'—')+'</div>' +
+        '<div><b>Inspection Date</b>'+esc(reportDate||'—')+'</div>' +
         '<div><b>Inspector</b>'+esc(state.job.inspector||'—')+'</div>' +
         '<div><b>Items Logged</b>'+state.items.length+'</div>' +
       '</div>' +
@@ -1132,7 +1149,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       (rows || '<tr><td colspan="11" style="text-align:center;padding:16px;color:rgba(28,18,8,.5)">No items logged yet.</td></tr>') +
       '</tbody></table></div>' +
       '<div class="sigline">' +
-        '<div class="sigitem">Inspection Date<span class="fillline">'+esc(state.job.date||'')+'</span></div>' +
+        '<div class="sigitem">Inspection Date<span class="fillline">'+esc(reportDate||'')+'</span></div>' +
         '<div class="sigitem">Inspector Name<span class="fillline">'+esc(state.job.inspector||'')+'</span></div>' +
         '<div class="sigitem">Signature<span class="fillline">' +
           (state.job.inspectorSignature ? '<img src="'+state.job.inspectorSignature+'" style="height:26px;display:block">' : '') +
@@ -1302,6 +1319,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       drawing = false;
       state.job.inspectorSignature = canvas.toDataURL('image/png');
       saveLocal();
+      renderReport();
     }
     canvas.addEventListener('touchstart', start, {passive:false});
     canvas.addEventListener('touchmove', move, {passive:false});
@@ -1314,6 +1332,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       state.job.inspectorSignature = null;
       saveLocal();
+      renderReport();
     });
 
     // restore a saved signature onto the canvas when resuming a job
