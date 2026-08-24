@@ -865,7 +865,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       if(state.locationEnabled){
         locStatusEl.style.display = 'block';
         if(currentPhotoMeta.lat != null && currentPhotoMeta.lng != null){
-          locStatusEl.textContent = '📍 Location captured: ' + currentPhotoMeta.lat.toFixed(5) + ', ' + currentPhotoMeta.lng.toFixed(5);
+          locStatusEl.textContent = 'Location captured: ' + currentPhotoMeta.lat.toFixed(5) + ', ' + currentPhotoMeta.lng.toFixed(5);
           locStatusEl.style.color = '#2f5c2f';
         } else {
           locStatusEl.textContent = "No GPS lock yet for this photo — the tool keeps trying in the background, later photos should pick it up.";
@@ -1096,7 +1096,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
         var gpsLine = '';
         if(item.photoLat != null && item.photoLng != null){
           var mapUrl = 'https://maps.google.com/?q=' + item.photoLat + ',' + item.photoLng;
-          gpsLine = '<a href="'+mapUrl+'" target="_blank" rel="noopener" style="font-size:.55rem;color:#2f5c2f;display:block;margin-top:1px">📍 '+item.photoLat.toFixed(5)+', '+item.photoLng.toFixed(5)+'</a>';
+          gpsLine = '<a href="'+mapUrl+'" target="_blank" rel="noopener" style="font-size:.55rem;color:#2f5c2f;display:block;margin-top:1px">'+item.photoLat.toFixed(5)+', '+item.photoLng.toFixed(5)+'</a>';
         }
         photoCell = img + caption + gpsLine;
       }
