@@ -136,26 +136,48 @@ select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns=
 .result-btn.untested.active{background:var(--dark);color:var(--tan);border-color:var(--dark)}
 
 /* ── REPORT ── */
-.report-head{text-align:center;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid var(--dark)}
-.report-head .t1{font-size:1.3rem;font-weight:bold;letter-spacing:.04em}
-.report-head .t2{font-size:.85rem;color:var(--muted);margin-top:4px}
-.report-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:.78rem;margin-bottom:16px}
-.report-meta div b{display:block;font-size:.62rem;letter-spacing:.04em;color:var(--muted);text-transform:uppercase;margin-bottom:1px}
+.report-head{text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:3px solid var(--dark)}
+.report-head .t1{font-size:1.9rem;font-weight:bold;letter-spacing:.03em}
+.report-head .t2{font-size:1.15rem;color:var(--muted);margin-top:6px}
+.report-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;font-size:1.05rem;margin-bottom:22px}
+.summary-box{border:2px solid var(--dark);margin-bottom:22px}
+.summary-title{background:var(--dark);color:var(--tan);padding:10px 16px;font-size:.85rem;font-weight:bold;letter-spacing:.04em;text-transform:uppercase}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:14px 10px;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat .num{font-size:1.7rem;font-weight:bold;line-height:1;color:var(--dark)}
+.stat .label{font-size:.65rem;letter-spacing:.03em;color:var(--muted);text-transform:uppercase;margin-top:5px}
+.issues-block{padding:14px 16px;border-top:1px solid var(--line)}
+.issues-block-title{font-size:.72rem;font-weight:bold;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.issues-block-text{font-size:.92rem;white-space:pre-wrap;line-height:1.5}
+.report-meta div b{display:block;font-size:.78rem;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;margin-bottom:2px}
 .report-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table.report-table{width:100%;border-collapse:collapse;font-size:.72rem;min-width:760px}
+table.report-table{width:100%;border-collapse:collapse;font-size:.98rem;min-width:900px;border:2px solid var(--dark);table-layout:fixed}
 table.report-table th{
-  background:var(--dark);color:var(--tan);padding:7px 6px;text-align:left;
-  font-size:.62rem;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;
+  background:var(--dark);color:var(--tan);padding:12px 8px;text-align:left;
+  font-size:.72rem;letter-spacing:.02em;text-transform:uppercase;border:1px solid var(--dark);
+  overflow-wrap:break-word;
 }
-table.report-table td{padding:7px 6px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
-table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
-.rpt-thumb{width:34px;height:34px;object-fit:cover;border:1px solid var(--line)}
+table.report-table td{padding:12px 8px;border:1px solid var(--line);vertical-align:middle;overflow-wrap:break-word}
+table.report-table tr:nth-child(even){background:rgba(195,169,125,.12)}
+table.report-table col.col-photo{width:12%}
+table.report-table col.col-loc{width:9%}
+table.report-table col.col-type{width:10%}
+table.report-table col.col-brand{width:8%}
+table.report-table col.col-model{width:8%}
+table.report-table col.col-mfg{width:9%}
+table.report-table col.col-lot{width:7%}
+table.report-table col.col-batt{width:6%}
+table.report-table col.col-det{width:7%}
+table.report-table col.col-conn{width:8%}
+table.report-table col.col-notes{width:16%}
+.rpt-thumb{width:90px;height:90px;object-fit:cover;border:1.5px solid var(--line)}
 .rpt-fail{color:var(--red);font-weight:bold}
 .rpt-pass{color:#2f5c2f;font-weight:bold}
-.sigline{display:flex;flex-wrap:wrap;gap:24px;margin-top:26px;padding-top:16px;border-top:1px solid var(--line)}
-.sigitem{font-size:.78rem;flex:1;min-width:160px}
-.sigitem .fillline{display:block;border-bottom:1px solid var(--dark);height:28px;margin-top:4px}
-.scope-note{font-size:.68rem;color:var(--muted);text-align:center;margin-top:18px}
+.sigline{display:flex;flex-wrap:wrap;gap:30px;margin-top:32px;padding-top:20px;border-top:2px solid var(--dark)}
+.sigitem{font-size:1rem;flex:1;min-width:160px}
+.sigitem .fillline{display:block;border-bottom:1.5px solid var(--dark);height:36px;margin-top:6px}
+.scope-note{font-size:.78rem;color:var(--muted);text-align:center;margin-top:20px}
 
 .report-actions{display:flex;gap:8px;margin-top:18px}
 .report-actions .btn{margin-top:0}
@@ -166,7 +188,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
   .wrap{max-width:100%;padding:0}
   .view{display:none!important}
   .view.active{display:block!important}
-  table.report-table{min-width:0;font-size:9px}
+  table.report-table{min-width:0}
 }
 
 /* ── EMPTY STATE ── */
@@ -307,6 +329,15 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       <label for="e-notes">Notes</label>
       <textarea id="e-notes" placeholder="e.g. Tamper seal intact, gauge at full"></textarea>
 
+      <label style="display:flex;align-items:center;gap:10px;margin-top:16px;cursor:pointer">
+        <input type="checkbox" id="e-replaced" style="width:20px;height:20px;flex-shrink:0">
+        <span style="font-size:.85rem;font-weight:normal">Unit replaced during this visit</span>
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;margin-top:10px;cursor:pointer">
+        <input type="checkbox" id="e-battery-replaced" style="width:20px;height:20px;flex-shrink:0">
+        <span style="font-size:.85rem;font-weight:normal">Battery replaced during this visit</span>
+      </label>
+
       <div class="btn-row" style="margin-top:16px">
         <button class="btn secondary" id="btn-cancel-item">Cancel</button>
         <button class="btn" id="btn-save-item">Save Item</button>
@@ -345,6 +376,12 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     </div>
 
     <div class="card no-print">
+      <div class="card-title">ISSUES &amp; RECOMMENDATIONS</div>
+      <div class="hint">Optional. Whatever you type here appears on the printed report, below the summary.</div>
+      <textarea id="r-issues" placeholder="e.g. Kitchen CO alarm nearing end of life, recommend replacement within 6 months." style="min-height:90px;margin-top:8px"></textarea>
+    </div>
+
+    <div class="card no-print">
       <div class="card-title">INSPECTOR SIGNATURE</div>
       <div class="hint">Sign with your finger. This gets embedded into the report below.</div>
       <canvas id="signature-canvas" width="600" height="180" style="width:100%;height:auto;background:#fff;border:1.5px solid var(--line);touch-action:none;margin-top:8px;display:block"></canvas>
@@ -374,7 +411,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
 
   // ── STATE ──
   var state = {
-    job: { customer:'', address:'', date:'', inspector:'', reportDate:'', inspectorSignature:null },
+    job: { customer:'', address:'', date:'', inspector:'', reportDate:'', inspectorSignature:null, issuesText:'' },
     items: [],       // {id, room, type, brand, model, modelName, sensor, power, interconnect, status, mfgDate, battery, detTest, group, notes, photo}
     groupNames: {},  // groupId -> label
     groupResults: {},// groupId -> 'Pass' | 'Fail' | null
@@ -406,6 +443,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     if(view==='groups') renderGroups();
     if(view==='report'){
       $('r-date').value = state.job.reportDate || state.job.date || '';
+      $('r-issues').value = state.job.issuesText || '';
       renderReport();
     }
     window.scrollTo(0,0);
@@ -427,6 +465,11 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
 
   $('r-date').addEventListener('input', function(){
     state.job.reportDate = $('r-date').value;
+    saveLocal();
+    renderReport();
+  });
+  $('r-issues').addEventListener('input', function(){
+    state.job.issuesText = $('r-issues').value;
     saveLocal();
     renderReport();
   });
@@ -929,6 +972,8 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     $('e-battery').value = '';
     $('e-dettest').value = 'Pass';
     $('e-notes').value = '';
+    $('e-replaced').checked = false;
+    $('e-battery-replaced').checked = false;
     $('e-photo-preview').style.display = 'none';
     $('e-photo-preview').src = '';
     currentPhotoDataUrl = null;
@@ -1007,7 +1052,9 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       photo: currentPhotoDataUrl,
       photoTimestamp: currentPhotoMeta ? currentPhotoMeta.timestamp : null,
       photoLat: currentPhotoMeta ? currentPhotoMeta.lat : null,
-      photoLng: currentPhotoMeta ? currentPhotoMeta.lng : null
+      photoLng: currentPhotoMeta ? currentPhotoMeta.lng : null,
+      replaced: $('e-replaced').checked,
+      batteryReplaced: $('e-battery-replaced').checked
     };
     state.items.push(item);
     showEquipForm(false);
@@ -1102,6 +1149,27 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
   function renderReport(){
     var c = $('report-container');
     var reportDate = state.job.reportDate || state.job.date || '';
+
+    var unitsInspected = state.items.length;
+    var passedInspection = state.items.filter(function(i){ return i.detTest === 'Pass'; }).length;
+    var unitsReplaced = state.items.filter(function(i){ return i.replaced; }).length;
+    var batteriesReplaced = state.items.filter(function(i){ return i.batteryReplaced; }).length;
+    var issuesText = (state.job.issuesText || '').trim();
+
+    var summaryHtml =
+      '<div class="summary-box">' +
+        '<div class="summary-title">Summary</div>' +
+        '<div class="stat-row">' +
+          '<div class="stat"><div class="num">'+unitsInspected+'</div><div class="label">Units Inspected</div></div>' +
+          '<div class="stat"><div class="num">'+passedInspection+'</div><div class="label">Passed Inspection</div></div>' +
+          '<div class="stat"><div class="num">'+unitsReplaced+'</div><div class="label">Units Replaced</div></div>' +
+          '<div class="stat"><div class="num">'+batteriesReplaced+'</div><div class="label">Batteries Replaced</div></div>' +
+        '</div>' +
+        (issuesText ?
+          '<div class="issues-block"><div class="issues-block-title">Issues &amp; Recommendations</div><div class="issues-block-text">'+esc(issuesText)+'</div></div>'
+          : '') +
+      '</div>';
+
     var rows = state.items.map(function(item){
       var conn = connTestLabel(item);
       var connClass = conn==='Fail' ? 'rpt-fail' : (conn==='Pass' ? 'rpt-pass' : '');
@@ -1112,8 +1180,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
         var caption = item.photoTimestamp ? '<div style="font-size:.55rem;color:rgba(28,18,8,.5);margin-top:2px">'+esc(item.photoTimestamp)+'</div>' : '';
         var gpsLine = '';
         if(item.photoLat != null && item.photoLng != null){
-          var mapUrl = 'https://maps.google.com/?q=' + item.photoLat + ',' + item.photoLng;
-          gpsLine = '<a href="'+mapUrl+'" target="_blank" rel="noopener" style="font-size:.55rem;color:#2f5c2f;display:block;margin-top:1px">'+item.photoLat.toFixed(5)+', '+item.photoLng.toFixed(5)+'</a>';
+          gpsLine = '<div style="font-size:.55rem;color:rgba(28,18,8,.5);margin-top:1px">'+item.photoLat.toFixed(5)+', '+item.photoLng.toFixed(5)+'</div>';
         }
         photoCell = img + caption + gpsLine;
       }
@@ -1143,8 +1210,11 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
         '<div><b>Inspector</b>'+esc(state.job.inspector||'—')+'</div>' +
         '<div><b>Items Logged</b>'+state.items.length+'</div>' +
       '</div>' +
-      '<div class="report-table-wrap"><table class="report-table"><thead><tr>' +
-        '<th>Photo</th><th>Location</th><th>Type</th><th>Brand</th><th>Model</th><th>Mfg Date</th><th>Lot/Serial</th><th>Battery</th><th>Detection</th><th>Connectivity</th><th>Notes</th>' +
+      summaryHtml +
+      '<div class="report-table-wrap"><table class="report-table">' +
+      '<colgroup><col class="col-photo"><col class="col-loc"><col class="col-type"><col class="col-brand"><col class="col-model"><col class="col-mfg"><col class="col-lot"><col class="col-batt"><col class="col-det"><col class="col-conn"><col class="col-notes"></colgroup>' +
+      '<thead><tr>' +
+        '<th>Photo</th><th>Location</th><th>Type</th><th>Brand</th><th>Model</th><th>Mfg Date</th><th>Lot/Ser</th><th>Batt.</th><th>Detect</th><th>Conn.</th><th>Notes</th>' +
       '</tr></thead><tbody>' +
       (rows || '<tr><td colspan="11" style="text-align:center;padding:16px;color:rgba(28,18,8,.5)">No items logged yet.</td></tr>') +
       '</tbody></table></div>' +
