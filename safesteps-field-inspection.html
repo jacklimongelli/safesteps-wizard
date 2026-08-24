@@ -505,7 +505,7 @@ table.report-table col.col-notes{width:16%}
     var statusEl = $('location-status');
     if($('chk-location').checked){
       if(!window.isSecureContext){
-        statusEl.textContent = "Location needs a secure (https) connection to work — it won't prompt you if you're opening this file directly on your phone. Use the live safestepsplans.com or github.io link instead.";
+        statusEl.textContent = "This live-tracking toggle needs a secure (https) connection, so it won't work opening the file directly. But GPS still works without it: if your phone's camera app has location tagging turned on, each photo's location gets read from the photo itself automatically. No need to enable anything here.";
         $('chk-location').checked = false;
         return;
       }
@@ -921,15 +921,14 @@ table.report-table col.col-notes{width:16%}
         lng: browserLoc ? browserLoc.lng : exif.gpsLng
       };
       var locStatusEl = $('location-capture-status');
-      if(state.locationEnabled){
+      if(currentPhotoMeta.lat != null && currentPhotoMeta.lng != null){
         locStatusEl.style.display = 'block';
-        if(currentPhotoMeta.lat != null && currentPhotoMeta.lng != null){
-          locStatusEl.textContent = 'Location captured: ' + currentPhotoMeta.lat.toFixed(5) + ', ' + currentPhotoMeta.lng.toFixed(5);
-          locStatusEl.style.color = '#2f5c2f';
-        } else {
-          locStatusEl.textContent = "No GPS lock yet for this photo — the tool keeps trying in the background, later photos should pick it up.";
-          locStatusEl.style.color = '';
-        }
+        locStatusEl.textContent = 'Location captured: ' + currentPhotoMeta.lat.toFixed(5) + ', ' + currentPhotoMeta.lng.toFixed(5);
+        locStatusEl.style.color = '#2f5c2f';
+      } else if(state.locationEnabled){
+        locStatusEl.style.display = 'block';
+        locStatusEl.textContent = "No GPS lock yet for this photo — the tool keeps trying in the background, later photos should pick it up.";
+        locStatusEl.style.color = '';
       } else {
         locStatusEl.style.display = 'none';
       }
