@@ -253,7 +253,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       </select>
 
       <label>Photo of Back Label</label>
-      <div class="hint">Take the photo first — everything below gets auto-filled from it where possible, and you can correct any of it.</div>
+      <div class="hint">Take the photo first — everything below gets auto-filled from it where possible, and you can correct any of it. For best results: hold the phone flat and steady, fill the frame with the label, and make sure it's well lit.</div>
       <div class="photo-input-row" style="margin-top:8px">
         <img id="e-photo-preview" class="photo-preview" style="display:none">
         <button class="file-btn" id="btn-photo-trigger">Take / Choose Photo</button>
@@ -415,15 +415,31 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
   $('btn-start-inspection').addEventListener('click', function(){ nav('inspect'); });
 
   // ── LOCATION & TIMESTAMP TOGGLE ──
+  var lastKnownPosition = null; // {lat, lng, at: timestamp} - kept fresh in the background
+  var geoWatchId = null;
+
+  function startLocationWatch(){
+    if(!navigator.geolocation || geoWatchId !== null) return;
+    geoWatchId = navigator.geolocation.watchPosition(
+      function(pos){
+        lastKnownPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude, at: Date.now() };
+      },
+      function(){ /* ignore individual watch errors — we just keep using the last good reading */ },
+      { enableHighAccuracy: true, maximumAge: 30000, timeout: 27000 }
+    );
+  }
+  function stopLocationWatch(){
+    if(geoWatchId !== null && navigator.geolocation){
+      navigator.geolocation.clearWatch(geoWatchId);
+      geoWatchId = null;
+    }
+    lastKnownPosition = null;
+  }
   function getBrowserLocation(){
-    return new Promise(function(resolve){
-      if(!state.locationEnabled || !navigator.geolocation){ resolve(null); return; }
-      navigator.geolocation.getCurrentPosition(
-        function(pos){ resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }); },
-        function(){ resolve(null); },
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
-      );
-    });
+    // synchronous read of whatever the background watch has most recently captured —
+    // no per-photo wait, so indoor GPS delays don't block or blank out a photo's location
+    if(!state.locationEnabled || !lastKnownPosition) return null;
+    return { lat: lastKnownPosition.lat, lng: lastKnownPosition.lng };
   }
   $('chk-location').addEventListener('change', function(){
     var statusEl = $('location-status');
@@ -440,9 +456,11 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       }
       statusEl.textContent = 'Requesting location permission...';
       navigator.geolocation.getCurrentPosition(
-        function(){
+        function(pos){
           state.locationEnabled = true;
-          statusEl.textContent = 'Location access granted — photos will be tagged with GPS and exact time.';
+          lastKnownPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude, at: Date.now() };
+          startLocationWatch();
+          statusEl.textContent = 'Location access granted — photos will be tagged with GPS and exact time. It may take a few extra seconds to lock on indoors; if the first photo or two shows no location, that\'s why, later ones should have it.';
           saveLocal();
         },
         function(err){
@@ -450,14 +468,15 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
           $('chk-location').checked = false;
           var msg = 'Could not get a location right now — try again.';
           if(err && err.code === 1) msg = "Location permission denied. If your browser didn't show a popup at all, check your phone's Settings → your browser app → Location, and make sure it's not set to Never — then reload this page and try again.";
-          if(err && err.code === 3) msg = 'Location request timed out — try again, ideally outdoors or near a window.';
+          if(err && err.code === 3) msg = 'Location request timed out — try again, ideally near a window, then it will keep tracking in the background from there.';
           statusEl.textContent = msg;
           saveLocal();
         },
-        { enableHighAccuracy: true, timeout: 8000 }
+        { enableHighAccuracy: true, timeout: 15000 }
       );
     } else {
       state.locationEnabled = false;
+      stopLocationWatch();
       statusEl.textContent = '';
       saveLocal();
     }
@@ -841,7 +860,10 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
         lat: browserLoc ? browserLoc.lat : exif.gpsLat,
         lng: browserLoc ? browserLoc.lng : exif.gpsLng
       };
-      var orientation = exif.orientation;
+      // Browsers already auto-rotate the decoded <img> per EXIF orientation before we
+      // ever see it, so we deliberately do NOT re-apply the orientation tag here —
+      // doing so was double-rotating already-correct images.
+      var orientation = 1;
       var reader = new FileReader();
       reader.onload = function(ev){
         var img = new Image();
@@ -853,7 +875,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
           prev.style.display = 'block';
 
           // run OCR at higher res than the stored thumbnail for better accuracy
-          var ocrCanvas = drawOrientedImage(img, orientation, 1400);
+          var ocrCanvas = drawOrientedImage(img, orientation, 1800);
           runOcrOnCanvas(ocrCanvas);
         };
         img.src = ev.target.result;
@@ -1135,6 +1157,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     $('j-date').value = state.job.date||'';
     $('j-inspector').value = state.job.inspector||'';
     $('chk-location').checked = state.locationEnabled;
+    if(state.locationEnabled) startLocationWatch();
     renderRoomChips();
     renderItemList();
   }
