@@ -212,6 +212,16 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     </div>
 
     <div class="card">
+      <div class="card-title">LOCATION &amp; TIMESTAMP</div>
+      <div class="hint">Tag each photo with the exact time and GPS location it was taken. Turning this on will prompt your phone for location permission — allow it once and it applies for the rest of this inspection.</div>
+      <label style="display:flex;align-items:center;gap:10px;margin-top:10px;cursor:pointer">
+        <input type="checkbox" id="chk-location" style="width:20px;height:20px;flex-shrink:0">
+        <span style="font-size:.85rem;font-weight:normal">Enable GPS + timestamp tagging</span>
+      </label>
+      <div class="hint" id="location-status"></div>
+    </div>
+
+    <div class="card">
       <div class="card-title">RESUME FROM A DOWNLOADED BACKUP</div>
       <div class="hint">Only needed if you're switching devices or your browser data got cleared. Normally your progress is saved automatically on this device.</div>
       <button class="file-btn" style="margin-top:10px;width:100%" id="btn-import-trigger">Choose Backup File</button>
@@ -326,6 +336,13 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
 
   <!-- ══════════ VIEW: REPORT ══════════ -->
   <section class="view" id="view-report">
+    <div class="card no-print">
+      <div class="card-title">INSPECTOR SIGNATURE</div>
+      <div class="hint">Sign with your finger. This gets embedded into the report below.</div>
+      <canvas id="signature-canvas" width="600" height="180" style="width:100%;height:auto;background:#fff;border:1.5px solid var(--line);touch-action:none;margin-top:8px;display:block"></canvas>
+      <button class="btn small secondary" id="btn-clear-signature" style="margin-top:8px">Clear Signature</button>
+    </div>
+
     <div class="report-actions no-print">
       <button class="btn secondary" id="btn-print">Print / Save PDF</button>
       <button class="btn secondary" id="btn-download-json">Download Data (JSON)</button>
@@ -357,7 +374,8 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     groupSeq: 0,
     currentRoom: null,
     rooms: [],
-    editingPhoto: null
+    editingPhoto: null,
+    locationEnabled: false
   };
 
   var PRODUCTS = [];
@@ -395,6 +413,50 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     });
   });
   $('btn-start-inspection').addEventListener('click', function(){ nav('inspect'); });
+
+  // ── LOCATION & TIMESTAMP TOGGLE ──
+  function getBrowserLocation(){
+    return new Promise(function(resolve){
+      if(!state.locationEnabled || !navigator.geolocation){ resolve(null); return; }
+      navigator.geolocation.getCurrentPosition(
+        function(pos){ resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }); },
+        function(){ resolve(null); },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+      );
+    });
+  }
+  $('chk-location').addEventListener('change', function(){
+    var statusEl = $('location-status');
+    if($('chk-location').checked){
+      if(!navigator.geolocation){
+        statusEl.textContent = "This browser doesn't support location access.";
+        $('chk-location').checked = false;
+        return;
+      }
+      statusEl.textContent = 'Requesting location permission...';
+      navigator.geolocation.getCurrentPosition(
+        function(){
+          state.locationEnabled = true;
+          statusEl.textContent = 'Location access granted — photos will be tagged with GPS and exact time.';
+          saveLocal();
+        },
+        function(err){
+          state.locationEnabled = false;
+          $('chk-location').checked = false;
+          statusEl.textContent = err && err.code === 1
+            ? 'Location permission denied. You can re-enable it in your browser/phone settings and try again.'
+            : 'Could not get a location right now — try again.';
+          saveLocal();
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    } else {
+      state.locationEnabled = false;
+      statusEl.textContent = '';
+      saveLocal();
+    }
+  });
+
 
   // ── ROOMS ──
   function renderRoomChips(){
@@ -642,43 +704,84 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
   }
 
   // ── EXIF ORIENTATION ──
-  function readExifOrientation(file){
+  function readExifData(file){
     return new Promise(function(resolve){
+      var result = { orientation: 1, dateTimeOriginal: null, gpsLat: null, gpsLng: null };
       var reader = new FileReader();
       reader.onload = function(e){
         try{
           var view = new DataView(e.target.result);
-          if(view.getUint16(0,false) !== 0xFFD8){ resolve(1); return; }
+          if(view.getUint16(0,false) !== 0xFFD8){ resolve(result); return; }
           var length = view.byteLength, offset = 2;
           while(offset < length){
             var marker = view.getUint16(offset,false);
             offset += 2;
             if(marker === 0xFFE1){
-              if(view.getUint32(offset+2,false) !== 0x45786966){ resolve(1); return; }
-              var little = view.getUint16(offset+8,false) === 0x4949;
+              if(view.getUint32(offset+2,false) !== 0x45786966){ resolve(result); return; }
               var tiffOffset = offset+8;
-              var firstIFDOffset = view.getUint32(tiffOffset+4, little);
-              var dirOffset = tiffOffset + firstIFDOffset;
-              var tags = view.getUint16(dirOffset, little);
-              for(var i=0;i<tags;i++){
-                var entryOffset = dirOffset + 2 + (i*12);
-                if(view.getUint16(entryOffset, little) === 0x0112){
-                  resolve(view.getUint16(entryOffset+8, little));
-                  return;
+              var little = view.getUint16(tiffOffset,false) === 0x4949;
+
+              function readIFD(ifdOffset){
+                var entries = {};
+                var count = view.getUint16(ifdOffset, little);
+                for(var i=0;i<count;i++){
+                  var entryOffset = ifdOffset + 2 + i*12;
+                  entries[view.getUint16(entryOffset, little)] = {
+                    type: view.getUint16(entryOffset+2, little),
+                    count: view.getUint32(entryOffset+4, little),
+                    entryOffset: entryOffset
+                  };
+                }
+                return entries;
+              }
+              function valueOffset(entry){
+                var typeSize = {1:1,2:1,3:2,4:4,5:8,9:4,10:8}[entry.type] || 1;
+                return (typeSize*entry.count <= 4) ? entry.entryOffset+8 : tiffOffset + view.getUint32(entry.entryOffset+8, little);
+              }
+              function readRational(off){
+                var num = view.getUint32(off, little), den = view.getUint32(off+4, little);
+                return den ? num/den : 0;
+              }
+              function readAscii(entry){
+                var off = valueOffset(entry), str = '';
+                for(var i=0;i<entry.count-1;i++){ str += String.fromCharCode(view.getUint8(off+i)); }
+                return str;
+              }
+              function readShort(entry){ return view.getUint16(valueOffset(entry), little); }
+              function readDMS(off){ return readRational(off) + readRational(off+8)/60 + readRational(off+16)/3600; }
+
+              var ifd0Offset = tiffOffset + view.getUint32(tiffOffset+4, little);
+              var ifd0 = readIFD(ifd0Offset);
+              if(ifd0[0x0112]) result.orientation = readShort(ifd0[0x0112]);
+
+              if(ifd0[0x8769]){
+                var exifIFD = readIFD(tiffOffset + view.getUint32(ifd0[0x8769].entryOffset+8, little));
+                if(exifIFD[0x9003]) result.dateTimeOriginal = readAscii(exifIFD[0x9003]);
+              }
+
+              if(ifd0[0x8825]){
+                var gpsIFD = readIFD(tiffOffset + view.getUint32(ifd0[0x8825].entryOffset+8, little));
+                if(gpsIFD[0x0002] && gpsIFD[0x0001]){
+                  var lat = readDMS(valueOffset(gpsIFD[0x0002]));
+                  result.gpsLat = readAscii(gpsIFD[0x0001]) === 'S' ? -lat : lat;
+                }
+                if(gpsIFD[0x0004] && gpsIFD[0x0003]){
+                  var lng = readDMS(valueOffset(gpsIFD[0x0004]));
+                  result.gpsLng = readAscii(gpsIFD[0x0003]) === 'W' ? -lng : lng;
                 }
               }
-              resolve(1); return;
+              resolve(result); return;
             } else if((marker & 0xFF00) !== 0xFF00){
               break;
             } else {
               offset += view.getUint16(offset,false);
             }
           }
-          resolve(1);
-        } catch(err){ resolve(1); }
+          resolve(result);
+        } catch(err){ resolve(result); }
       };
-      reader.onerror = function(){ resolve(1); };
-      reader.readAsArrayBuffer(file.slice(0, 128*1024));
+      reader.onerror = function(){ resolve(result); };
+      reader.readAsArrayBuffer(file.slice(0, 256*1024));
     });
   }
 
@@ -711,11 +814,28 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
 
   // photo capture + downscale
   var currentPhotoDataUrl = null;
+  var currentPhotoMeta = null;
+  function formatExifTimestamp(t){
+    // EXIF format: "YYYY:MM:DD HH:MM:SS"
+    if(!t) return null;
+    var m = t.match(/^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2}):(\d{2})$/);
+    if(!m) return t;
+    var d = new Date(m[1], m[2]-1, m[3], m[4], m[5], m[6]);
+    return d.toLocaleString();
+  }
   $('btn-photo-trigger').addEventListener('click', function(){ $('e-photo-input').click(); });
   $('e-photo-input').addEventListener('change', function(e){
     var file = e.target.files[0];
     if(!file) return;
-    readExifOrientation(file).then(function(orientation){
+    Promise.all([readExifData(file), getBrowserLocation()]).then(function(results){
+      var exif = results[0];
+      var browserLoc = results[1];
+      currentPhotoMeta = {
+        timestamp: formatExifTimestamp(exif.dateTimeOriginal) || new Date().toLocaleString(),
+        lat: browserLoc ? browserLoc.lat : exif.gpsLat,
+        lng: browserLoc ? browserLoc.lng : exif.gpsLng
+      };
+      var orientation = exif.orientation;
       var reader = new FileReader();
       reader.onload = function(ev){
         var img = new Image();
@@ -754,6 +874,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     $('e-photo-preview').style.display = 'none';
     $('e-photo-preview').src = '';
     currentPhotoDataUrl = null;
+    currentPhotoMeta = null;
     $('ocr-status').style.display = 'none';
     $('ocr-status').textContent = '';
     $('ocr-details').style.display = 'none';
@@ -823,7 +944,10 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       detTest: isAlarm ? $('e-dettest').value : 'N/A',
       group: isAlarm ? $('e-group').value : '',
       notes: $('e-notes').value.trim(),
-      photo: currentPhotoDataUrl
+      photo: currentPhotoDataUrl,
+      photoTimestamp: currentPhotoMeta ? currentPhotoMeta.timestamp : null,
+      photoLat: currentPhotoMeta ? currentPhotoMeta.lat : null,
+      photoLng: currentPhotoMeta ? currentPhotoMeta.lng : null
     };
     state.items.push(item);
     showEquipForm(false);
@@ -921,8 +1045,18 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       var conn = connTestLabel(item);
       var connClass = conn==='Fail' ? 'rpt-fail' : (conn==='Pass' ? 'rpt-pass' : '');
       var detClass = item.detTest==='Fail' ? 'rpt-fail' : (item.detTest==='Pass' ? 'rpt-pass' : '');
+      var photoCell = '—';
+      if(item.photo){
+        var img = '<img class="rpt-thumb" src="'+item.photo+'">';
+        var caption = item.photoTimestamp ? '<div style="font-size:.55rem;color:rgba(28,18,8,.5);margin-top:2px">'+esc(item.photoTimestamp)+'</div>' : '';
+        if(item.photoLat != null && item.photoLng != null){
+          var mapUrl = 'https://maps.google.com/?q=' + item.photoLat + ',' + item.photoLng;
+          img = '<a href="'+mapUrl+'" target="_blank" rel="noopener">'+img+'</a>';
+        }
+        photoCell = img + caption;
+      }
       return '<tr>' +
-        '<td>'+(item.photo ? '<img class="rpt-thumb" src="'+item.photo+'">' : '—')+'</td>' +
+        '<td>'+photoCell+'</td>' +
         '<td>'+esc(item.room)+'</td>' +
         '<td>'+esc(item.type)+'</td>' +
         '<td>'+esc(item.brand)+'</td>' +
@@ -955,7 +1089,9 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       '<div class="sigline">' +
         '<div class="sigitem">Inspection Date<span class="fillline">'+esc(state.job.date||'')+'</span></div>' +
         '<div class="sigitem">Inspector Name<span class="fillline">'+esc(state.job.inspector||'')+'</span></div>' +
-        '<div class="sigitem">Signature<span class="fillline"></span></div>' +
+        '<div class="sigitem">Signature<span class="fillline">' +
+          (state.job.inspectorSignature ? '<img src="'+state.job.inspectorSignature+'" style="height:26px;display:block">' : '') +
+        '</span></div>' +
       '</div>' +
       '<div class="scope-note">Safe Steps Plans LLC — We work exclusively with residential homes and do not install, service, or repair wired or monitored fire alarm systems.</div>';
   }
@@ -965,7 +1101,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
   // ── CHECKPOINT / STORAGE ──
   var STORAGE_KEY = 'safesteps_inspection_v1';
   function exportState(){
-    return { job: state.job, items: state.items, groupNames: state.groupNames, groupResults: state.groupResults, itemSeq: state.itemSeq, groupSeq: state.groupSeq, rooms: state.rooms };
+    return { job: state.job, items: state.items, groupNames: state.groupNames, groupResults: state.groupResults, itemSeq: state.itemSeq, groupSeq: state.groupSeq, rooms: state.rooms, locationEnabled: state.locationEnabled };
   }
   function saveLocal(){
     try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(exportState())); }catch(e){ console.warn('local save failed', e); }
@@ -987,10 +1123,12 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     state.itemSeq = data.itemSeq || 0;
     state.groupSeq = data.groupSeq || 0;
     state.rooms = data.rooms || DEFAULT_ROOMS.slice();
+    state.locationEnabled = !!data.locationEnabled;
     $('j-customer').value = state.job.customer||'';
     $('j-address').value = state.job.address||'';
     $('j-date').value = state.job.date||'';
     $('j-inspector').value = state.job.inspector||'';
+    $('chk-location').checked = state.locationEnabled;
     renderRoomChips();
     renderItemList();
   }
@@ -1078,6 +1216,73 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     };
     reader.readAsText(file);
   });
+
+  // ── SIGNATURE PAD ──
+  (function initSignaturePad(){
+    var canvas = $('signature-canvas');
+    if(!canvas) return;
+    var ctx = canvas.getContext('2d');
+    ctx.strokeStyle = '#1C1208';
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    var drawing = false;
+
+    function pos(e){
+      var rect = canvas.getBoundingClientRect();
+      var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: (clientX - rect.left) * (canvas.width / rect.width),
+        y: (clientY - rect.top) * (canvas.height / rect.height)
+      };
+    }
+    function start(e){
+      e.preventDefault();
+      drawing = true;
+      var p = pos(e);
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+    }
+    function move(e){
+      if(!drawing) return;
+      e.preventDefault();
+      var p = pos(e);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    }
+    function end(){
+      if(!drawing) return;
+      drawing = false;
+      state.job.inspectorSignature = canvas.toDataURL('image/png');
+      saveLocal();
+    }
+    canvas.addEventListener('touchstart', start, {passive:false});
+    canvas.addEventListener('touchmove', move, {passive:false});
+    canvas.addEventListener('touchend', end);
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+
+    $('btn-clear-signature').addEventListener('click', function(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      state.job.inspectorSignature = null;
+      saveLocal();
+    });
+
+    // restore a saved signature onto the canvas when resuming a job
+    function restoreSignature(){
+      if(state.job.inspectorSignature){
+        var img = new Image();
+        img.onload = function(){ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0,canvas.width,canvas.height); };
+        img.src = state.job.inspectorSignature;
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+    document.querySelector('.step-btn[data-view="report"]').addEventListener('click', restoreSignature);
+    $('btn-resume-local') && $('btn-resume-local').addEventListener('click', function(){ setTimeout(restoreSignature, 0); });
+  })();
 
   // init
   toggleAlarmFields();
