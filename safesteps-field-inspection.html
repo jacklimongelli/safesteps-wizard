@@ -428,6 +428,11 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
   $('chk-location').addEventListener('change', function(){
     var statusEl = $('location-status');
     if($('chk-location').checked){
+      if(!window.isSecureContext){
+        statusEl.textContent = "Location needs a secure (https) connection to work — it won't prompt you if you're opening this file directly on your phone. Use the live safestepsplans.com or github.io link instead.";
+        $('chk-location').checked = false;
+        return;
+      }
       if(!navigator.geolocation){
         statusEl.textContent = "This browser doesn't support location access.";
         $('chk-location').checked = false;
@@ -443,9 +448,10 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
         function(err){
           state.locationEnabled = false;
           $('chk-location').checked = false;
-          statusEl.textContent = err && err.code === 1
-            ? 'Location permission denied. You can re-enable it in your browser/phone settings and try again.'
-            : 'Could not get a location right now — try again.';
+          var msg = 'Could not get a location right now — try again.';
+          if(err && err.code === 1) msg = "Location permission denied. If your browser didn't show a popup at all, check your phone's Settings → your browser app → Location, and make sure it's not set to Never — then reload this page and try again.";
+          if(err && err.code === 3) msg = 'Location request timed out — try again, ideally outdoors or near a window.';
+          statusEl.textContent = msg;
           saveLocal();
         },
         { enableHighAccuracy: true, timeout: 8000 }
