@@ -260,6 +260,7 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
         <input type="file" id="e-photo-input" accept="image/*" capture="environment" style="display:none">
       </div>
       <div class="hint" id="ocr-status" style="display:none"></div>
+      <div class="hint" id="location-capture-status" style="display:none"></div>
       <details id="ocr-details" style="display:none;margin-top:6px">
         <summary style="font-size:.72rem;color:var(--muted);cursor:pointer">Scanned text (for manual double-check)</summary>
         <pre id="ocr-raw" style="white-space:pre-wrap;font-size:.7rem;color:var(--muted);margin-top:6px;font-family:Arial,sans-serif"></pre>
@@ -860,6 +861,19 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
         lat: browserLoc ? browserLoc.lat : exif.gpsLat,
         lng: browserLoc ? browserLoc.lng : exif.gpsLng
       };
+      var locStatusEl = $('location-capture-status');
+      if(state.locationEnabled){
+        locStatusEl.style.display = 'block';
+        if(currentPhotoMeta.lat != null && currentPhotoMeta.lng != null){
+          locStatusEl.textContent = '📍 Location captured: ' + currentPhotoMeta.lat.toFixed(5) + ', ' + currentPhotoMeta.lng.toFixed(5);
+          locStatusEl.style.color = '#2f5c2f';
+        } else {
+          locStatusEl.textContent = "No GPS lock yet for this photo — the tool keeps trying in the background, later photos should pick it up.";
+          locStatusEl.style.color = '';
+        }
+      } else {
+        locStatusEl.style.display = 'none';
+      }
       // Browsers already auto-rotate the decoded <img> per EXIF orientation before we
       // ever see it, so we deliberately do NOT re-apply the orientation tag here —
       // doing so was double-rotating already-correct images.
@@ -907,6 +921,8 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
     $('ocr-status').textContent = '';
     $('ocr-details').style.display = 'none';
     $('ocr-raw').textContent = '';
+    $('location-capture-status').style.display = 'none';
+    $('location-capture-status').textContent = '';
     resultsBox.classList.remove('open');
     resultsBox.innerHTML = '';
     populateProductList();
@@ -1077,11 +1093,12 @@ table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
       if(item.photo){
         var img = '<img class="rpt-thumb" src="'+item.photo+'">';
         var caption = item.photoTimestamp ? '<div style="font-size:.55rem;color:rgba(28,18,8,.5);margin-top:2px">'+esc(item.photoTimestamp)+'</div>' : '';
+        var gpsLine = '';
         if(item.photoLat != null && item.photoLng != null){
           var mapUrl = 'https://maps.google.com/?q=' + item.photoLat + ',' + item.photoLng;
-          img = '<a href="'+mapUrl+'" target="_blank" rel="noopener">'+img+'</a>';
+          gpsLine = '<a href="'+mapUrl+'" target="_blank" rel="noopener" style="font-size:.55rem;color:#2f5c2f;display:block;margin-top:1px">📍 '+item.photoLat.toFixed(5)+', '+item.photoLng.toFixed(5)+'</a>';
         }
-        photoCell = img + caption;
+        photoCell = img + caption + gpsLine;
       }
       return '<tr>' +
         '<td>'+photoCell+'</td>' +
