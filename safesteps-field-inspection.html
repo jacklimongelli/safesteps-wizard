@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Safe Steps — Field Inspection</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{overflow-x:hidden}
+img{max-width:100%;height:auto}
+
+:root{
+  --tan:#C3A97D;
+  --dark:#1C1208;
+  --dark-bg:#0e0b05;
+  --red:#6e1008;
+  --line:rgba(28,18,8,.28);
+  --line-soft:rgba(28,18,8,.14);
+  --muted:rgba(28,18,8,.65);
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:var(--tan);
+  color:var(--dark);
+  padding-bottom:40px;
+}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:var(--dark);color:var(--tan);
+  padding:12px 14px;
+  border-bottom:2px solid var(--red);
+}
+.topbar-title{font-size:1.05rem;letter-spacing:.04em;font-weight:bold;margin-bottom:10px}
+.topbar-title span{color:var(--red)}
+.steps{display:flex;gap:6px}
+.step-btn{
+  flex:1;background:rgba(195,169,125,.08);color:rgba(195,169,125,.6);
+  border:1px solid rgba(195,169,125,.25);padding:8px 4px;
+  font-family:Arial,sans-serif;font-size:.68rem;letter-spacing:.02em;
+  cursor:pointer;text-align:center;
+}
+.step-btn.active{background:var(--tan);color:var(--dark);border-color:var(--tan);font-weight:bold}
+.step-btn .n{display:block;font-size:.62rem;opacity:.7;margin-bottom:1px}
+
+/* ── LAYOUT ── */
+.wrap{max-width:640px;margin:0 auto;padding:16px 14px 60px}
+.view{display:none}
+.view.active{display:block}
+
+.card{
+  background:rgba(255,255,255,.35);
+  border:1px solid var(--line);
+  padding:16px;margin-bottom:14px;
+}
+.card-title{font-size:.72rem;letter-spacing:.08em;font-weight:bold;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.card-title::before{content:'';width:12px;height:1px;background:var(--muted)}
+
+label{display:block;font-size:.72rem;font-weight:bold;letter-spacing:.03em;color:var(--dark);margin-bottom:4px;margin-top:12px}
+label:first-child{margin-top:0}
+input[type=text],input[type=number],input[type=date],select,textarea{
+  width:100%;padding:11px 10px;font-family:Arial,sans-serif;font-size:.95rem;
+  border:1.5px solid var(--line);background:#fff;color:var(--dark);
+}
+textarea{resize:vertical;min-height:60px}
+select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%231C1208'/></svg>");background-repeat:no-repeat;background-position:right 12px center}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:Arial,sans-serif;font-size:.88rem;letter-spacing:.03em;
+  padding:12px 18px;border:2px solid var(--dark);cursor:pointer;
+  background:var(--dark);color:var(--tan);width:100%;margin-top:14px;
+}
+.btn.secondary{background:transparent;color:var(--dark)}
+.btn.danger{background:transparent;color:var(--red);border-color:var(--red)}
+.btn.small{width:auto;padding:8px 14px;font-size:.78rem;margin-top:0}
+.btn-row{display:flex;gap:8px}
+.btn-row .btn{margin-top:0}
+
+.hint{font-size:.72rem;color:var(--muted);margin-top:6px;line-height:1.4}
+.product-results{
+  position:absolute;left:0;right:0;top:100%;z-index:20;
+  background:#fff;border:1.5px solid var(--dark);border-top:none;
+  max-height:240px;overflow-y:auto;display:none;
+}
+.product-results.open{display:block}
+.pr-item{padding:10px 10px;border-bottom:1px solid var(--line-soft);cursor:pointer;font-size:.82rem}
+.pr-item:last-child{border-bottom:none}
+.pr-item .pr-name{font-weight:bold}
+.pr-item .pr-sub{font-size:.7rem;color:var(--muted)}
+.pr-empty{padding:10px;font-size:.78rem;color:var(--muted)}
+.badge{display:inline-block;font-size:.62rem;letter-spacing:.03em;font-weight:bold;padding:2px 7px;border:1px solid currentColor}
+.badge.discontinued{color:var(--red)}
+.badge.ok{color:#2f5c2f}
+
+/* ── ROOM CHIPS ── */
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{
+  padding:9px 13px;border:1.5px solid var(--line);background:rgba(255,255,255,.4);
+  font-size:.82rem;cursor:pointer;
+}
+.chip.active{background:var(--dark);color:var(--tan);border-color:var(--dark)}
+
+/* ── ITEM LIST ── */
+.item-row{
+  border:1px solid var(--line);background:rgba(255,255,255,.45);
+  padding:12px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;
+}
+.item-thumb{width:52px;height:52px;object-fit:cover;border:1px solid var(--line);flex-shrink:0;background:#fff}
+.item-thumb.empty{display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--muted);text-align:center}
+.item-main{flex:1;min-width:0}
+.item-loc{font-size:.68rem;letter-spacing:.03em;color:var(--muted);text-transform:uppercase}
+.item-name{font-size:.9rem;font-weight:bold;margin:2px 0}
+.item-meta{font-size:.74rem;color:var(--muted)}
+.item-actions{display:flex;flex-direction:column;gap:6px}
+.icon-btn{background:none;border:1px solid var(--line);padding:5px 9px;font-size:.68rem;cursor:pointer;color:var(--dark)}
+
+/* ── PHOTO ── */
+.photo-input-row{display:flex;align-items:center;gap:12px;margin-top:6px}
+.photo-preview{width:70px;height:70px;object-fit:cover;border:1.5px solid var(--line);background:#fff}
+.file-btn{
+  padding:11px 14px;border:1.5px dashed var(--line);background:rgba(255,255,255,.3);
+  font-size:.82rem;cursor:pointer;flex:1;text-align:center;color:var(--muted);
+}
+
+/* ── GROUPS ── */
+.group-card{border:1px solid var(--line);background:rgba(255,255,255,.45);padding:14px;margin-bottom:10px}
+.group-card h4{font-size:.85rem;margin-bottom:8px}
+.group-members{font-size:.72rem;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.result-btns{display:flex;gap:6px}
+.result-btn{flex:1;padding:9px;border:1.5px solid var(--line);background:#fff;font-size:.78rem;cursor:pointer;text-align:center}
+.result-btn.pass.active{background:#2f5c2f;color:#fff;border-color:#2f5c2f}
+.result-btn.fail.active{background:var(--red);color:#fff;border-color:var(--red)}
+.result-btn.untested.active{background:var(--dark);color:var(--tan);border-color:var(--dark)}
+
+/* ── REPORT ── */
+.report-head{text-align:center;margin-bottom:16px;padding-bottom:14px;border-bottom:2px solid var(--dark)}
+.report-head .t1{font-size:1.3rem;font-weight:bold;letter-spacing:.04em}
+.report-head .t2{font-size:.85rem;color:var(--muted);margin-top:4px}
+.report-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;font-size:.78rem;margin-bottom:16px}
+.report-meta div b{display:block;font-size:.62rem;letter-spacing:.04em;color:var(--muted);text-transform:uppercase;margin-bottom:1px}
+.report-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.report-table{width:100%;border-collapse:collapse;font-size:.72rem;min-width:760px}
+table.report-table th{
+  background:var(--dark);color:var(--tan);padding:7px 6px;text-align:left;
+  font-size:.62rem;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap;
+}
+table.report-table td{padding:7px 6px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+table.report-table tr:nth-child(even){background:rgba(255,255,255,.35)}
+.rpt-thumb{width:34px;height:34px;object-fit:cover;border:1px solid var(--line)}
+.rpt-fail{color:var(--red);font-weight:bold}
+.rpt-pass{color:#2f5c2f;font-weight:bold}
+.sigline{display:flex;flex-wrap:wrap;gap:24px;margin-top:26px;padding-top:16px;border-top:1px solid var(--line)}
+.sigitem{font-size:.78rem;flex:1;min-width:160px}
+.sigitem .fillline{display:block;border-bottom:1px solid var(--dark);height:28px;margin-top:4px}
+.scope-note{font-size:.68rem;color:var(--muted);text-align:center;margin-top:18px}
+
+.report-actions{display:flex;gap:8px;margin-top:18px}
+.report-actions .btn{margin-top:0}
+
+@media print{
+  .topbar,.report-actions,.no-print{display:none!important}
+  body{background:#fff;padding:0}
+  .wrap{max-width:100%;padding:0}
+  .view{display:none!important}
+  .view.printing{display:block!important}
+  table.report-table{min-width:0;font-size:9px}
+}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:30px 20px;color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">SAFE STEPS <span>// FIELD INSPECTION</span></div>
+  <div class="steps">
+    <button class="step-btn active" data-view="job"><span class="n">01</span>Job</button>
+    <button class="step-btn" data-view="inspect"><span class="n">02</span>Inspect</button>
+    <button class="step-btn" data-view="groups"><span class="n">03</span>Connectivity</button>
+    <button class="step-btn" data-view="report"><span class="n">04</span>Report</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ══════════ VIEW: JOB INFO ══════════ -->
+  <section class="view active" id="view-job">
+    <div class="card" id="resume-banner" style="display:none;border-color:var(--red)">
+      <div class="card-title">IN-PROGRESS INSPECTION FOUND</div>
+      <div class="hint" id="resume-banner-text"></div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="btn secondary" id="btn-discard-local">Discard It</button>
+        <button class="btn" id="btn-resume-local">Resume It</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">JOB INFORMATION</div>
+      <label for="j-customer">Customer Name</label>
+      <input type="text" id="j-customer" placeholder="e.g. Jane Miller">
+      <label for="j-address">Property Address</label>
+      <input type="text" id="j-address" placeholder="e.g. 128 Cedar Hollow Rd">
+      <label for="j-date">Inspection Date</label>
+      <input type="date" id="j-date">
+      <label for="j-inspector">Inspector Name</label>
+      <input type="text" id="j-inspector" placeholder="e.g. Jack Limongelli">
+      <button class="btn" id="btn-start-inspection">Start Inspection →</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">RESUME FROM A DOWNLOADED BACKUP</div>
+      <div class="hint">Only needed if you're switching devices or your browser data got cleared. Normally your progress is saved automatically on this device.</div>
+      <button class="file-btn" style="margin-top:10px;width:100%" id="btn-import-trigger">Choose Backup File</button>
+      <input type="file" id="import-file" accept="application/json" style="display:none">
+      <div class="hint" id="import-status"></div>
+    </div>
+  </section>
+
+  <!-- ══════════ VIEW: INSPECT ══════════ -->
+  <section class="view" id="view-inspect">
+    <div class="card">
+      <div class="card-title">ROOM / LOCATION</div>
+      <div class="chip-row" id="room-chips"></div>
+      <div class="btn-row">
+        <input type="text" id="new-room-input" placeholder="Custom location..." style="flex:1">
+        <button class="btn small secondary" id="btn-add-room">Add</button>
+      </div>
+    </div>
+
+    <div class="card" id="equip-form-card" style="display:none">
+      <div class="card-title">ADD EQUIPMENT — <span id="current-room-label"></span></div>
+
+      <label for="e-type">Equipment Type</label>
+      <select id="e-type">
+        <option value="Smoke Alarm">Smoke Alarm</option>
+        <option value="CO Alarm">CO Alarm</option>
+        <option value="Combination Smoke+CO Alarm">Combination Smoke+CO Alarm</option>
+        <option value="Fire Extinguisher">Fire Extinguisher</option>
+      </select>
+
+      <label>Photo of Back Label</label>
+      <div class="hint">Take the photo first — everything below gets auto-filled from it where possible, and you can correct any of it.</div>
+      <div class="photo-input-row" style="margin-top:8px">
+        <img id="e-photo-preview" class="photo-preview" style="display:none">
+        <button class="file-btn" id="btn-photo-trigger">Take / Choose Photo</button>
+        <input type="file" id="e-photo-input" accept="image/*" capture="environment" style="display:none">
+      </div>
+      <div class="hint" id="ocr-status" style="display:none"></div>
+      <details id="ocr-details" style="display:none;margin-top:6px">
+        <summary style="font-size:.72rem;color:var(--muted);cursor:pointer">Scanned text (for manual double-check)</summary>
+        <pre id="ocr-raw" style="white-space:pre-wrap;font-size:.7rem;color:var(--muted);margin-top:6px;font-family:Arial,sans-serif"></pre>
+      </details>
+
+      <label for="e-product" style="margin-top:18px">Brand / Model</label>
+      <div style="position:relative">
+        <input type="text" id="e-product" autocomplete="off" placeholder="Start typing brand or model...">
+        <div id="product-results" class="product-results"></div>
+      </div>
+      <div class="hint" id="e-product-info"></div>
+      <button class="btn small secondary" id="btn-manual-toggle" style="margin-top:8px">Can't find it — enter manually</button>
+
+      <div id="manual-fields" style="display:none">
+        <label for="e-brand-manual">Brand</label>
+        <input type="text" id="e-brand-manual" placeholder="e.g. First Alert">
+        <label for="e-model-manual">Model Number</label>
+        <input type="text" id="e-model-manual" placeholder="e.g. SA320">
+      </div>
+
+      <label for="e-mfgdate">Manufacturing Date</label>
+      <input type="text" id="e-mfgdate" placeholder="e.g. 2026 JUL 06">
+
+      <label for="e-lotcode">Serial / Lot Number</label>
+      <input type="text" id="e-lotcode" placeholder="e.g. L29">
+
+      <div id="alarm-only-fields">
+        <label for="e-battery">Battery Voltage</label>
+        <input type="text" id="e-battery" placeholder="e.g. 8.6V">
+
+        <label for="e-dettest">Detection Test</label>
+        <select id="e-dettest">
+          <option value="Pass">Pass</option>
+          <option value="Fail">Fail</option>
+          <option value="N/A">N/A</option>
+        </select>
+
+        <label for="e-group">Interconnect Group</label>
+        <select id="e-group">
+          <option value="">Standalone (not interconnected)</option>
+        </select>
+      </div>
+
+      <label for="e-notes">Notes</label>
+      <textarea id="e-notes" placeholder="e.g. Tamper seal intact, gauge at full"></textarea>
+
+      <div class="btn-row" style="margin-top:16px">
+        <button class="btn secondary" id="btn-cancel-item">Cancel</button>
+        <button class="btn" id="btn-save-item">Save Item</button>
+      </div>
+    </div>
+
+    <button class="btn" id="btn-add-equip" style="display:none">+ Add Equipment to This Room</button>
+
+    <div class="card">
+      <div class="card-title">ITEMS LOGGED (<span id="item-count">0</span>)</div>
+      <div id="item-list"><div class="empty-state">No equipment logged yet.</div></div>
+      <button class="btn secondary small" id="btn-manual-backup" style="width:100%;margin-top:10px">Backup to File Now</button>
+      <div class="hint" id="backup-status"></div>
+    </div>
+
+    <button class="btn secondary" id="btn-goto-groups">Continue to Connectivity →</button>
+  </section>
+
+  <!-- ══════════ VIEW: GROUPS ══════════ -->
+  <section class="view" id="view-groups">
+    <div class="card">
+      <div class="card-title">CONNECTIVITY TESTS</div>
+      <div class="hint">Interconnected alarms sound together when one is triggered. Test each group by triggering one unit and confirming the others respond, then record the result here. It applies to every unit in that group.</div>
+    </div>
+    <div id="group-list"><div class="empty-state">No interconnected groups created. Standalone units don't need a connectivity test.</div></div>
+    <button class="btn secondary" id="btn-goto-report">Continue to Report →</button>
+  </section>
+
+  <!-- ══════════ VIEW: REPORT ══════════ -->
+  <section class="view" id="view-report">
+    <div class="report-actions no-print">
+      <button class="btn secondary" id="btn-print">Print / Save PDF</button>
+      <button class="btn secondary" id="btn-download-json">Download Data (JSON)</button>
+    </div>
+    <button class="btn secondary no-print" id="btn-download-photos" style="width:100%;margin-top:0">Download All Photos (ZIP)</button>
+    <div class="card" id="report-container" style="background:#fff"></div>
+    <button class="btn danger no-print" id="btn-start-new" style="width:100%">Start New Inspection (clears this device's saved data)</button>
+  </section>
+
+</div>
+
+<script id="product-db" type="application/json">
+[{"b":"First Alert","m":"CO3-B01","n":"Battery-Operated Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"9V Alkaline battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"CO3-B01D","n":"Battery-Operated Carbon Monoxide Alarm with Backlit Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"2 AA Alkaline batteries","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"CO3-P01","n":"Plug-In Carbon Monoxide Alarm with Battery Backup","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with 9V battery backup","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"CO3-P01D","n":"Plug-In Carbon Monoxide Alarm with Battery Backup & Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with 2 AA battery backup","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"CO400","n":"Battery Powered Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Battery: two 9V","interconnect":"Standalone/No (page: 'Wireless Interconnectivity: No')","status":"Current"},{"b":"First Alert","m":"CO5-B10D","n":"Carbon Monoxide Alarm with 10-Year Battery & Digital Temperature Display","t":"CO Alarm","sensor":"Electrochemical","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"CO606","n":"Plug-In Carbon Monoxide Alarm with Battery Backup","t":"CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Smoke: 10-yr sealed lithium; CO: plug-in w/ 9V backup","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"CO615","n":"Plug-In Carbon Monoxide Alarm with Battery Backup and Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with 2 AA battery backup","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"CO710","n":"Carbon Monoxide Alarm with 10-Year Battery and Digital Temperature Display","t":"CO Alarm","sensor":"Electrochemical","power":"Built-in 10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"GCO1","n":"Combination Explosive Gas and Carbon Monoxide Alarm with Backlit Digital Display","t":"CO Alarm","sensor":"Electrochemical (CO + explosive/combustible gas)","power":"Plug-in (120V) with 9V battery backup","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"CO250T","n":"First Alert Battery Operated Travel Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"CO400CN2","n":"Carbon Monoxide Alarm Twin Pack","t":"CO Alarm","sensor":"Electrochemical","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"CO511B","n":"Wireless Interconnect Battery Operated Carbon Monoxide Alarm with Voice Alerts","t":"CO Alarm","sensor":"Electrochemical","power":"2 AA batteries","interconnect":"Wireless/RF interconnect","status":"Discontinued"},{"b":"First Alert","m":"CO910","n":"First Alert 10 Year Carbon Monoxide Alarm, Designer Series","t":"CO Alarm","sensor":"Electrochemical","power":"Sealed 3V lithium, 10-year","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"CO910V","n":"First Alert 10 Year Carbon Monoxide Alarm with Voice & Location","t":"CO Alarm","sensor":"Electrochemical","power":"Sealed 3V lithium, 10-year","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"FCD4CN-3","n":"Plug-In Digital Display Carbon Monoxide Alarm with Battery Backup","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with battery backup","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SC2-B01","n":"Battery-Operated Combination Smoke & Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA alkaline batteries","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SC2-B10","n":"10-Year Battery Combination Smoke & Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SC2-W01","n":"Hardwire Combination Smoke & Carbon Monoxide Alarm with Battery Backup","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SC2-W10","n":"Hardwire Combination Smoke & Carbon Monoxide Alarm with 10-Year Battery Backup","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr lithium backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SMCO100","n":"Battery Powered 2-in-1 Combination Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA alkaline batteries","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SMCO100V-AC","n":"Interconnect Hardwire Combination Smoke and Carbon Monoxide Alarm with Voice Alerts","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SMCO110V-AC","n":"Hardwire Smoke & Carbon Monoxide Alarm with 10-Year Battery Backup & Voice Alerts","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SMCO200","n":"Slim Profile Battery Powered Combination Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA alkaline batteries","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SMCO200V","n":"Battery-Operated 2-in-1 Smoke and Carbon Monoxide Alarm with Voice Alerts","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA alkaline batteries","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SMCO210","n":"10-Year Battery 2-in-1 Smoke and Carbon Monoxide Alarm with Slim Profile Design","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SMCO210V","n":"10-Year Battery 2-in-1 Smoke and Carbon Monoxide Alarm with Voice Alerts","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SMCO410","n":"Z-Wave Plus Smart Smoke and Carbon Monoxide Alarm, Works with Ring","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (Z-Wave Plus, works with Ring)","status":"Current"},{"b":"First Alert","m":"SMCO500V","n":"Interconnect Battery-Operated 2-in-1 Smoke and CO Alarm with Voice Alerts","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA alkaline batteries","interconnect":"Wireless/RF interconnect","status":"Current"},{"b":"First Alert","m":"SMCO600NV","n":"SC5 Battery Smart Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"6x CR123A lithium (3V)","interconnect":"Wireless/RF interconnect","status":"Current"},{"b":"First Alert","m":"SMCO600NV-AC","n":"SC5 Hardwire Smart Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with lithium backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SMICO100","n":"Battery-Operated 2-in-1 Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"9V alkaline battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SMICO100-AC","n":"Interconnect Hardwire 2-in-1 Smoke and Carbon Monoxide Alarm with Battery Backup","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SMICO105-AC","n":"Interconnect Hardwire 2-in-1 Smoke and CO Alarm with 10-Year Battery Backup","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr lithium backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SMICO110","n":"10-Year Battery 2-in-1 Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"1039102","n":"Onelink Safe & Sound Hardwired Smoke + Carbon Monoxide Alarm with Amazon Alexa","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with battery backup","interconnect":"Wireless/RF interconnect (WiFi, Onelink Safe & Sound w/ Alexa)","status":"Discontinued"},{"b":"First Alert","m":"1042135","n":"First Alert Onelink Smart Smoke + CO Alarm, Hardwired","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr sealed lithium backup","interconnect":"Wireless/RF interconnect (WiFi/Bluetooth, Onelink)","status":"Discontinued"},{"b":"First Alert","m":"1042136","n":"Onelink Battery Operated WiFi Smart Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed battery","interconnect":"Wireless/RF interconnect (WiFi/Bluetooth, Onelink)","status":"Discontinued"},{"b":"First Alert","m":"7030BSL","n":"First Alert Hardwired Smoke and Carbon Monoxide Alarm with Strobe Light","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr sealed battery backup","interconnect":"Hardwired interconnect (strobe model, up to 18 units)","status":"Discontinued"},{"b":"First Alert","m":"AC10-500","n":"First Alert Onelink Hardwired Wi-Fi Smoke & Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr sealed battery backup","interconnect":"Wireless/RF interconnect (WiFi/Bluetooth mesh, Onelink)","status":"Discontinued"},{"b":"First Alert","m":"DC10-500","n":"First Alert Onelink WiFi Smoke & Carbon Monoxide Alarm, 10 Year Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed battery","interconnect":"Wireless/RF interconnect (WiFi/Bluetooth mesh, Onelink)","status":"Discontinued"},{"b":"First Alert","m":"FAS-SMOKE-CO-BUNDLE","n":"First Alert Smoke and CO Protection Bundle","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke, SA9120BCN) + Electrochemical (CO, CO605)","power":"Bundle: smoke hardwired 120V w/9V backup, CO plug-in 120V w/2 AA backup","interconnect":"Smoke=Hardwired interconnect; CO=Standalone (bundle of 2 units)","status":"Discontinued"},{"b":"First Alert","m":"PC900","n":"First Alert PC900 Photoelectric Smoke & CO Combo Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"PC900V","n":"First Alert PC900V Photoelectric Smoke and CO Combo Alarm with Voice","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"PC910","n":"First Alert 10 Year Photoelectric Combo Smoke & CO Alarm, Designer","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year built-in lithium battery (3V)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"PC910V","n":"First Alert 10 Year Photoelectric Smoke & CO Alarm, Voice & Location","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year built-in lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"PRC700","n":"Slim Battery Operated Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"PRC700V","n":"First Alert PRC700V Slim Design Battery Smoke & CO Alarm with Voice","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"PRC710","n":"First Alert Slim Design 10-Year Battery Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year built-in lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"PRC710V","n":"Slim 10-Year Battery Smoke and Carbon Monoxide Alarm with Voice","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year built-in lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SC7010B","n":"First Alert Hardwired Photoelectric Smoke and CO Alarm with Battery Backup","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with AA battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"SC7010BV","n":"First Alert Talking Hardwired Photoelectric Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"SC9120B","n":"First Alert Hardwired Ionization Smoke and CO Alarm with Battery Backup","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"SC9120LBL","n":"BRK Hardwired Combo Smoke and Carbon Monoxide Alarm with 10-Year Battery Backup","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr lithium backup","interconnect":"Hardwired interconnect (up to 18 units)","status":"Discontinued"},{"b":"First Alert","m":"SCO403","n":"First Alert Battery Operated Carbon Monoxide and Smoke Detector, Combo-Pack","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Battery: two 9V","interconnect":"Standalone/No (page: 'Wireless Interconnectivity: No')","status":"Discontinued"},{"b":"First Alert","m":"SCO501B2","n":"First Alert Wireless Talking Battery Operated Smoke & Carbon Monoxide Alarm, 2-pk","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Wireless/RF interconnect (Onelink mesh, up to 16 units)","status":"Discontinued"},{"b":"First Alert","m":"SCO501CN-3ST","n":"First Alert Wireless Interconnected Talking Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Wireless/RF interconnect","status":"Discontinued"},{"b":"First Alert","m":"SCO5CN","n":"First Alert Battery Operated Smoke and Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SCO5CN-Bundle","n":"First Alert Combination Smoke and Carbon Monoxide Alarm SCO5CN Bundle","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SCO7CN","n":"First Alert Battery Talking Combo Smoke & Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SCO7CN-C","n":"First Alert Child Awakening Combo Smoke & CO Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SCO7CN-C2","n":"First Alert Child Awakening Combo Smoke & CO Alarm with Voice Location Feature","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"ZCOMBO-G","n":"First Alert Z-Wave Enabled Battery Smoke & Carbon Monoxide Combo Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Wireless/RF interconnect (Z-Wave)","status":"Discontinued"},{"b":"First Alert","m":"AF400","n":"AF400 EZ Fire Spray","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"FE10GR (Garage)","n":"Rechargeable Garage Fire Extinguisher UL Rated 10-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"FE10GR (Marine)","n":"Rechargeable Marine Fire Extinguisher UL Rated 10-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"FE1A10GR","n":"Rechargeable Home Fire Extinguisher UL Rated 1-A:10-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"FE1A10GR (Marine)","n":"Rechargeable Marine Fire Extinguisher UL Rated 1-A:10-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"FE2A10GR","n":"Rechargeable Compliance Fire Extinguisher UL Rated 2-A:10-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"FE3A40GR","n":"Heavy Duty Plus Rechargeable Fire Extinguisher UL Rated 3-A:40-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"FE4A60BC","n":"Rechargeable Commercial Fire Extinguisher UL Rated 4-A:60-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"FE5GR","n":"Rechargeable Recreation Fire Extinguisher UL Rated 5-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"FESA5","n":"Auto Fire Extinguisher UL Rated 5-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"KFE2S5","n":"Kitchen Fire Extinguisher UL Rated 5-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"First Alert","m":"FE20A120B","n":"First Alert Heavy Duty Commercial Fire Extinguisher 20-A:120-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"First Alert","m":"AF400-AUTO","n":"First Alert Tundra Auto Fire Extinguishing Spray","t":"Fire Extinguisher (Spray)","sensor":"Photoelectric (typical for this line)","power":"Not specified in listing","interconnect":"No / Standalone","status":"Discontinued"},{"b":"First Alert","m":"AF400-CAMP","n":"First Alert Tundra Camp Fire Extinguishing Spray","t":"Fire Extinguisher (Spray)","sensor":"Photoelectric (typical for this line)","power":"Not specified in listing","interconnect":"No / Standalone","status":"Discontinued"},{"b":"First Alert","m":"SM100V-AC","n":"Interconnect Hardwire Smoke Alarm with Voice Alerts","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with AA battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SM2-B01","n":"Battery-Operated Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"2 AA alkaline batteries","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SM2-B10","n":"10-Year Battery Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SM2-W01","n":"Hardwire Smoke Alarm with Battery Backup","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SM2-W10","n":"Hardwire Smoke Alarm with 10-Year Battery Backup","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr lithium backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SM200","n":"Battery-Operated Smoke Alarm with Slim Profile Design","t":"Smoke Alarm","sensor":"Photoelectric","power":"2 AA alkaline batteries","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SM210","n":"10-Year Battery Smoke Alarm with Slim Profile Design","t":"Smoke Alarm","sensor":"Photoelectric (smoke SM210) + Electrochemical (CO400)","power":"Smoke: 10-yr sealed lithium; CO: 9V (value pack)","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SM210L","n":"10-Year Battery Smoke Alarm with Safety Path Light","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SM210M","n":"10-Year Battery Micro Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SM210V","n":"10-Year Battery Smoke Alarm with Voice Alerts","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SM310","n":"10-Year Sealed Battery Dual Sensor Smoke Alarm","t":"Smoke Alarm","sensor":"Dual sensor: Photoelectric + Ionization","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SMI100","n":"Battery-Operated Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"9V alkaline battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SMI100-AC","n":"Interconnect Hardwire Smoke Alarm with Battery Backup","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SMI100RV","n":"RV Approved Battery-Operated Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"9V alkaline battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"SMI105-AC","n":"Interconnect Hardwire Smoke Alarm with 10-Year Battery Backup","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 10-yr lithium backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"First Alert","m":"SMI110","n":"10-Year Battery Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"First Alert","m":"0827B","n":"First Alert 10-Year Sealed Battery Ionization Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"10-year sealed lithium battery (3V)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"3120B","n":"First Alert 120VAC Hardwired Dual Sensor Smoke Alarm with Battery Backup","t":"Smoke Alarm","sensor":"Dual sensor: Photoelectric + Ionization","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"7010","n":"First Alert 120-Volt AC Photoelectric Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V AC)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"7010B","n":"First Alert Hardwired Photoelectric Smoke Alarm with Battery Backup","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"7010BSL","n":"First Alert Hardwired Photoelectric Smoke Detector with Strobe","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with AAA battery backup","interconnect":"Hardwired interconnect (strobe, up to 18 units)","status":"Discontinued"},{"b":"First Alert","m":"7020B","n":"First Alert Hardwired Interconnectable Smoke Detector with Escape Light","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"7020BSL","n":"First Alert Hardwired LED Strobe Light Smoke Alarm with 10-Year Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr sealed battery backup","interconnect":"Hardwired interconnect (strobe for hearing impaired)","status":"Discontinued"},{"b":"First Alert","m":"9120","n":"First Alert Hardwired Inter-connected Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect (up to 18 units)","status":"Discontinued"},{"b":"First Alert","m":"9120B","n":"First Alert Hardwired Smoke Alarm with Battery Backup","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"9120B-48B","n":"First Alert Hardwired Smoke Alarm - Contractor Pack (48 pack)","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect (48-pack)","status":"Discontinued"},{"b":"First Alert","m":"9120B-48P","n":"First Alert Hardwired Smoke Alarm - Contractor Pack (48 pack)","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect (48-pack)","status":"Discontinued"},{"b":"First Alert","m":"9120B-Bundle6","n":"First Alert Hardwired Smoke Alarm with Battery Backup, 6-Pack","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"9120LBL","n":"First Alert BRK Brands Hardwired Smoke Alarm with 10-Year Battery","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 10-yr lithium backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"P1000","n":"First Alert Atom Photoelectric Smoke & Fire Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"3V CR2 lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"P1000-AC-3","n":"First Alert Atom Photoelectric Smoke Alarm, Antique Copper, 3-Pack","t":"Smoke Alarm","sensor":"Photoelectric","power":"3V CR2 lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"P1000-CH-3","n":"First Alert Atom Photoelectric Smoke Alarm, Cherry Wood, 3-Pack","t":"Smoke Alarm","sensor":"Photoelectric","power":"3V CR2 lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"P1000-PN-3","n":"First Alert Atom Photoelectric Smoke Alarm, Polished Nickel, 3-Pack","t":"Smoke Alarm","sensor":"Photoelectric","power":"3V CR2 lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"P1010","n":"First Alert 10 Year Battery Atom Photoelectric Micro Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"P900","n":"First Alert P900 Photoelectric Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"Battery (9V)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"P900E","n":"First Alert P900E Photoelectric Smoke Alarm with LED Escape Light","t":"Smoke Alarm","sensor":"Photoelectric","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"P910","n":"First Alert 10 Year Photoelectric Smoke Alarm, Designer Series","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery (3V)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"P910E","n":"First Alert 10 Year Photoelectric Smoke Alarm with Escape Light","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery (3V)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"PR700","n":"First Alert Slim Design Battery Photoelectric Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"PR710","n":"First Alert 10-Year Sealed Battery Low Profile Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA100B","n":"Hearing Impaired Strobe Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA300CN2","n":"First Alert Battery Operated Ionization Smoke Alarm, 2-Pack","t":"Smoke Alarm","sensor":"Ionization","power":"Battery (replaceable)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA300CN3","n":"First Alert Battery Operated Ionization Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"Battery (replaceable)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA303CN3","n":"First Alert Basic Battery Operated Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA304CN3","n":"First Alert Battery Powered Smoke Alarm with Escape Light","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA304LCN","n":"First Alert Lithium Battery Operated Smoke Alarm with Escape Light","t":"Smoke Alarm","sensor":"Ionization","power":"9V lithium battery (10-year)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA305CN3","n":"First Alert Long Life Battery Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"Sealed 10-year lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA320CN","n":"First Alert Smart Dual Sensor Smoke Alarm with Nuisance Resistance","t":"Smoke Alarm","sensor":"Dual sensor: Photoelectric + Ionization","power":"2 AA alkaline batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA3210","n":"First Alert Dual Sensor 10-Year Battery Smoke and Fire Alarm","t":"Smoke Alarm","sensor":"Dual sensor: Photoelectric + Ionization","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA340CN","n":"Tamperproof 10-Year Smoke Alarm","t":"Smoke Alarm","sensor":"Dual sensor: Photoelectric + Ionization","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA501CN-3ST","n":"First Alert Wireless Interconnect Battery Operated Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"2 AA batteries","interconnect":"Wireless/RF interconnect (Onelink, up to 18 units)","status":"Discontinued"},{"b":"First Alert","m":"SA501CN2-3ST","n":"First Alert Wireless Interconnect Battery Operated Smoke Alarm Twin Pack","t":"Smoke Alarm","sensor":"Photoelectric","power":"2 AA batteries","interconnect":"Wireless/RF interconnect (Onelink, up to 18 units)","status":"Discontinued"},{"b":"First Alert","m":"SA511B","n":"First Alert Wireless Interconnected Smoke Alarm with Voice Location","t":"Smoke Alarm","sensor":"Photoelectric","power":"2 AA batteries","interconnect":"Wireless/RF interconnect (Onelink)","status":"Discontinued"},{"b":"First Alert","m":"SA511CN2-3ST","n":"First Alert Wireless Interconnected Battery Smoke Alarm with Voice, 2-Pack","t":"Smoke Alarm","sensor":"Photoelectric","power":"2 AA batteries","interconnect":"Wireless/RF interconnect","status":"Discontinued"},{"b":"First Alert","m":"SA520B","n":"First Alert Wireless Interconnected Hardwired Smoke Alarm with Battery Backup","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Wireless/RF interconnect (hardwired power + wireless link)","status":"Discontinued"},{"b":"First Alert","m":"SA521CN-3ST","n":"First Alert Wireless Interconnected Hardwired Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with AA battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"SA710CN","n":"Photoelectric Sensor Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA710LCN","n":"First Alert Long Life Photoelectric Sensor Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"9V lithium battery (10-year)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA720CN","n":"Photoelectric Sensor Smoke Alarm with Escape Light","t":"Smoke Alarm","sensor":"Photoelectric","power":"9V battery (DC)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"First Alert","m":"SA9120BCN","n":"First Alert 120VAC Hardwired Smoke Alarm with Battery Backup","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120VAC) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"SA9120BCN-Bundle3","n":"3 Pack Bundle of First Alert 120VAC Hardwired Smoke Alarm with Battery Backup","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120VAC) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"SA9120BPCN","n":"First Alert Hardwired Smoke Alarm with Adapter Plugs","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V AC) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"First Alert","m":"SM500V","n":"Wireless Interconnect Battery-Operated Smoke Alarm with Voice Alerts","t":"Smoke Alarm","sensor":"Photoelectric","power":"2 AA alkaline batteries","interconnect":"Wireless/RF interconnect","status":"Discontinued"},{"b":"Kidde","m":"C3010","n":"Sealed Lithium Battery Power Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"C3010D","n":"Sealed Lithium Battery Power Carbon Monoxide Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"COB","n":"Battery Powered Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"AA batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"COB10","n":"10-Year Battery Powered Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"10-year battery (AA included)","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"COBD","n":"Battery Powered Carbon Monoxide Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"AA batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"COBD10","n":"10-Year Battery Powered Carbon Monoxide Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"10-year battery (AA included)","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"COBDL","n":"Battery Powered Carbon Monoxide Alarm with Low Level Alert Detection","t":"CO Alarm","sensor":"Electrochemical","power":"AA batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"COBDL10","n":"10-Year Battery Powered CO Alarm, Digital Display, Low Level Alert Detection","t":"CO Alarm","sensor":"Electrochemical","power":"10-year battery (AA included)","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"COP","n":"Plug-in Carbon Monoxide Alarm with AA Backup Battery","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with AA battery backup","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"COPD","n":"Plug-in Carbon Monoxide Alarm with AA Backup Battery and Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with AA battery backup","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"COPDLG","n":"Plug-in Carbon Monoxide Alarm, Digital Display, Low Level and Explosive Gas Detection","t":"CO Alarm","sensor":"Electrochemical (CO + explosive gas: natural gas/propane)","power":"Plug-in (120V) with AA battery backup","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"COPDLQW","n":"Smart CO Alarm with Indoor Air Quality Monitoring, Digital Display, Plug-in with AA Backup Battery","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with AA battery backup","interconnect":"Wireless/RF (WiFi/app smart, not alarm-to-alarm interconnect)","status":"Current"},{"b":"Kidde","m":"COPDW","n":"Smart Carbon Monoxide Alarm with Digital Display, Plug-in with AA Backup Battery","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with AA battery backup","interconnect":"Wireless/RF (WiFi/app smart, not alarm-to-alarm interconnect)","status":"Current"},{"b":"Kidde","m":"KN-COB-B-LP","n":"Nighthawk Battery Operated Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"3 AA batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COB-B-LPM","n":"Battery Operated Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"3 AA batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COB-DP-LS","n":"Nighthawk AC Plug-in Operated Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V AC)","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COB-DP2","n":"Carbon Monoxide Alarm, AC Powered, Plug-in with Battery Backup","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with battery backup","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COB-IC","n":"AC Hardwired Operated Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"Hardwired (120V AC)","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"KN-COB-LCB-A","n":"AC Plug-in Operated Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V AC)","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COB-LP2","n":"Battery Operated Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"2 AA batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COEG-3","n":"AC Plug-in Operated Carbon Monoxide and Explosive Gas Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical (CO + explosive gas)","power":"Plug-in (120V AC)","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COP-DP-10YB","n":"Worry-Free Bedroom Plug-in CO Alarm, Sealed Lithium Backup, Digital Display, Voice Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with 10-yr sealed lithium backup","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COP-DP-10YH","n":"Worry-Free Hallway Plug-in CO Alarm, Sealed Lithium Backup, Digital Display, Escape/Night Light","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with 10-yr sealed lithium backup","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COP-DP-10YL","n":"Worry-Free Living Area Plug-in CO Alarm, Sealed Lithium Battery Backup, Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with 10-yr sealed lithium backup","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COP-DP-10YL-AQ-WF","n":"Smart Carbon Monoxide Alarm with Indoor Air Quality Monitor","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with 10-yr sealed lithium backup","interconnect":"Wireless/RF (WiFi/app smart, not alarm-to-alarm interconnect)","status":"Current"},{"b":"Kidde","m":"KN-COP-DP-B","n":"Carbon Monoxide Alarm, AC Powered, Plug-in with Battery Backup and Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with battery backup","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COP-DP-LS","n":"Nighthawk AC Plug-in Operated Carbon Monoxide Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with battery backup","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COP-IC","n":"AC Hardwired Operated Carbon Monoxide Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Hardwired (120V AC)","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"KN-COPF-I","n":"Silhouette AC Hardwired Operated Carbon Monoxide Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Hardwired (120V) with sealed Li-ion backup","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COPP-3","n":"AC Plug-in Operated Carbon Monoxide Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V AC)","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COPP-B","n":"Battery Operated with Digital Display Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"Battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COPP-B-LP","n":"Nighthawk Carbon Monoxide Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COPP-B-LPM","n":"Battery Operated Carbon Monoxide Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COU-B","n":"Ultra-Sensitive Battery Powered Carbon Monoxide Monitor","t":"CO Alarm","sensor":"Electrochemical","power":"Battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"900-0143-LPM-US","n":"Battery Operated Carbon Monoxide Alarm, RV Listed","t":"CO Alarm","sensor":"Electrochemical","power":"3 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"9CO5-LP2","n":"Battery Operated Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"Battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"C3010","n":"DC Carbon Monoxide Alarm with Sealed Lithium Battery","t":"CO Alarm","sensor":"Electrochemical","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"C3010D","n":"Sealed Lithium Battery Power Carbon Monoxide Detector with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COB-B-LPM","n":"Battery Operated Basic Carbon Monoxide Alarm","t":"CO Alarm","sensor":"Electrochemical","power":"3 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COB-B-LS","n":"Nighthawk Battery Operated Carbon Monoxide Alarm, Basic","t":"CO Alarm","sensor":"Electrochemical","power":"Battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COB-DP2","n":"120V AC Plug-In Carbon Monoxide Alarm w/ Battery Backup, Theft-Deterrent","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with battery backup","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COB-IC","n":"Hardwired AC/DC Carbon Monoxide w/ Battery Backup, Interconnectable","t":"CO Alarm","sensor":"Electrochemical","power":"Hardwired (120V AC)","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"KN-COEG-3","n":"120V AC/DC Plug-in Operated CO and Explosive Gas Alarm w/ Digital Display","t":"CO Alarm","sensor":"Electrochemical (CO + explosive gas)","power":"Plug-in (120V AC)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COP-DP-10YB","n":"120V Bedroom Plug-in Carbon Monoxide Alarm, 10 Yr Sealed Backup, Digital Display, Voice","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with 10-yr sealed lithium backup","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COP-DP-10YH","n":"120V Plug-in Carbon Monoxide Alarm w/Exit Light, 10 Yr Sealed, Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with 10-yr sealed lithium backup","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COP-DP-10YL","n":"120V AC/DC Plug-in Carbon Monoxide Alarm, 10 Yr Sealed Backup, Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with 10-yr sealed lithium backup","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COP-DP-B","n":"120V AC Plug-In Carbon Monoxide Alarm w/ Battery Backup, Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V) with battery backup","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COP-IC","n":"AC/DC Hardwired Carbon Monoxide Alarm with Digital Display, Interconnectable","t":"CO Alarm","sensor":"Electrochemical","power":"Hardwired (120V AC)","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"KN-COPF-i","n":"120V AC Carbon Monoxide Alarm w/ Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Hardwired (120V) with sealed Li-ion backup","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COPP-3","n":"NightHawk AC Plug-In Carbon Monoxide Alarm with Digital Display and 9v Battery Backup","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V AC)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COPP-B-LPM","n":"Battery Operated Carbon Monoxide Alarm with Peak Level Memory and Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COPP-B-LS","n":"Nighthawk Battery Operated Carbon Monoxide Alarm with Digital Display","t":"CO Alarm","sensor":"Electrochemical","power":"Battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COU-B","n":"Ultra-Sensitive Battery Powered Carbon Monoxide Monitor","t":"CO Alarm","sensor":"Electrochemical","power":"Battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"30CUA10","n":"Smoke + CO Alarm, Hardwired with 10-Year Backup Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr backup battery","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"30CUA10-V","n":"Smoke + CO Alarm, Hardwired with 10-Year Backup Battery, Voice Alerts","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr backup battery","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"30CUAR","n":"Smoke + CO Alarm, Hardwired + AA Backup Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"30CUAR-V","n":"Smoke + CO Alarm, Hardwired + AA Backup Battery, Voice Alerts","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"30CUAR-VRF","n":"Smoke + CO Alarm, Wire-Free Interconnect, Hardwired with AA Backup Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with AA battery backup","interconnect":"Wireless/RF interconnect (wire-free, up to 12 units)","status":"Current"},{"b":"Kidde","m":"30CUAR-W","n":"Smart Smoke + CO Alarm, Hardwired with AA Backup Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Wireless/RF (WiFi/app smart + mobile alerts)","status":"Current"},{"b":"Kidde","m":"30CUD10","n":"Smoke + CO Alarm, 10-Year Battery Powered","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"30CUD10-V","n":"Smoke + CO Alarm, 10-Year Battery Powered, Voice Alerts","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"30CUDR","n":"Smoke + CO Alarm, 2 AA Battery Powered","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA replaceable batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"30CUDR-V","n":"Smoke + CO Alarm, 2 AA Battery Powered, Voice Alerts","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA replaceable batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"30CUDR-VRF","n":"Combo Smoke + CO Alarm, Wire-Free Interconnect, AA Battery Powered","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA replaceable batteries","interconnect":"Wireless/RF interconnect (wire-free, up to 12 units)","status":"Current"},{"b":"Kidde","m":"900-CUAR","n":"Hardwired Smoke & Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"900-CUAR-V","n":"Hardwired Smoke & Carbon Monoxide Alarm, Voice","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"900-CUDR","n":"Battery Powered Smoke & Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"900-CUDR-V","n":"Battery Powered Smoke & Carbon Monoxide Alarm, Voice","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COPE-D","n":"Battery Operated Combination Carbon Monoxide & Photoelectric Smoke Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"9V battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COPE-IC","n":"AC Wire-In Combination Carbon Monoxide & Photoelectric Smoke Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"KN-COSM-B-RF","n":"Battery Operated Wireless Interconnect Combination CO, Fire & Smoke Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Battery","interconnect":"Wireless/RF interconnect","status":"Current"},{"b":"Kidde","m":"KN-COSM-BA","n":"Battery Operated Combination Carbon Monoxide & Smoke Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"KN-COSM-IBA","n":"AC Wire-In Combination Carbon Monoxide & Smoke Alarm","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Hardwired (120V)","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"KN-COSM-XTR-BA","n":"Intelligent Alarm, Battery Operated Combination Smoke & Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"P3010CU","n":"Combination Smoke & Carbon Monoxide Alarm with Sealed Lithium Battery Power","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"P3010K-CO","n":"Worry-Free Kitchen Smoke and Carbon Monoxide Alarm, Sealed Lithium Battery Power","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"P4010ACLEDSCO-2","n":"120V AC 3-in-1 LED Strobe and 10-Year Combo Smoke/CO Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr battery backup","interconnect":"Hardwired interconnect (strobe model)","status":"Current"},{"b":"Kidde","m":"P4010ACSCO","n":"120V AC Wire-In Combination Smoke & Carbon Monoxide Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr sealed lithium backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"P4010ACSCO-W","n":"Intelligent Wire-Free Combo Smoke and CO Alarm, 120V AC with 10-Year Battery Backup, Wire-Free Interconnect","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with battery backup","interconnect":"Wireless/RF interconnect (supervised wire-free)","status":"Current"},{"b":"Kidde","m":"P4010ACSCO-WF","n":"Smoke + Carbon Monoxide Alarm with Smart Features","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V AC)","interconnect":"Wireless/RF (WiFi/app smart; works with hardwired interconnect)","status":"Current"},{"b":"Kidde","m":"P4010ACSCOAQ-WF","n":"Smoke + Carbon Monoxide Alarm with Indoor Air Quality Monitor","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V AC)","interconnect":"Wireless/RF (WiFi/app smart + hardwired interconnect)","status":"Current"},{"b":"Kidde","m":"P4010DCSCO-W","n":"Intelligent Wire-Free Combo Smoke and CO Alarm, 10-Year Sealed Battery Powered, Wire-Free Interconnect","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (supervised wire-free)","status":"Current"},{"b":"Kidde","m":"RGCUAR-RW","n":"Ring Smart Smoke + CO Alarm, Hardwired with 2 AA Backup Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Wireless/RF (WiFi/app, Ring; + hardwired interconnect)","status":"Current"},{"b":"Kidde","m":"i12010SCO","n":"10-Year Battery AC Wire-In Combination Smoke & CO Alarm, Sealed Lithium Battery Backup","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 3V lithium 10-yr backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"2070-VASCR","n":"120V AC/DC Powered Smoke & CO Alarm w/Multi-Criteria Smoke Sensor, 9V Battery Backup","t":"Combination Smoke+CO Alarm","sensor":"Multi-criteria/optical (smoke) + Electrochemical (CO)","power":"Plug-in (120V) with 9V battery backup","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"2070-VDSCR","n":"9V DC Battery Powered Combo Smoke & Carbon Monoxide Alarm w/Voice","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"900-CUAR","n":"Smoke & Carbon Monoxide Detector, Interconnectable, 120V, Photoelectric/Electrochemical","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"KN-COPE-D","n":"Battery Operated Combination Photoelectric Smoke/CO Alarm with Voice Warning","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COPE-D","n":"9V DC Photoelectric Carbon Monoxide & Smoke Alarm w/Voice, Front Load Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COPE-I","n":"AC/DC Wire-In Photoelectric Smoke/CO Alarm with Voice Warning","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V AC/DC) with battery backup","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COSM-BA","n":"Battery Operated Combo Carbon Monoxide & Smoke Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"2 AA batteries","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"KN-COSM-IBA","n":"120V CO & Smoke Alarm w/Voice, Ionization Sensor, Front Load Battery","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Hardwired (120V)","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"KN-COSM-XRT-BA","n":"Battery Operated Combination CO & Smoke Alarm w/ Front Load Battery & Voice","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Battery (front-load)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"P3010CU","n":"DC Combination Smoke and Carbon Monoxide Alarm w/Voice, 10 Yr Sealed Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"P3010K-CO","n":"DC Photoelectric Smoke and Carbon Monoxide Combo Alarm","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"P4010ACLEDSCO-2","n":"120V AC 3-in-1 LED Strobe Smoke & CO Alarm w/Voice, Sync Flash, 10 Yr Sealed Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr battery backup","interconnect":"Hardwired interconnect (strobe model)","status":"Discontinued"},{"b":"Kidde","m":"P4010ACSCO","n":"120V AC/DC Carbon Monoxide & Photoelectric Smoke Alarm w/Voice, 10 Yr Sealed Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 10-yr sealed lithium backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"P4010ACSCO-W","n":"120V AC/DC Wireless Smoke and CO Alarm w/Voice, Photoelectric, 10 Yr Sealed Battery","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with battery backup","interconnect":"Wireless/RF interconnect (supervised wire-free)","status":"Discontinued"},{"b":"Kidde","m":"P4010DCSCO-W","n":"Photoelectric Smoke & CO Alarm, Wireless, 10 Year Sealed Battery Backup","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (supervised wire-free)","status":"Discontinued"},{"b":"Kidde","m":"i12010SCO","n":"Hardwired AC/DC Ion Smoke and Carbon Monoxide Alarm with Sealed Lithium Battery Backup, Voice","t":"Combination Smoke+CO Alarm","sensor":"Ionization (smoke) + Electrochemical (CO)","power":"Hardwired (120V) with 3V lithium 10-yr backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"FA10G","n":"Basic 10 Fire Extinguisher, 10-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"FA110G","n":"Basic 110 Fire Extinguisher, 1-A:10-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"FA5G","n":"Basic Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"FX210R","n":"Red Living Area Fire Extinguisher, 2-A:10-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"FX210W","n":"White Living Area Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"FX340GW-2","n":"Garage Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"FX340SC-2","n":"Full Home Fire Extinguisher, 3-A:40-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"KAP-14K","n":"Flame Out (fire spray)","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"KD57-5BC","n":"Basic 5 Fire Extinguisher, 5-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"KD57W-5BC","n":"Mariner PWC Fire Extinguisher, 5-B:C","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"KD82-110ABC","n":"Recreational Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"M10G","n":"Auto 10 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"M110G","n":"Basic 110 Fire Extinguisher (Auto line)","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"M5G","n":"Auto 5 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"MAR10","n":"Mariner 10 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"MAR110","n":"Mariner 110 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"MAR210","n":"Mariner 210 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"MAR340","n":"Mariner 340 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"MAR5","n":"Mariner 5 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"PLS-2.5MP-1","n":"Pro Plus PLS-2.5MP-1 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"PRO 2.5 WM-2","n":"Pro 2.5 WM-2 Water Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"PRO CD50 CDM-2","n":"Wheeled Extinguisher 50lb Carbon Dioxide Self Expelling","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"PRO-10MP-1","n":"Pro 460 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"PRO-2.5MP-1","n":"Pro 110 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"PRO-2.75BC-1","n":"Pro 10 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"PRO-4MP-1","n":"Pro 210 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"PRO-5MP-1","n":"Pro 340 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"Pro 10 CDM-4","n":"Pro 10 CDM-4 Fire Extinguisher (CO2)","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"Pro 15 CDM-4","n":"Pro 15 CDM-4 Fire Extinguisher (CO2)","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"Pro 20 CDM-4","n":"Pro 20 CDM-4 Fire Extinguisher (CO2)","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"Pro 5 CDM-4","n":"Pro 5 CDM-4 CO2 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"Pro Plus 150 MP","n":"Wheeled Extinguisher 125lb ABC Dry Chemical","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"Pro Plus 50 MP","n":"Wheeled Extinguisher 50lb ABC Dry Chemical","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"Pro Plus PLS-10MP-1","n":"Pro Plus PLS-10MP-1 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"Pro Plus PLS-20MP-1","n":"Pro Plus PLS-20MP-1 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"Pro Plus PLS-5MP-1","n":"Pro Plus PLS-5MP-1 Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"RESSP","n":"Kitchen Fire Extinguisher, 711A Rated","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"WC-100-1 KS Pro","n":"6 Liter Class K Wet Chemical Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Current"},{"b":"Kidde","m":"21006204N","n":"Service Lite Multi-Purpose Dry Chemical Fire Extinguisher, ABC","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"21006287N","n":"Specialty Disposable Regular Dry Chemical Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"21008173N","n":"Kitchen Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"25074","n":"Class K, 6 Liter Fire Extinguisher, Factory-Filled, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"440161N","n":"2.9 lb Fire Control 10 FX Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"466112","n":"3-A, 40-B:C, 5# Fire Extinguisher with wall hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"466112-01","n":"Multi-Purpose Tri-Classic ABC Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"466141","n":"2.75lb Kitchen & Garage Fire Extinguisher w/Nylon Strap Bracket, Disposable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"466141N","n":"3 LB Class B and C Kitchen/Garage Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"Auto FX 5 II","n":"5-B:C, 2# Fire Extinguisher with nylon strap bracket, silver, Disposable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"FA110","n":"1-A, 10-B:C, 2.5# Fire Extinguisher with nylon strap bracket, Disposable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"FA110/RESSP","n":"2.75lb Kitchen Fire Extinguisher Twin Pack, 1-A:10-B:C/711A Rated, Disposable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"FA5B","n":"FA5B Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"FA5B","n":"Basic Fire Extinguisher with Pressure Gauge and Nylon Strap Bracket, Disposable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"FX210R","n":"Living Area Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"FX340SC","n":"3-A, 40-B:C, 5.5# Fire Extinguisher with Wall Hook, Disposable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"KG Plus","n":"Kitchen and Garage Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"KK2","n":"Kitchen 2BC Fire Extinguisher, Disposable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"PRO10CD","n":"10-B:C, 10# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"PRO10MP","n":"4-A, 60-B:C, 10# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"PRO15CD","n":"10-B:C, 15# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"PRO2.5MP","n":"1-A, 10-B:C, 2.6# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"PRO2.5MP-V","n":"1-A, 10-B:C, 2.6# Fire Extinguisher with metal strap bracket, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"PRO20CD","n":"10-B:C, 20# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"PRO20MP","n":"6-A, 80-B:C, 20# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"PRO5CD","n":"5-B:C, 5# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"Pro 110","n":"Consumer Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"Pro 210","n":"2-A, 10-B:C, 4# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"Pro 340","n":"3-A, 40-B:C, 5.5# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"Pro2.5W","n":"2-A, 2.5 Gallon Water Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"ProPlus10H","n":"1-A, 10-B:C, 11# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"ProPlus10MP","n":"4-A, 80-B:C, 10# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"ProPlus15.5H","n":"2-A, 10-B:C, 15.5# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"ProPlus2.5 MP","n":"1-A, 10-B:C, 2.6# Fire Extinguisher with metal strap bracket, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"ProPlus2.5H","n":"2-B:C, 2.5# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"ProPlus20MP","n":"6-A, 120-B:C, 20# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"ProPlus5H","n":"5-B:C, 5# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"ProPlus5MP","n":"3-A, 40-B:C, 5# Fire Extinguisher with Wall Hook, Rechargeable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"RESSP","n":"Kitchen Fire Extinguisher","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"RESSP","n":"711A Rated, 2.5# White Kitchen Fire Extinguisher with Wall Hook, Disposable","t":"Fire Extinguisher","sensor":"N/A","power":"N/A (manual/pressurized agent)","interconnect":"No / Standalone","status":"Discontinued"},{"b":"Kidde","m":"10SDR","n":"Smoke Alarm, AA Battery Powered (4in compact)","t":"Smoke Alarm","sensor":"Photoelectric","power":"2 AA replaceable batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"20SA10","n":"Smoke Alarm, Hardwired with 10-Year Backup Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr backup battery","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"20SA10-V","n":"Smoke Alarm, Hardwired with 10-Year Backup Battery, Voice Alerts","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr backup battery","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"20SAR","n":"Smoke Alarm, Hardwired with AA Backup Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"20SAR-VRF","n":"Smoke Alarm, Wire-Free Interconnect, Hardwired with AA Backup Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with AA battery backup","interconnect":"Wireless/RF (WiFi/app smart + hardwired interconnect)","status":"Current"},{"b":"Kidde","m":"20SAR-W","n":"Smart Smoke Alarm, Hardwired with AA Backup Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with AA battery backup","interconnect":"Wireless/RF (WiFi/app smart + hardwired interconnect)","status":"Current"},{"b":"Kidde","m":"20SD10","n":"Smoke Alarm, 10-Year Battery Powered","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"20SD10-V","n":"Smoke Alarm, 10-Year Battery Powered and Voice Alerts","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"20SDR","n":"Smoke Alarm, AA Battery Powered","t":"Smoke Alarm","sensor":"Photoelectric","power":"2 AA replaceable batteries","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"20SDR-VRF","n":"Smoke Alarm, Wire-Free Interconnect, AA Battery Powered","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with AA battery backup","interconnect":"Wireless/RF (WiFi/app smart + hardwired interconnect)","status":"Current"},{"b":"Kidde","m":"P12040","n":"AC Hardwired Interconnect Photoelectric Smoke Alarm with Hush","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"P3010B","n":"Worry-Free Bedroom Sealed Lithium Battery Power Smoke Alarm, Voice","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"P3010H","n":"Worry-Free Hallway Sealed Lithium Battery Power Smoke Alarm, Safety Light","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"P3010L","n":"Worry-Free Living Area Sealed Lithium Battery Power Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"P4010ACLEDS-2","n":"Smoke Alarm with LED Strobe","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr sealed battery backup","interconnect":"Hardwired interconnect (strobe model)","status":"Current"},{"b":"Kidde","m":"P4010ACS","n":"AC Hardwired Photoelectric Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V AC/DC) with 10-yr sealed lithium backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"P4010ACS-W","n":"Wire-Free Interconnected AC Hardwired Smoke Alarm, Photoelectric","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr battery backup","interconnect":"Wireless/RF interconnect (wire-free)","status":"Current"},{"b":"Kidde","m":"P4010ACS-WF","n":"Smoke Alarm with Smart Features","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr sealed lithium backup","interconnect":"Wireless/RF (WiFi/app smart + wire-free interconnect)","status":"Current"},{"b":"Kidde","m":"P4010ACSAQ-WF","n":"Smoke Alarm with Indoor Air Quality Monitor","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr battery backup","interconnect":"Wireless/RF (WiFi/app smart + hardwired interconnect)","status":"Current"},{"b":"Kidde","m":"P4010DCS-W","n":"Wire-Free Interconnected Battery Powered Smoke Alarm, Photoelectric","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (wire-free)","status":"Current"},{"b":"Kidde","m":"P4010LACS-W","n":"Wire-Free Interconnected Hardwired Smoke Alarm with Egress Light","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr battery backup","interconnect":"Wireless/RF interconnect (wire-free, egress light)","status":"Current"},{"b":"Kidde","m":"P4010LDCS-W","n":"Wire-Free Interconnected Battery Powered Smoke Alarm with Egress Light","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (wire-free, egress light)","status":"Current"},{"b":"Kidde","m":"P9040","n":"Photoelectric Battery Operated 4in Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"9V battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"P9050","n":"Battery Operated Photoelectric Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"9V battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"PI2010","n":"Dual Sensor AC Hardwired Interconnect Smoke Alarm, Photoelectric and Ionization","t":"Smoke Alarm","sensor":"Dual sensor: Photoelectric + Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"PI9010","n":"Dual Sensor Battery Operated Smoke Alarm","t":"Smoke Alarm","sensor":"Dual sensor: Photoelectric + Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"RF-SM-ACDC","n":"AC Hardwired Wireless Interconnect Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with battery backup","interconnect":"Wireless/RF interconnect","status":"Current"},{"b":"Kidde","m":"RF-SM-DC","n":"Battery Operated Wireless Interconnect Smoke Alarm","t":"Smoke Alarm","sensor":"Photoelectric","power":"Battery","interconnect":"Wireless/RF interconnect","status":"Current"},{"b":"Kidde","m":"RGSAR-RW","n":"Ring Smart Smoke Alarm, Hardwired with 2 AA Backup Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 2 AA battery backup","interconnect":"Wireless/RF (WiFi/app, Ring; + hardwired interconnect)","status":"Current"},{"b":"Kidde","m":"i1040","n":"Micro 10-Year Sealed Battery Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"i12010S","n":"Worry-Free Hardwired Interconnect Smoke Alarm, Sealed Lithium Battery Backup","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 10-yr lithium backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"i12020","n":"Hardwired Smoke Alarm, basic use","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V AC) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"i12040","n":"AC Hardwired Interconnect Smoke Alarm with Hush, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"i12060","n":"AC Hardwired Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect (up to 24 devices)","status":"Current"},{"b":"Kidde","m":"i12080","n":"AC Hardwired Interconnect Smoke Alarm with Safety Light","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"i4618AC","n":"Firex Hardwired Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V AC) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"i4718","n":"120V AC Wire-In Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V AC) with 9V battery backup","interconnect":"Hardwired interconnect (up to 24 devices)","status":"Current"},{"b":"Kidde","m":"i5000","n":"Firex 120V AC Wire-In Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V AC) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"Kidde","m":"i9010","n":"Sealed Lithium Battery Power Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"i9030","n":"FyreWatch Battery Operated Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"i9040","n":"Fire Sentry Battery Operated 4in Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"i9050","n":"Battery Operated Smoke Alarm, basic","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"i9060","n":"Battery Operated Smoke Alarm with Hush","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"i9070","n":"Front-Load Battery Operated Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery (front-load)","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"i9080","n":"Hallway Battery Operated Smoke Alarm, Safety Light","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Current"},{"b":"Kidde","m":"2070-VASR","n":"120V AC/DC Powered Smoke Alarm w/Voice, 9V Battery Backup","t":"Smoke Alarm","sensor":"Photoelectric (multi-criteria optical)","power":"Hardwired (120V AC) with 9V battery backup","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"2070-VDSR","n":"9V DC Battery Powered Smoke Alarm w/Voice & Battery Backup","t":"Smoke Alarm","sensor":"Photoelectric (multi-criteria optical)","power":"9V DC battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"P12040","n":"120V AC/DC Photoelectric Smoke Alarm with Hush Feature","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"P3010B","n":"Worry-Free Bedroom Sealed Lithium Battery Smoke Alarm with Voice, Photoelectric","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"P3010H","n":"Worry-Free DC Photoelectric Smoke Alarm with Safety Light","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"P3010L","n":"Worry-Free Living Area Sealed Battery Power Smoke Alarm, Photoelectric","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"P4010ACLEDS-2","n":"120V AC 2-in-1 LED Strobe Smoke Alarm w/Voice, Synchronized Flash, 10 Yr Sealed Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr sealed battery backup","interconnect":"Hardwired interconnect (strobe model)","status":"Discontinued"},{"b":"Kidde","m":"P4010ACS","n":"120V AC Hardwired Photoelectric Smoke Alarm w/Voice, 10 Yr Sealed Battery Backup","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V AC/DC) with 10-yr sealed lithium backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"P4010ACS-W","n":"120V AC/DC Wireless Smoke Alarm w/ Voice, Photoelectric Sensor, 10Yr Sealed Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr battery backup","interconnect":"Wireless/RF interconnect (wire-free)","status":"Discontinued"},{"b":"Kidde","m":"P4010DCS-W","n":"Photoelectric DC Wireless Interconnected Smoke Alarm w/Voice, 10 Yr Sealed Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (wire-free)","status":"Discontinued"},{"b":"Kidde","m":"P4010LACS-W","n":"120V AC/DC Wireless Smoke Alarm w/Light and Voice, Photoelectric, 10 Yr Sealed Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"Hardwired (120V) with 10-yr battery backup","interconnect":"Wireless/RF interconnect (wire-free, egress light)","status":"Discontinued"},{"b":"Kidde","m":"P4010LDCS-W","n":"Photoelectric Smoke Alarm w/Light and Voice, Wireless, 10 Yr Sealed Battery","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (wire-free, egress light)","status":"Discontinued"},{"b":"Kidde","m":"P9050","n":"9V Battery Operating Photoelectric Smoke Alarm with Hush","t":"Smoke Alarm","sensor":"Photoelectric","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"PI2010","n":"120V AC/DC Photo/Ion Dual Sensor Wire-in Smoke Alarm with Hush Feature","t":"Smoke Alarm","sensor":"Dual sensor: Photoelectric + Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"Pi9010","n":"9V Photoelectric/Ionization Dual Sensor Battery Operated Smoke Alarm","t":"Smoke Alarm","sensor":"Dual sensor: Photoelectric + Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"RF-SM-AC","n":"120V AC Hardwired Wireless Smoke Alarm Interconnected, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V AC)","interconnect":"Wireless/RF interconnect (up to 24 devices)","status":"Discontinued"},{"b":"Kidde","m":"RF-SM-DC","n":"9V DC Battery Powered Smoke Alarm, Interconnected, Ionization","t":"Smoke Alarm","sensor":"Photoelectric","power":"Battery","interconnect":"Wireless/RF interconnect","status":"Discontinued"},{"b":"Kidde","m":"i1040","n":"Micro 10 Year Sealed Battery Ionization Smoke Alarm","t":"Smoke Alarm","sensor":"Ionization","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"i12010S","n":"Worry-Free Hardwired Interconnect Smoke Alarm with Sealed Lithium Battery Backup, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 10-yr lithium backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"i12040","n":"120V AC/DC Rear load Smoke Alarm with 9V Battery Backup, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"i12060","n":"120V AC/DC Hardwired Smoke Alarm w/ Spring Load Battery Door, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect (up to 24 devices)","status":"Discontinued"},{"b":"Kidde","m":"i12060-A","n":"120V AC Hardwired Front-Load Smoke Alarm with Alkaline Battery Backup","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect (up to 24 devices)","status":"Discontinued"},{"b":"Kidde","m":"i12080","n":"120V AC/DC Hardwired Smoke Alarm with Safety Light, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"i4618","n":"120V AC/DC Slide load Smoke Detector with 9V Battery, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V AC) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"i4618-A","n":"AC/DC Slide Load Smoke Alarm w/ 9v Alkaline Battery, 6 pack, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V AC/DC) with alkaline battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"i5000","n":"120V AC/DC Slide load Smoke Alarm with Alkaline Battery Backup, 5 yr Warranty","t":"Smoke Alarm","sensor":"Ionization","power":"Hardwired (120V AC) with 9V battery backup","interconnect":"Hardwired interconnect","status":"Discontinued"},{"b":"Kidde","m":"i9010","n":"DC Sealed Lithium Battery Power Smoke Alarm w/Hush, 10 Yr Battery, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"i9040","n":"9V Micro Battery Operated Smoke Alarm Unit w/ 5in Base Plate, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"i9050","n":"9v Battery Operated Smoke Alarm, Basic Model, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"i9060","n":"9V Battery Operated Smoke Alarm with Hush Feature, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"i9070","n":"9v Front-Load Battery Operated Smoke Alarm with Hush Feature, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery (front-load)","interconnect":"Standalone/No","status":"Discontinued"},{"b":"Kidde","m":"i9080","n":"9V Battery Operated Smoke Alarm with Safety Light, Ionization","t":"Smoke Alarm","sensor":"Ionization","power":"9V battery","interconnect":"Standalone/No","status":"Discontinued"},{"b":"X-Sense","m":"XC01-M","n":"XC01-M Interconnected Smart Carbon Monoxide Alarm (Base Station, Figaro Sensor)","t":"CO Alarm","sensor":"Electrochemical","power":"CR123A or CR2/3A replaceable battery","interconnect":"Wireless/RF interconnect (915MHz, up to 18 units, requires SBS50 base station)","status":"Current"},{"b":"X-Sense","m":"XC01-R","n":"XC01-R Standalone Carbon Monoxide Alarm (5-Year Battery, Figaro Sensor)","t":"CO Alarm","sensor":"Electrochemical","power":"CR123A replaceable battery","interconnect":"Standalone/No (explicitly standalone, incompatible with base station)","status":"Current"},{"b":"X-Sense","m":"XC01-WR","n":"XC01-WR Wireless Interconnected Carbon Monoxide Alarm (RF, 5-Year Battery, Figaro Sensor)","t":"CO Alarm","sensor":"Electrochemical","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (915MHz, up to 24 units)","status":"Current"},{"b":"X-Sense","m":"XC0C-MR","n":"XC0C-MR Interconnected Smart Carbon Monoxide Alarm (Base Station)","t":"CO Alarm","sensor":"Electrochemical","power":"CR123A lithium replaceable battery","interconnect":"Wireless/RF interconnect (requires SBS50 base station, up to 18 units)","status":"Current"},{"b":"X-Sense","m":"XC0C-SA","n":"XC0C-SA Plug-in Standalone Carbon Monoxide Alarm (AC + Battery Backup)","t":"CO Alarm","sensor":"Electrochemical","power":"Plug-in (120V AC) with backup battery","interconnect":"Standalone/No (incompatible with base station)","status":"Current"},{"b":"X-Sense","m":"XC0C-SR","n":"XC0C-SR Standalone Carbon Monoxide Alarm (3-Year Battery)","t":"CO Alarm","sensor":"Electrochemical","power":"2 AA replaceable batteries","interconnect":"Standalone/No","status":"Current"},{"b":"X-Sense","m":"XC0C-iR","n":"XC0C-iR Smart Carbon Monoxide Alarm (Wi-Fi)","t":"CO Alarm","sensor":"Electrochemical","power":"CR123A replaceable battery","interconnect":"Standalone/No (WiFi app monitoring only, no alarm-to-alarm interconnect)","status":"Current"},{"b":"X-Sense","m":"XC0K-SN","n":"XC0K-SN Standalone Carbon Monoxide Alarm (10-Year Battery)","t":"CO Alarm","sensor":"Electrochemical","power":"10-year sealed battery","interconnect":"Standalone/No","status":"Current"},{"b":"X-Sense","m":"XC0M-SR","n":"XC0M-SR Standalone Carbon Monoxide Alarm (Voice, 3-in-1 CO/Temp/Humidity)","t":"CO Alarm","sensor":"Electrochemical","power":"CR123A replaceable battery","interconnect":"Standalone/No","status":"Current"},{"b":"X-Sense","m":"XC0M-iR","n":"XC0M-iR Smart Carbon Monoxide Alarm with Voice Alerts (Wi-Fi, 3-in-1 CO/Temp/Humidity)","t":"CO Alarm","sensor":"Electrochemical","power":"CR123A replaceable battery","interconnect":"Standalone/No (WiFi app monitoring only)","status":"Current"},{"b":"X-Sense","m":"SC01","n":"SC01 Standalone Smoke and CO Alarm (10-Year Battery)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (link up to 18 alarms)","status":"Current"},{"b":"X-Sense","m":"SC01-W","n":"SC01-W Wireless Interconnected Smoke and CO Alarm (RF, 10-Year Battery)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (link up to 18 alarms)","status":"Current"},{"b":"X-Sense","m":"SC06","n":"SC06 Standalone Smoke and CO Alarm (10-Year Battery)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery (2x CR123A)","interconnect":"Wireless/RF interconnect","status":"Current"},{"b":"X-Sense","m":"SC06-W","n":"SC06-W Wireless Interconnected Smoke and CO Alarm (RF, 10-Year Battery)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery (2x CR123A)","interconnect":"Wireless/RF interconnect","status":"Current"},{"b":"X-Sense","m":"SC07","n":"SC07 Standalone Smoke and CO Alarm (10-Year Battery)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (requires SBS50 base station)","status":"Current"},{"b":"X-Sense","m":"SC07-MR","n":"SC07-MR Interconnected Smart Smoke and CO Alarm (Base Station)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (requires SBS50 base station)","status":"Current"},{"b":"X-Sense","m":"SC07-W","n":"SC07-W Wireless Interconnected Smoke and CO Alarm (RF, 10-Year Battery)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"10-year sealed lithium battery (2x CR123A)","interconnect":"Wireless/RF interconnect (link up to 18 alarms)","status":"Current"},{"b":"X-Sense","m":"SC07-WX","n":"SC07-WX Smart Smoke and CO Alarm (Wi-Fi)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (WiFi-based, no base station)","status":"Current"},{"b":"X-Sense","m":"XP02-AR","n":"XP02-AR Hardwired Smoke and CO Alarm with Voice Alerts (Hardwire Interconnect)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V AC) with CR123A battery backup","interconnect":"Hardwired interconnect","status":"Current"},{"b":"X-Sense","m":"XP04","n":"XP04 Hardwired Smoke and CO Alarm (Hardwire Interconnect)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V AC) with 9V alkaline battery backup","interconnect":"Hardwired interconnect (up to 18 units)","status":"Current"},{"b":"X-Sense","m":"XP0A-MR","n":"XP0A-MR Interconnected Smart Smoke and CO Alarm with Voice Alerts (Base Station)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (requires SBS50 base station)","status":"Current"},{"b":"X-Sense","m":"XP0A-SR","n":"XP0A-SR Standalone Smoke and CO Alarm with Voice Alerts (5-Year Battery)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"CR123A replaceable battery","interconnect":"Standalone/No","status":"Current"},{"b":"X-Sense","m":"XP0A-iR","n":"XP0A-iR Smart Smoke and CO Detector with Voice Alerts (Wi-Fi)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (WiFi-based)","status":"Current"},{"b":"X-Sense","m":"XP0J-SA","n":"XP0J-SA Hardwired Smoke and CO Alarm with Voice Alerts (Hardwire Interconnect)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V AC) with CR123A battery backup","interconnect":"Hardwired interconnect (up to 18 units)","status":"Current"},{"b":"X-Sense","m":"XP0J-iA","n":"XP0J-iA Smart Hardwired Smoke and CO Alarm with Voice Alerts (Wi-Fi)","t":"Combination Smoke+CO Alarm","sensor":"Photoelectric (smoke) + Electrochemical (CO)","power":"Hardwired (120V AC) with CR123A battery backup","interconnect":"Hardwired interconnect (+ WiFi app)","status":"Current"},{"b":"X-Sense","m":"SD19-MN","n":"SD19-MN Interconnected Smart Smoke Alarm (Base Station, 3-Pack+Base)","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (requires SBS50 base station)","status":"Current"},{"b":"X-Sense","m":"SD19-W","n":"SD19-W Wireless Interconnected Smoke Alarm (RF, 10-Year Battery)","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect","status":"Current"},{"b":"X-Sense","m":"SD20-W","n":"SD20-W Wireless Interconnected Smoke Alarm (RF, 10-Year Battery)","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Wireless/RF interconnect (up to 24 units)","status":"Current"},{"b":"X-Sense","m":"SD2J0AX","n":"SD2J0AX Standalone Smoke Alarm (10-Year Battery)","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery","interconnect":"Standalone/No","status":"Current"},{"b":"X-Sense","m":"XS01","n":"XS01 Standalone Smoke Alarm (10-Year Battery)","t":"Smoke Alarm","sensor":"Photoelectric","power":"10-year sealed lithium battery (non-replaceable)","interconnect":"Standalone/No","status":"Current"},{"b":"X-Sense","m":"XS01-M","n":"XS01-M Interconnected Smart Smoke Alarm (Base Station)","t":"Smoke Alarm","sensor":"Photoelectric","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (requires SBS50 base station)","status":"Current"},{"b":"X-Sense","m":"XS01-WR","n":"XS01-WR Wireless Interconnected Smoke Alarm (RF)","t":"Smoke Alarm","sensor":"Photoelectric","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (up to 18 units)","status":"Current"},{"b":"X-Sense","m":"XS01-WX","n":"XS01-WX Smart Smoke Alarm (Wi-Fi)","t":"Smoke Alarm","sensor":"Photoelectric","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (WiFi-based)","status":"Current"},{"b":"X-Sense","m":"XS0B-MR","n":"XS0B-MR Interconnected Smart Smoke Alarm with Voice Alerts (Base Station)","t":"Smoke Alarm","sensor":"Photoelectric","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (requires SBS50 base station)","status":"Current"},{"b":"X-Sense","m":"XS0B-iR","n":"XS0B-iR Smart Smoke Alarm with Voice Alerts (Wi-Fi)","t":"Smoke Alarm","sensor":"Photoelectric","power":"CR123A replaceable battery","interconnect":"Wireless/RF interconnect (WiFi-based)","status":"Current"}]
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  // ── STATE ──
+  var state = {
+    job: { customer:'', address:'', date:'', inspector:'' },
+    items: [],       // {id, room, type, brand, model, modelName, sensor, power, interconnect, status, mfgDate, battery, detTest, group, notes, photo}
+    groupNames: {},  // groupId -> label
+    groupResults: {},// groupId -> 'Pass' | 'Fail' | null
+    itemSeq: 0,
+    groupSeq: 0,
+    currentRoom: null,
+    rooms: [],
+    editingPhoto: null
+  };
+
+  var PRODUCTS = [];
+  try {
+    PRODUCTS = JSON.parse(document.getElementById('product-db').textContent);
+  } catch(e) { console.error('product db parse failed', e); }
+
+  var DEFAULT_ROOMS = ['Bedroom 1','Bedroom 2','Kitchen','Basement','Garage','Upstairs Hallway','Downstairs Hallway','First Floor','Second Floor'];
+  var ALARM_TYPES = ['Smoke Alarm','CO Alarm','Combination Smoke+CO Alarm'];
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return (s===undefined||s===null?'':String(s)).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  // ── NAV ──
+  function nav(view){
+    document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+    document.querySelectorAll('.step-btn').forEach(function(b){ b.classList.remove('active'); });
+    $('view-'+view).classList.add('active');
+    document.querySelector('.step-btn[data-view="'+view+'"]').classList.add('active');
+    if(view==='groups') renderGroups();
+    if(view==='report') renderReport();
+    window.scrollTo(0,0);
+  }
+  document.querySelectorAll('.step-btn').forEach(function(b){
+    b.addEventListener('click', function(){ nav(b.dataset.view); });
+  });
+
+  // ── JOB INFO ──
+  $('j-date').value = new Date().toISOString().slice(0,10);
+  ['j-customer','j-address','j-date','j-inspector'].forEach(function(id){
+    $(id).addEventListener('input', function(){
+      var key = id.replace('j-','');
+      state.job[key] = $(id).value;
+      saveLocal();
+    });
+  });
+  $('btn-start-inspection').addEventListener('click', function(){ nav('inspect'); });
+
+  // ── ROOMS ──
+  function renderRoomChips(){
+    var wrap = $('room-chips');
+    wrap.innerHTML = '';
+    state.rooms.forEach(function(r){
+      var chip = document.createElement('div');
+      chip.className = 'chip' + (state.currentRoom===r ? ' active':'');
+      chip.textContent = r;
+      chip.addEventListener('click', function(){
+        state.currentRoom = r;
+        renderRoomChips();
+        showEquipForm(true);
+      });
+      wrap.appendChild(chip);
+    });
+  }
+  DEFAULT_ROOMS.forEach(function(r){ state.rooms.push(r); });
+  renderRoomChips();
+
+  $('btn-add-room').addEventListener('click', function(){
+    var v = $('new-room-input').value.trim();
+    if(!v) return;
+    if(state.rooms.indexOf(v)===-1) state.rooms.push(v);
+    state.currentRoom = v;
+    $('new-room-input').value = '';
+    renderRoomChips();
+    showEquipForm(true);
+  });
+
+  function showEquipForm(show){
+    $('btn-add-equip').style.display = show ? 'none' : (state.currentRoom ? 'block':'none');
+    $('equip-form-card').style.display = show ? 'block' : 'none';
+    if(show){
+      $('current-room-label').textContent = state.currentRoom || '';
+      resetEquipForm();
+    }
+  }
+  $('btn-add-equip').addEventListener('click', function(){ showEquipForm(true); });
+  $('btn-cancel-item').addEventListener('click', function(){ showEquipForm(false); });
+
+  // ── EQUIPMENT FORM ──
+  function toggleAlarmFields(){
+    var isAlarm = ALARM_TYPES.indexOf($('e-type').value) !== -1;
+    $('alarm-only-fields').style.display = isAlarm ? 'block' : 'none';
+  }
+  $('e-type').addEventListener('change', function(){
+    toggleAlarmFields();
+    populateProductList();
+  });
+
+  var currentTypeProducts = [];
+  function populateProductList(){
+    var type = $('e-type').value;
+    currentTypeProducts = PRODUCTS.filter(function(p){ return p.t === type; });
+  }
+
+  function productLabel(p){ return p.b + ' ' + p.m + ' \u2014 ' + p.n; }
+
+  var selectedProduct = null;
+  var resultsBox = $('product-results');
+
+  function renderProductResults(query){
+    var q = query.trim().toLowerCase();
+    if(q.length < 2){ resultsBox.classList.remove('open'); resultsBox.innerHTML=''; return; }
+    var matches = currentTypeProducts.filter(function(p){
+      return (p.b+' '+p.m+' '+p.n).toLowerCase().indexOf(q) !== -1;
+    }).slice(0, 8);
+    if(matches.length === 0){
+      resultsBox.innerHTML = '<div class="pr-empty">No matches in database — use "enter manually" below.</div>';
+    } else {
+      resultsBox.innerHTML = matches.map(function(p, idx){
+        return '<div class="pr-item" data-idx="'+idx+'">' +
+          '<div class="pr-name">'+esc(p.b)+' '+esc(p.m)+'</div>' +
+          '<div class="pr-sub">'+esc(p.n)+(p.status==='Discontinued' ? ' · Discontinued' : '')+'</div>' +
+        '</div>';
+      }).join('');
+      resultsBox.querySelectorAll('.pr-item').forEach(function(el){
+        el.addEventListener('click', function(){
+          var p = matches[parseInt(el.dataset.idx,10)];
+          selectedProduct = p;
+          $('e-product').value = productLabel(p);
+          resultsBox.classList.remove('open');
+          resultsBox.innerHTML = '';
+          showProductInfo(p);
+        });
+      });
+    }
+    resultsBox.classList.add('open');
+  }
+
+  function showProductInfo(match){
+    var info = $('e-product-info');
+    if(match){
+      info.innerHTML = 'Sensor: ' + esc(match.sensor) + ' · Power: ' + esc(match.power) + ' · Interconnect: ' + esc(match.interconnect) +
+        (match.status==='Discontinued' ? ' <span class="badge discontinued">DISCONTINUED</span>' : ' <span class="badge ok">CURRENT</span>');
+    } else {
+      info.innerHTML = '';
+    }
+  }
+
+  $('e-product').addEventListener('input', function(){
+    selectedProduct = null;
+    $('e-product-info').innerHTML = '';
+    renderProductResults($('e-product').value);
+  });
+  $('e-product').addEventListener('focus', function(){
+    if($('e-product').value.trim().length >= 2) renderProductResults($('e-product').value);
+  });
+  document.addEventListener('click', function(e){
+    if(e.target !== $('e-product') && !resultsBox.contains(e.target)){
+      resultsBox.classList.remove('open');
+    }
+  });
+
+  var manualMode = false;
+  $('btn-manual-toggle').addEventListener('click', function(){
+    manualMode = !manualMode;
+    $('manual-fields').style.display = manualMode ? 'block' : 'none';
+    $('btn-manual-toggle').textContent = manualMode ? 'Use database search instead' : "Can't find it — enter manually";
+  });
+
+  // ── OCR (best-effort label scan) ──
+  var ocrWorkerPromise = null;
+  function getOcrWorker(){
+    if(typeof Tesseract === 'undefined') return Promise.resolve(null);
+    if(!ocrWorkerPromise){
+      ocrWorkerPromise = Tesseract.createWorker('eng').catch(function(e){ console.warn('OCR worker failed to init', e); return null; });
+    }
+    return ocrWorkerPromise;
+  }
+  function findModelMatch(text){
+    var norm = text.toUpperCase().replace(/[^A-Z0-9]/g,'');
+    var best = null;
+    currentTypeProducts.forEach(function(p){
+      var m = (p.m||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+      if(m.length>=4 && norm.indexOf(m)!==-1){
+        if(!best || m.length > best.m.length) best = p;
+      }
+    });
+    return best;
+  }
+  function findMfgDate(text){
+    var t = text.toUpperCase();
+    var patterns = [
+      // YYYY MMM DD   e.g. 2026 JUL 06
+      /\b(20\d{2}|19\d{2})\s?(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*\.?\s?(0?[1-9]|[12]\d|3[01])\b/,
+      // DD MMM YYYY   e.g. 06 JUL 2026
+      /\b(0?[1-9]|[12]\d|3[01])\s?(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*\.?\s?,?\s?(20\d{2}|19\d{2})\b/,
+      // MMM DD YYYY   e.g. JUL 06 2026 / JUL 06, 2026
+      /\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*\.?\s?(0?[1-9]|[12]\d|3[01]),?\s?(20\d{2}|19\d{2})\b/,
+      // YYYY-MM-DD (ISO)
+      /\b(20\d{2}|19\d{2})[\/\-\.](0[1-9]|1[0-2])[\/\-\.](0[1-9]|[12]\d|3[01])\b/,
+      // DD/MM/YYYY or MM/DD/YYYY
+      /\b(0[1-9]|[12]\d|3[01])[\/\-\.](0[1-9]|1[0-2])[\/\-\.](20\d{2}|19\d{2}|\d{2})\b/,
+      // MMM YYYY   e.g. JUL 2026 / JULY 2026
+      /\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*\.?\s?(20\d{2}|19\d{2})\b/,
+      // MM/YYYY
+      /\b(0[1-9]|1[0-2])[\/\-\.](20\d{2}|19\d{2})\b/,
+      // YYYY/MM
+      /\b(20\d{2}|19\d{2})[\/\-\.](0[1-9]|1[0-2])\b/,
+      // MMM'YY or MMM YY (2-digit year, less specific — last resort)
+      /\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*\.?\s?'?\s?(\d{2})\b/,
+      // MM/YY (2-digit year, last resort)
+      /\b(0[1-9]|1[0-2])[\/\-](\d{2})\b/
+    ];
+    var keywords = ['DATE OF MANUFACTURE','MANUFACTURED','MFG DATE','MFG.','MFG ',' DOM ','DATE MFD','PROD DATE','MANUFACTURE DATE'];
+    // prefer a date found near an explicit "manufactured/mfg/dom" label
+    for(var k=0;k<keywords.length;k++){
+      var idx = t.indexOf(keywords[k]);
+      if(idx !== -1){
+        var windowText = t.slice(Math.max(0, idx-10), idx+70);
+        for(var i=0;i<patterns.length;i++){
+          var wm = windowText.match(patterns[i]);
+          if(wm) return wm[0];
+        }
+      }
+    }
+    // fall back to a whole-text search, most specific pattern first
+    for(var j=0;j<patterns.length;j++){
+      var m = t.match(patterns[j]);
+      if(m) return m[0];
+    }
+    return null;
+  }
+
+  function findLotCode(text, dateMatch){
+    var t = text.toUpperCase();
+    var searchFrom = 0;
+    if(dateMatch){
+      var idx = t.indexOf(dateMatch.toUpperCase());
+      if(idx !== -1) searchFrom = idx + dateMatch.length;
+    }
+    // look right after the date for a short letter+number lot code, e.g. "-L29"
+    var afterDate = t.slice(searchFrom, searchFrom + 15);
+    var m = afterDate.match(/^[\s\-–—]{0,3}([A-Z]{1,3}\d{1,6}|\d{1,3}[A-Z]{1,3})\b/);
+    if(m) return m[1];
+    // fallback: an explicit "LOT" / "SERIAL" / "BATCH" label anywhere in the text
+    var kwMatch = t.match(/\b(LOT|SERIAL|BATCH)\s*#?\.?:?\s*([A-Z0-9\-]{2,15})\b/);
+    if(kwMatch) return kwMatch[2];
+    return null;
+  }
+
+  function runOcrOnCanvas(canvas){
+    var statusEl = $('ocr-status');
+    statusEl.style.display = 'block';
+    statusEl.textContent = 'Scanning label for model number and date...';
+    getOcrWorker().then(function(worker){
+      if(!worker){
+        statusEl.textContent = 'Auto-detect unavailable on this device — enter details manually.';
+        return;
+      }
+      return worker.recognize(canvas).then(function(result){
+        var text = (result && result.data && result.data.text) || '';
+        var product = findModelMatch(text);
+        var date = findMfgDate(text);
+        var lot = findLotCode(text, date);
+        var applied = [];
+        if(product && !selectedProduct){
+          selectedProduct = product;
+          $('e-product').value = productLabel(product);
+          showProductInfo(product);
+          applied.push('model number');
+        }
+        if(date && !$('e-mfgdate').value){
+          $('e-mfgdate').value = date;
+          applied.push('mfg date');
+        }
+        if(lot && !$('e-lotcode').value){
+          $('e-lotcode').value = lot;
+          applied.push('lot number');
+        }
+        statusEl.textContent = applied.length
+          ? 'Auto-detected ' + applied.join(', ') + ' — double check before saving.'
+          : "Scanned the label but couldn't confidently match anything — enter manually.";
+        if(text.trim()){
+          $('ocr-details').style.display = 'block';
+          $('ocr-raw').textContent = text.trim().slice(0,400);
+        }
+      });
+    }).catch(function(err){
+      console.error('OCR failed', err);
+      statusEl.textContent = 'Scan failed — enter details manually.';
+    });
+  }
+
+  // ── EXIF ORIENTATION ──
+  function readExifOrientation(file){
+    return new Promise(function(resolve){
+      var reader = new FileReader();
+      reader.onload = function(e){
+        try{
+          var view = new DataView(e.target.result);
+          if(view.getUint16(0,false) !== 0xFFD8){ resolve(1); return; }
+          var length = view.byteLength, offset = 2;
+          while(offset < length){
+            var marker = view.getUint16(offset,false);
+            offset += 2;
+            if(marker === 0xFFE1){
+              if(view.getUint32(offset+2,false) !== 0x45786966){ resolve(1); return; }
+              var little = view.getUint16(offset+8,false) === 0x4949;
+              var tiffOffset = offset+8;
+              var firstIFDOffset = view.getUint32(tiffOffset+4, little);
+              var dirOffset = tiffOffset + firstIFDOffset;
+              var tags = view.getUint16(dirOffset, little);
+              for(var i=0;i<tags;i++){
+                var entryOffset = dirOffset + 2 + (i*12);
+                if(view.getUint16(entryOffset, little) === 0x0112){
+                  resolve(view.getUint16(entryOffset+8, little));
+                  return;
+                }
+              }
+              resolve(1); return;
+            } else if((marker & 0xFF00) !== 0xFF00){
+              break;
+            } else {
+              offset += view.getUint16(offset,false);
+            }
+          }
+          resolve(1);
+        } catch(err){ resolve(1); }
+      };
+      reader.onerror = function(){ resolve(1); };
+      reader.readAsArrayBuffer(file.slice(0, 128*1024));
+    });
+  }
+
+  function drawOrientedImage(img, orientation, maxDim){
+    var srcW = img.width, srcH = img.height;
+    var scale = Math.min(1, maxDim / Math.max(srcW, srcH));
+    var width = Math.round(srcW*scale);
+    var height = Math.round(srcH*scale);
+    var canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    var ctx = canvas.getContext('2d');
+    if(orientation>=5 && orientation<=8){
+      canvas.width = height;
+      canvas.height = width;
+    }
+    switch(orientation){
+      case 2: ctx.translate(width,0); ctx.scale(-1,1); break;
+      case 3: ctx.translate(width,height); ctx.rotate(Math.PI); break;
+      case 4: ctx.translate(0,height); ctx.scale(1,-1); break;
+      case 5: ctx.rotate(0.5*Math.PI); ctx.scale(1,-1); break;
+      case 6: ctx.rotate(0.5*Math.PI); ctx.translate(0,-height); break;
+      case 7: ctx.rotate(0.5*Math.PI); ctx.translate(width,-height); ctx.scale(-1,1); break;
+      case 8: ctx.rotate(-0.5*Math.PI); ctx.translate(-width,0); break;
+      default: break;
+    }
+    ctx.drawImage(img, 0, 0, width, height);
+    return canvas;
+  }
+
+  // photo capture + downscale
+  var currentPhotoDataUrl = null;
+  $('btn-photo-trigger').addEventListener('click', function(){ $('e-photo-input').click(); });
+  $('e-photo-input').addEventListener('change', function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    readExifOrientation(file).then(function(orientation){
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        var img = new Image();
+        img.onload = function(){
+          var thumbCanvas = drawOrientedImage(img, orientation, 800);
+          currentPhotoDataUrl = thumbCanvas.toDataURL('image/jpeg', 0.72);
+          var prev = $('e-photo-preview');
+          prev.src = currentPhotoDataUrl;
+          prev.style.display = 'block';
+
+          // run OCR at higher res than the stored thumbnail for better accuracy
+          var ocrCanvas = drawOrientedImage(img, orientation, 1400);
+          runOcrOnCanvas(ocrCanvas);
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  function resetEquipForm(){
+    $('e-type').value = 'Smoke Alarm';
+    $('e-product').value = '';
+    $('e-product-info').innerHTML = '';
+    selectedProduct = null;
+    manualMode = false;
+    $('manual-fields').style.display = 'none';
+    $('btn-manual-toggle').textContent = "Can't find it — enter manually";
+    $('e-brand-manual').value = '';
+    $('e-model-manual').value = '';
+    $('e-mfgdate').value = '';
+    $('e-lotcode').value = '';
+    $('e-battery').value = '';
+    $('e-dettest').value = 'Pass';
+    $('e-notes').value = '';
+    $('e-photo-preview').style.display = 'none';
+    $('e-photo-preview').src = '';
+    currentPhotoDataUrl = null;
+    $('ocr-status').style.display = 'none';
+    $('ocr-status').textContent = '';
+    $('ocr-details').style.display = 'none';
+    $('ocr-raw').textContent = '';
+    resultsBox.classList.remove('open');
+    resultsBox.innerHTML = '';
+    populateProductList();
+    toggleAlarmFields();
+    renderGroupSelect();
+  }
+
+  function renderGroupSelect(){
+    var sel = $('e-group');
+    var current = sel.value;
+    sel.innerHTML = '<option value="">Standalone (not interconnected)</option>';
+    Object.keys(state.groupNames).forEach(function(gid){
+      var opt = document.createElement('option');
+      opt.value = gid;
+      opt.textContent = state.groupNames[gid];
+      sel.appendChild(opt);
+    });
+    var newOpt = document.createElement('option');
+    newOpt.value = '__new__';
+    newOpt.textContent = '+ New Group';
+    sel.appendChild(newOpt);
+    sel.value = current;
+  }
+  $('e-group').addEventListener('change', function(){
+    if($('e-group').value === '__new__'){
+      state.groupSeq++;
+      var gid = 'g'+state.groupSeq;
+      state.groupNames[gid] = 'Group '+state.groupSeq;
+      state.groupResults[gid] = null;
+      renderGroupSelect();
+      $('e-group').value = gid;
+    }
+  });
+
+  // ── SAVE ITEM ──
+  $('btn-save-item').addEventListener('click', function(){
+    var type = $('e-type').value;
+    var isAlarm = ALARM_TYPES.indexOf(type) !== -1;
+    var brand, model, modelName, sensor, power, interconnect, status;
+    if(manualMode || !selectedProduct){
+      brand = $('e-brand-manual').value.trim();
+      model = $('e-model-manual').value.trim();
+      modelName = ''; sensor=''; power=''; interconnect=''; status='Current';
+    } else {
+      brand = selectedProduct.b; model = selectedProduct.m; modelName = selectedProduct.n;
+      sensor = selectedProduct.sensor; power = selectedProduct.power;
+      interconnect = selectedProduct.interconnect; status = selectedProduct.status;
+    }
+    if(!brand && !model){
+      alert('Enter a brand/model, or select one from the list.');
+      return;
+    }
+    state.itemSeq++;
+    var item = {
+      id: 'i'+state.itemSeq,
+      room: state.currentRoom,
+      type: type,
+      brand: brand, model: model, modelName: modelName,
+      sensor: sensor, power: power, interconnect: interconnect, status: status,
+      mfgDate: $('e-mfgdate').value.trim(),
+      lotCode: $('e-lotcode').value.trim(),
+      battery: isAlarm ? $('e-battery').value.trim() : 'N/A',
+      detTest: isAlarm ? $('e-dettest').value : 'N/A',
+      group: isAlarm ? $('e-group').value : '',
+      notes: $('e-notes').value.trim(),
+      photo: currentPhotoDataUrl
+    };
+    state.items.push(item);
+    showEquipForm(false);
+    renderItemList();
+    saveLocal();
+  });
+
+  function renderItemList(){
+    $('item-count').textContent = state.items.length;
+    var wrap = $('item-list');
+    if(state.items.length===0){
+      wrap.innerHTML = '<div class="empty-state">No equipment logged yet.</div>';
+      return;
+    }
+    wrap.innerHTML = '';
+    state.items.slice().reverse().forEach(function(item){
+      var row = document.createElement('div');
+      row.className = 'item-row';
+      var thumbHtml = item.photo
+        ? '<img class="item-thumb" src="'+item.photo+'">'
+        : '<div class="item-thumb empty">no photo</div>';
+      row.innerHTML =
+        thumbHtml +
+        '<div class="item-main">' +
+          '<div class="item-loc">'+esc(item.room)+' · '+esc(item.type)+'</div>' +
+          '<div class="item-name">'+esc(item.brand)+' '+esc(item.model)+
+            (item.status==='Discontinued' ? ' <span class="badge discontinued">DISC.</span>' : '') +
+          '</div>' +
+          '<div class="item-meta">Mfg '+esc(item.mfgDate||'—')+' · Lot '+esc(item.lotCode||'—')+' · Batt '+esc(item.battery)+' · Test '+esc(item.detTest)+
+            (item.group ? ' · '+esc(state.groupNames[item.group]||'') : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="item-actions"><button class="icon-btn" data-del="'+item.id+'">Delete</button></div>';
+      wrap.appendChild(row);
+    });
+    wrap.querySelectorAll('[data-del]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var id = btn.dataset.del;
+        state.items = state.items.filter(function(i){ return i.id!==id; });
+        renderItemList();
+        saveLocal();
+      });
+    });
+  }
+
+  $('btn-goto-groups').addEventListener('click', function(){ nav('groups'); });
+  $('btn-goto-report').addEventListener('click', function(){ nav('report'); });
+
+  // ── GROUPS VIEW ──
+  function renderGroups(){
+    var wrap = $('group-list');
+    var groupIds = Object.keys(state.groupNames).filter(function(gid){
+      return state.items.some(function(i){ return i.group===gid; });
+    });
+    if(groupIds.length===0){
+      wrap.innerHTML = '<div class="empty-state">No interconnected groups created. Standalone units don\'t need a connectivity test.</div>';
+      return;
+    }
+    wrap.innerHTML = '';
+    groupIds.forEach(function(gid){
+      var members = state.items.filter(function(i){ return i.group===gid; });
+      var card = document.createElement('div');
+      card.className = 'group-card';
+      var result = state.groupResults[gid];
+      card.innerHTML =
+        '<h4>'+esc(state.groupNames[gid])+'</h4>' +
+        '<div class="group-members">' + members.map(function(m){ return esc(m.room)+' — '+esc(m.brand)+' '+esc(m.model); }).join('<br>') + '</div>' +
+        '<div class="result-btns">' +
+          '<div class="result-btn pass'+(result==='Pass'?' active':'')+'" data-gid="'+gid+'" data-r="Pass">Pass</div>' +
+          '<div class="result-btn fail'+(result==='Fail'?' active':'')+'" data-gid="'+gid+'" data-r="Fail">Fail</div>' +
+          '<div class="result-btn untested'+(!result?' active':'')+'" data-gid="'+gid+'" data-r="">Not Tested</div>' +
+        '</div>';
+      wrap.appendChild(card);
+    });
+    wrap.querySelectorAll('.result-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        state.groupResults[btn.dataset.gid] = btn.dataset.r || null;
+        saveLocal();
+        renderGroups();
+      });
+    });
+  }
+
+  // ── REPORT ──
+  function connTestLabel(item){
+    if(ALARM_TYPES.indexOf(item.type)===-1) return 'N/A';
+    if(!item.group) return 'N/A';
+    var r = state.groupResults[item.group];
+    return r || 'Not Tested';
+  }
+
+  function renderReport(){
+    var c = $('report-container');
+    var rows = state.items.map(function(item){
+      var conn = connTestLabel(item);
+      var connClass = conn==='Fail' ? 'rpt-fail' : (conn==='Pass' ? 'rpt-pass' : '');
+      var detClass = item.detTest==='Fail' ? 'rpt-fail' : (item.detTest==='Pass' ? 'rpt-pass' : '');
+      return '<tr>' +
+        '<td>'+(item.photo ? '<img class="rpt-thumb" src="'+item.photo+'">' : '—')+'</td>' +
+        '<td>'+esc(item.room)+'</td>' +
+        '<td>'+esc(item.type)+'</td>' +
+        '<td>'+esc(item.brand)+'</td>' +
+        '<td>'+esc(item.model)+(item.status==='Discontinued'?' <span class="badge discontinued">DISC.</span>':'')+'</td>' +
+        '<td>'+esc(item.mfgDate||'—')+'</td>' +
+        '<td>'+esc(item.lotCode||'—')+'</td>' +
+        '<td>'+esc(item.battery)+'</td>' +
+        '<td class="'+detClass+'">'+esc(item.detTest)+'</td>' +
+        '<td class="'+connClass+'">'+esc(conn)+'</td>' +
+        '<td>'+esc(item.notes||'—')+'</td>' +
+      '</tr>';
+    }).join('');
+
+    c.innerHTML =
+      '<div class="report-head">' +
+        '<div class="t1">SAFE STEPS INSPECTION REPORT</div>' +
+        '<div class="t2">'+esc(state.job.address||'—')+'</div>' +
+      '</div>' +
+      '<div class="report-meta">' +
+        '<div><b>Customer</b>'+esc(state.job.customer||'—')+'</div>' +
+        '<div><b>Inspection Date</b>'+esc(state.job.date||'—')+'</div>' +
+        '<div><b>Inspector</b>'+esc(state.job.inspector||'—')+'</div>' +
+        '<div><b>Items Logged</b>'+state.items.length+'</div>' +
+      '</div>' +
+      '<div class="report-table-wrap"><table class="report-table"><thead><tr>' +
+        '<th>Photo</th><th>Location</th><th>Type</th><th>Brand</th><th>Model</th><th>Mfg Date</th><th>Lot/Serial</th><th>Battery</th><th>Detection</th><th>Connectivity</th><th>Notes</th>' +
+      '</tr></thead><tbody>' +
+      (rows || '<tr><td colspan="11" style="text-align:center;padding:16px;color:rgba(28,18,8,.5)">No items logged yet.</td></tr>') +
+      '</tbody></table></div>' +
+      '<div class="sigline">' +
+        '<div class="sigitem">Inspection Date<span class="fillline">'+esc(state.job.date||'')+'</span></div>' +
+        '<div class="sigitem">Inspector Name<span class="fillline">'+esc(state.job.inspector||'')+'</span></div>' +
+        '<div class="sigitem">Signature<span class="fillline"></span></div>' +
+      '</div>' +
+      '<div class="scope-note">Safe Steps Plans LLC — We work exclusively with residential homes and do not install, service, or repair wired or monitored fire alarm systems.</div>';
+  }
+
+  $('btn-print').addEventListener('click', function(){ window.print(); });
+
+  // ── CHECKPOINT / STORAGE ──
+  var STORAGE_KEY = 'safesteps_inspection_v1';
+  function exportState(){
+    return { job: state.job, items: state.items, groupNames: state.groupNames, groupResults: state.groupResults, itemSeq: state.itemSeq, groupSeq: state.groupSeq, rooms: state.rooms };
+  }
+  function saveLocal(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(exportState())); }catch(e){ console.warn('local save failed', e); }
+  }
+  function loadLocalRaw(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){ return null; }
+  }
+  function clearLocal(){
+    try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  }
+  function applyLoadedState(data){
+    state.job = data.job || state.job;
+    state.items = data.items || [];
+    state.groupNames = data.groupNames || {};
+    state.groupResults = data.groupResults || {};
+    state.itemSeq = data.itemSeq || 0;
+    state.groupSeq = data.groupSeq || 0;
+    state.rooms = data.rooms || DEFAULT_ROOMS.slice();
+    $('j-customer').value = state.job.customer||'';
+    $('j-address').value = state.job.address||'';
+    $('j-date').value = state.job.date||'';
+    $('j-inspector').value = state.job.inspector||'';
+    renderRoomChips();
+    renderItemList();
+  }
+  function downloadJSON(obj, filename){
+    var blob = new Blob([JSON.stringify(obj)], {type:'application/json'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 300);
+  }
+  function slugify(s){ return (s||'inspection').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+  $('btn-download-json').addEventListener('click', function(){
+    var addr = slugify(state.job.address || state.job.customer || 'job');
+    downloadJSON(exportState(), 'safesteps-report-'+addr+'.json');
+  });
+  $('btn-manual-backup').addEventListener('click', function(){
+    var addr = slugify(state.job.address || state.job.customer || 'job');
+    downloadJSON(exportState(), 'safesteps-backup-'+addr+'.json');
+    $('backup-status').textContent = 'Backup file downloaded at ' + new Date().toLocaleTimeString() + '.';
+  });
+  $('btn-download-photos').addEventListener('click', function(){
+    if(typeof JSZip === 'undefined'){
+      alert('Photo zip tool failed to load. Check your internet connection (needed once, to load this feature) and try again.');
+      return;
+    }
+    var withPhotos = state.items.filter(function(i){ return i.photo; });
+    if(withPhotos.length === 0){
+      alert('No photos logged yet.');
+      return;
+    }
+    var zip = new JSZip();
+    withPhotos.forEach(function(item, idx){
+      var name = (idx+1) + '-' + slugify(item.room) + '-' + slugify((item.brand||'')+' '+(item.model||'')) + '.jpg';
+      var base64 = item.photo.split(',')[1];
+      zip.file(name, base64, {base64:true});
+    });
+    zip.generateAsync({type:'blob'}).then(function(blob){
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'safesteps-photos-' + slugify(state.job.address || state.job.customer || 'job') + '.zip';
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 300);
+    });
+  });
+  $('btn-start-new').addEventListener('click', function(){
+    if(!confirm('Clear all data on this device and start a new inspection? Download a backup first if you need one.')) return;
+    clearLocal();
+    location.reload();
+  });
+
+  // check for in-progress local data on load
+  (function checkResume(){
+    var data = loadLocalRaw();
+    if(data && data.items && data.items.length){
+      $('resume-banner').style.display = 'block';
+      $('resume-banner-text').textContent = (data.items.length) + ' item(s) logged for ' + (data.job && (data.job.address || data.job.customer) || 'an unnamed job') + '. Resume or discard.';
+      $('btn-resume-local').addEventListener('click', function(){
+        applyLoadedState(data);
+        $('resume-banner').style.display = 'none';
+      });
+      $('btn-discard-local').addEventListener('click', function(){
+        clearLocal();
+        $('resume-banner').style.display = 'none';
+      });
+    }
+  })();
+
+  // ── IMPORT BACKUP FILE ──
+  $('btn-import-trigger').addEventListener('click', function(){ $('import-file').click(); });
+  $('import-file').addEventListener('change', function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      try{
+        var data = JSON.parse(ev.target.result);
+        applyLoadedState(data);
+        saveLocal();
+        $('import-status').textContent = 'Loaded ' + state.items.length + ' items from backup file.';
+      } catch(err){
+        $('import-status').textContent = 'Could not read that file.';
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  // init
+  toggleAlarmFields();
+})();
+
+</script>
+</body>
+</html>
