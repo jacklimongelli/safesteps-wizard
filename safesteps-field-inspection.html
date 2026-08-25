@@ -222,19 +222,6 @@ table.report-table col.col-notes{width:16%}
     </div>
 
     <div class="card">
-      <div class="card-title">JOB INFORMATION</div>
-      <label for="j-customer">Customer Name</label>
-      <input type="text" id="j-customer" placeholder="e.g. Jane Miller">
-      <label for="j-address">Property Address</label>
-      <input type="text" id="j-address" placeholder="e.g. 128 Cedar Hollow Rd">
-      <label for="j-date">Inspection Date</label>
-      <input type="date" id="j-date">
-      <label for="j-inspector">Inspector Name</label>
-      <input type="text" id="j-inspector" placeholder="e.g. Jack Limongelli">
-      <button class="btn" id="btn-start-inspection">Start Inspection →</button>
-    </div>
-
-    <div class="card">
       <div class="card-title">LOCATION &amp; TIMESTAMP</div>
       <div class="hint">Tag each photo with the exact time and GPS location it was taken. Turning this on will prompt your phone for location permission — allow it once and it applies for the rest of this inspection.</div>
       <label style="display:flex;align-items:center;gap:10px;margin-top:10px;cursor:pointer">
@@ -242,6 +229,26 @@ table.report-table col.col-notes{width:16%}
         <span style="font-size:.85rem;font-weight:normal">Enable GPS + timestamp tagging</span>
       </label>
       <div class="hint" id="location-status"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">JOB INFORMATION</div>
+      <label for="j-customer">Customer Name</label>
+      <input type="text" id="j-customer" placeholder="e.g. Jane Miller">
+      <label for="j-address">Property Address</label>
+      <div class="btn-row" style="margin-top:0">
+        <input type="text" id="j-address" placeholder="e.g. 128 Cedar Hollow Rd" style="flex:1">
+        <button class="btn small secondary" id="btn-use-location" type="button">Use My Location</button>
+      </div>
+      <div class="hint" id="address-location-status"></div>
+      <label for="j-date">Inspection Date</label>
+      <input type="date" id="j-date">
+      <label for="j-inspector">Inspector Name</label>
+      <div class="chip-row" id="inspector-chips" style="margin-bottom:8px">
+        <div class="chip" data-name="Jack Limongelli">Jack Limongelli</div>
+      </div>
+      <input type="text" id="j-inspector" placeholder="e.g. Jack Limongelli">
+      <button class="btn" id="btn-start-inspection">Start Inspection →</button>
     </div>
 
     <div class="card">
@@ -370,15 +377,12 @@ table.report-table col.col-notes{width:16%}
   <!-- ══════════ VIEW: REPORT ══════════ -->
   <section class="view" id="view-report">
     <div class="card no-print">
-      <div class="card-title">REPORT DATE</div>
-      <div class="hint">Defaults to the inspection date you entered on the Job tab. Change it here if this specific report should show a different date.</div>
-      <label for="r-date">Inspection Date (on report)</label>
-      <input type="date" id="r-date">
-    </div>
-
-    <div class="card no-print">
       <div class="card-title">ISSUES &amp; RECOMMENDATIONS</div>
       <div class="hint">Optional. Whatever you type here appears on the printed report, below the summary.</div>
+      <select id="r-issues-quickadd" style="margin-top:10px">
+        <option value="">+ Add a suggestion...</option>
+        <option value="Upgrade to wireless interconnected system">Upgrade to wireless interconnected system</option>
+      </select>
       <textarea id="r-issues" placeholder="e.g. Kitchen CO alarm nearing end of life, recommend replacement within 6 months." style="min-height:90px;margin-top:8px"></textarea>
     </div>
 
@@ -412,7 +416,7 @@ table.report-table col.col-notes{width:16%}
 
   // ── STATE ──
   var state = {
-    job: { customer:'', address:'', date:'', inspector:'', reportDate:'', inspectorSignature:null, issuesText:'' },
+    job: { customer:'', address:'', date:'', inspector:'', inspectorSignature:null, issuesText:'' },
     items: [],       // {id, room, type, brand, model, modelName, sensor, power, interconnect, status, mfgDate, battery, detTest, group, notes, photo}
     groupNames: {},  // groupId -> label
     groupResults: {},// groupId -> 'Pass' | 'Fail' | null
@@ -443,7 +447,6 @@ table.report-table col.col-notes{width:16%}
     document.querySelector('.step-btn[data-view="'+view+'"]').classList.add('active');
     if(view==='groups') renderGroups();
     if(view==='report'){
-      $('r-date').value = state.job.reportDate || state.job.date || '';
       $('r-issues').value = state.job.issuesText || '';
       renderReport();
     }
@@ -464,13 +467,75 @@ table.report-table col.col-notes{width:16%}
   });
   $('btn-start-inspection').addEventListener('click', function(){ nav('inspect'); });
 
-  $('r-date').addEventListener('input', function(){
-    state.job.reportDate = $('r-date').value;
+  // inspector quick-select — tap fills the field, but it stays a free-text input
+  document.querySelectorAll('#inspector-chips .chip').forEach(function(chip){
+    chip.addEventListener('click', function(){
+      $('j-inspector').value = chip.dataset.name;
+      state.job.inspector = chip.dataset.name;
+      saveLocal();
+    });
+  });
+
+  // property address — fill from device location via reverse geocoding
+  $('btn-use-location').addEventListener('click', function(){
+    var statusEl = $('address-location-status');
+    if(!window.isSecureContext){
+      statusEl.textContent = "This needs a secure (https) connection to work — it won't work opening the file directly on your phone.";
+      return;
+    }
+    if(!navigator.geolocation){
+      statusEl.textContent = "This browser doesn't support location access.";
+      return;
+    }
+    statusEl.textContent = 'Getting your location...';
+    navigator.geolocation.getCurrentPosition(
+      function(pos){
+        var lat = pos.coords.latitude, lng = pos.coords.longitude;
+        statusEl.textContent = 'Looking up the address...';
+        fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat='+lat+'&lon='+lng+'&zoom=18&addressdetails=1')
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            var addr = (data && data.address) || {};
+            var line = [addr.house_number, addr.road].filter(Boolean).join(' ');
+            var city = addr.city || addr.town || addr.village || addr.hamlet || '';
+            var full = line || data.display_name || '';
+            if(city) full += (full ? ', ' : '') + city;
+            if(!full) full = data.display_name || '';
+            if(!full){
+              statusEl.textContent = "Couldn't find an address for this location — enter it manually.";
+              return;
+            }
+            $('j-address').value = full;
+            state.job.address = full;
+            saveLocal();
+            statusEl.textContent = 'Address filled in — double check it before starting.';
+          })
+          .catch(function(){
+            statusEl.textContent = 'Could not look up the address — check your connection, or type it manually.';
+          });
+      },
+      function(err){
+        var msg = 'Could not get your location.';
+        if(err && err.code === 1) msg = "Location permission denied — check your phone's browser location settings and try again, or type the address manually.";
+        if(err && err.code === 3) msg = 'Location request timed out — try again, ideally near a window.';
+        statusEl.textContent = msg;
+      },
+      { enableHighAccuracy: true, timeout: 15000 }
+    );
+  });
+
+  $('r-issues').addEventListener('input', function(){
+    state.job.issuesText = $('r-issues').value;
     saveLocal();
     renderReport();
   });
-  $('r-issues').addEventListener('input', function(){
+  $('r-issues-quickadd').addEventListener('change', function(){
+    var val = $('r-issues-quickadd').value;
+    if(!val) return;
+    var current = $('r-issues').value;
+    $('r-issues').value = current ? (current + '\n' + val) : val;
     state.job.issuesText = $('r-issues').value;
+    $('r-issues-quickadd').value = '';
     saveLocal();
     renderReport();
   });
@@ -1150,7 +1215,7 @@ table.report-table col.col-notes{width:16%}
 
   function renderReport(){
     var c = $('report-container');
-    var reportDate = state.job.reportDate || state.job.date || '';
+    var reportDate = state.job.date || '';
 
     var unitsInspected = state.items.length;
     var passedInspection = state.items.filter(function(i){ return i.detTest === 'Pass'; }).length;
