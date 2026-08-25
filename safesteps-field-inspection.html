@@ -139,7 +139,7 @@ select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns=
 .report-head{text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:3px solid var(--dark)}
 .report-head .t1{font-size:1.9rem;font-weight:bold;letter-spacing:.03em}
 .report-head .t2{font-size:1.15rem;color:var(--muted);margin-top:6px}
-.report-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px;font-size:1.05rem;margin-bottom:22px}
+.report-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px 20px;font-size:1.05rem;margin-bottom:22px}
 .summary-box{border:2px solid var(--dark);margin-bottom:22px}
 .summary-title{background:var(--dark);color:var(--tan);padding:10px 16px;font-size:.85rem;font-weight:bold;letter-spacing:.04em;text-transform:uppercase}
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr)}
@@ -1275,7 +1275,6 @@ table.report-table col.col-notes{width:16%}
         '<div><b>Customer</b>'+esc(state.job.customer||'—')+'</div>' +
         '<div><b>Inspection Date</b>'+esc(reportDate||'—')+'</div>' +
         '<div><b>Inspector</b>'+esc(state.job.inspector||'—')+'</div>' +
-        '<div><b>Items Logged</b>'+state.items.length+'</div>' +
       '</div>' +
       summaryHtml +
       '<div class="report-table-wrap"><table class="report-table">' +
