@@ -235,7 +235,12 @@ table.report-table col.col-notes{width:16%}
 
     <div class="card">
       <div class="card-title">LOCATION &amp; TIMESTAMP</div>
-      <div class="hint">Photos are automatically tagged with the exact time and GPS location they were taken, read directly from the photo itself. For location to be included, make sure your phone's camera has location tagging turned on (iPhone: Settings → Privacy &amp; Security → Location Services → Camera. Android: Camera app → Settings → Location tags). No setup needed here.</div>
+      <div class="hint">Tag each photo with the exact time and GPS location it was taken. Turning this on will prompt your phone for location permission — allow it once and it applies for the rest of this inspection.</div>
+      <label style="display:flex;align-items:center;gap:10px;margin-top:10px;cursor:pointer">
+        <input type="checkbox" id="chk-location" style="width:20px;height:20px;flex-shrink:0">
+        <span style="font-size:.85rem;font-weight:normal">Enable GPS + timestamp tagging</span>
+      </label>
+      <div class="hint" id="location-status"></div>
     </div>
 
     <div class="card">
@@ -414,7 +419,8 @@ table.report-table col.col-notes{width:16%}
     groupSeq: 0,
     currentRoom: null,
     rooms: [],
-    editingPhoto: null
+    editingPhoto: null,
+    locationEnabled: false
   };
 
   var PRODUCTS = [];
@@ -466,6 +472,74 @@ table.report-table col.col-notes{width:16%}
     state.job.issuesText = $('r-issues').value;
     saveLocal();
     renderReport();
+  });
+
+  // ── LOCATION & TIMESTAMP TOGGLE ──
+  var lastKnownPosition = null; // {lat, lng, at: timestamp} - kept fresh in the background
+  var geoWatchId = null;
+
+  function startLocationWatch(){
+    if(!navigator.geolocation || geoWatchId !== null) return;
+    geoWatchId = navigator.geolocation.watchPosition(
+      function(pos){
+        lastKnownPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude, at: Date.now() };
+      },
+      function(){ /* ignore individual watch errors — we just keep using the last good reading */ },
+      { enableHighAccuracy: true, maximumAge: 30000, timeout: 27000 }
+    );
+  }
+  function stopLocationWatch(){
+    if(geoWatchId !== null && navigator.geolocation){
+      navigator.geolocation.clearWatch(geoWatchId);
+      geoWatchId = null;
+    }
+    lastKnownPosition = null;
+  }
+  function getBrowserLocation(){
+    // synchronous read of whatever the background watch has most recently captured —
+    // no per-photo wait, so indoor GPS delays don't block or blank out a photo's location
+    if(!state.locationEnabled || !lastKnownPosition) return null;
+    return { lat: lastKnownPosition.lat, lng: lastKnownPosition.lng };
+  }
+  $('chk-location').addEventListener('change', function(){
+    var statusEl = $('location-status');
+    if($('chk-location').checked){
+      if(!window.isSecureContext){
+        statusEl.textContent = "Location needs a secure (https) connection to work — it won't prompt you if you're opening this file directly on your phone. Use the live safestepsplans.com link instead.";
+        $('chk-location').checked = false;
+        return;
+      }
+      if(!navigator.geolocation){
+        statusEl.textContent = "This browser doesn't support location access.";
+        $('chk-location').checked = false;
+        return;
+      }
+      statusEl.textContent = 'Requesting location permission...';
+      navigator.geolocation.getCurrentPosition(
+        function(pos){
+          state.locationEnabled = true;
+          lastKnownPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude, at: Date.now() };
+          startLocationWatch();
+          statusEl.textContent = 'Location access granted — photos will be tagged with GPS and exact time. It may take a few extra seconds to lock on indoors; if the first photo or two shows no location, that\'s why, later ones should have it.';
+          saveLocal();
+        },
+        function(err){
+          state.locationEnabled = false;
+          $('chk-location').checked = false;
+          var msg = 'Could not get a location right now — try again.';
+          if(err && err.code === 1) msg = "Location permission denied. If your browser didn't show a popup at all, check your phone's Settings → your browser app → Location, and make sure it's not set to Never — then reload this page and try again.";
+          if(err && err.code === 3) msg = 'Location request timed out — try again, ideally near a window, then it will keep tracking in the background from there.';
+          statusEl.textContent = msg;
+          saveLocal();
+        },
+        { enableHighAccuracy: true, timeout: 15000 }
+      );
+    } else {
+      state.locationEnabled = false;
+      stopLocationWatch();
+      statusEl.textContent = '';
+      saveLocal();
+    }
   });
 
 
@@ -838,20 +912,26 @@ table.report-table col.col-notes{width:16%}
   $('e-photo-input').addEventListener('change', function(e){
     var file = e.target.files[0];
     if(!file) return;
-    readExifData(file).then(function(exif){
+    Promise.all([readExifData(file), getBrowserLocation()]).then(function(results){
+      var exif = results[0];
+      var browserLoc = results[1];
       currentPhotoMeta = {
         timestamp: formatExifTimestamp(exif.dateTimeOriginal) || new Date().toLocaleString(),
-        lat: exif.gpsLat,
-        lng: exif.gpsLng
+        lat: browserLoc ? browserLoc.lat : exif.gpsLat,
+        lng: browserLoc ? browserLoc.lng : exif.gpsLng
       };
       var locStatusEl = $('location-capture-status');
       if(currentPhotoMeta.lat != null && currentPhotoMeta.lng != null){
         locStatusEl.style.display = 'block';
         locStatusEl.textContent = 'Location captured: ' + currentPhotoMeta.lat.toFixed(5) + ', ' + currentPhotoMeta.lng.toFixed(5);
         locStatusEl.style.color = '#2f5c2f';
+      } else if(state.locationEnabled){
+        locStatusEl.style.display = 'block';
+        locStatusEl.textContent = "No GPS lock yet for this photo — the tool keeps trying in the background, later photos should pick it up.";
+        locStatusEl.style.color = '';
       } else {
         locStatusEl.style.display = 'block';
-        locStatusEl.textContent = "No location on this photo — check that location tagging is turned on in your phone's camera settings.";
+        locStatusEl.textContent = "No location on this photo. Turn on \"Enable GPS + timestamp tagging\" on the Job tab for more reliable location capture.";
         locStatusEl.style.color = '';
       }
       // Browsers already auto-rotate the decoded <img> per EXIF orientation before we
@@ -1154,7 +1234,7 @@ table.report-table col.col-notes{width:16%}
   // ── CHECKPOINT / STORAGE ──
   var STORAGE_KEY = 'safesteps_inspection_v1';
   function exportState(){
-    return { job: state.job, items: state.items, groupNames: state.groupNames, groupResults: state.groupResults, itemSeq: state.itemSeq, groupSeq: state.groupSeq, rooms: state.rooms };
+    return { job: state.job, items: state.items, groupNames: state.groupNames, groupResults: state.groupResults, itemSeq: state.itemSeq, groupSeq: state.groupSeq, rooms: state.rooms, locationEnabled: state.locationEnabled };
   }
   function saveLocal(){
     try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(exportState())); }catch(e){ console.warn('local save failed', e); }
@@ -1176,10 +1256,13 @@ table.report-table col.col-notes{width:16%}
     state.itemSeq = data.itemSeq || 0;
     state.groupSeq = data.groupSeq || 0;
     state.rooms = data.rooms || DEFAULT_ROOMS.slice();
+    state.locationEnabled = !!data.locationEnabled;
     $('j-customer').value = state.job.customer||'';
     $('j-address').value = state.job.address||'';
     $('j-date').value = state.job.date||'';
     $('j-inspector').value = state.job.inspector||'';
+    $('chk-location').checked = state.locationEnabled;
+    if(state.locationEnabled) startLocationWatch();
     renderRoomChips();
     renderItemList();
   }
