@@ -2873,6 +2873,25 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
       </div>
     </div>
 
+    <!-- SIGN UP CTA (TOP) -->
+    <div class="dw-sec">
+      <div class="price-cta">
+        <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
+          <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$100</span>
+        </div>
+        <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
+          <a data-cal-namespace="home-equipment-top" data-cal-link="jack-limongelli-sa2nkr/safe-steps-home-equipment-inspection" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}' style="font-family:Arial,sans-serif;font-size:1rem;letter-spacing:.04em;color:#C3A97D;border:1px solid rgba(195,169,125,.5);border-radius:6px;padding:12px 24px;cursor:pointer;text-decoration:none;text-align:center">SCHEDULE MY INSPECTION</a>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+      Cal("init", "home-equipment-top", { origin: "https://app.cal.com" });
+      Cal.config = Cal.config || {};
+      Cal.config.forwardQueryParams = true;
+      Cal.ns["home-equipment-top"]("ui", { "hideEventTypeDetails": false, "layout": "month_view" });
+    </script>
+
     <!-- WHY? -->
     <div class="dw-sec">
       <div class="dw-eyebrow">WHY?</div>
@@ -3135,7 +3154,6 @@ document.getElementById('inquiry-overlay').addEventListener('click', function(e)
     <div class="dw-sec">
       <div class="price-cta">
         <div class="price-cta-left" style="padding:20px 24px;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(195,169,125,.18)">
-          <span style="font-family:Arial,sans-serif;font-size:.6rem;letter-spacing:.12em;color:#C3A97D;opacity:.7;margin-bottom:6px">QUARTERLY VISIT</span>
           <span style="font-family:Arial,sans-serif;font-size:1.4rem;font-weight:bold;letter-spacing:.04em;color:#C3A97D">$100</span>
         </div>
         <div class="price-cta-btn" style="padding:16px 20px;display:flex;align-items:center">
