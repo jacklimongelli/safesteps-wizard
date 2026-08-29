@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Response Time Calculator | Safe Steps</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2TS63YXNNN"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-2TS63YXNNN');
+</script>
+    <style>
+        *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+
+        :root {
+            --ink:     #0d0d0d;
+            --gray:    #6b6b6b;
+            --line:    rgba(13,13,13,.14);
+            --line-lt: rgba(13,13,13,.08);
+            --panel:   rgba(13,13,13,.03);
+            --blue:    #1d3fa8;
+            --red:     #a01810;
+            --serif:   Georgia, 'Times New Roman', Times, serif;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            background: #ffffff;
+            padding: 28px 20px 22px;
+            border-bottom: 2px solid var(--line);
+        }
+        .hero-eyebrow {
+            font-family: Arial, sans-serif;
+            font-size: .68rem;
+            font-weight: bold;
+            letter-spacing: .1em;
+            color: var(--blue);
+            display: block;
+            margin-bottom: 10px;
+        }
+        .hero h1 {
+            font-family: var(--serif);
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 400;
+            line-height: 1.05;
+            letter-spacing: 0;
+            color: var(--ink);
+            margin-bottom: 0;
+        }
+        .hero-sub {
+            font-family: Arial, sans-serif;
+            font-size: .84rem;
+            line-height: 1.68;
+            color: var(--gray);
+            border-left: 3px solid var(--line);
+            padding-left: 14px;
+            max-width: 560px;
+        }
+
+        /* ── INPUT PANEL ── */
+        .input-panel {
+            padding: 24px 20px;
+            border-bottom: 2px solid var(--line);
+            background: var(--panel);
+        }
+        .input-label {
+            font-family: Arial, sans-serif;
+            font-size: .6rem;
+            font-weight: bold;
+            letter-spacing: .08em;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 12px;
+        }
+        .input-label::before { content:''; display:block; width:12px; height:1px; background:var(--line); }
+        .input-row { display:flex; gap:8px; flex-wrap:wrap; }
+        .input-street { flex: 1 1 100%; }
+        .input-city   { flex: 2 1 160px; }
+        .input-state  { flex: 1 1 60px; }
+        .input-zip    { flex: 1 1 80px; }
+        .addr-field {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid var(--line);
+            background: #ffffff;
+            font-family: Arial, sans-serif;
+            font-size: .84rem;
+            color: var(--ink);
+            outline: none;
+            transition: border-color .2s, background .2s;
+            box-sizing: border-box;
+        }
+        .addr-field::placeholder { color: rgba(13,13,13,.4); }
+        .addr-field:focus { border-color: var(--ink); background: #ffffff; }
+        .input-row-bottom { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+        @media (max-width: 480px) {
+            .input-city, .input-state, .input-zip { flex: 1 1 100%; }
+            #search-btn { width: 100%; }
+        }
+        #search-btn {
+            background: var(--ink);
+            color: #ffffff;
+            border: none;
+            padding: 12px 22px;
+            font-family: Arial, sans-serif;
+            font-size: .84rem;
+            font-weight: bold;
+            letter-spacing: .02em;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: opacity .15s;
+        }
+        #search-btn:hover { opacity: .8; }
+        #search-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+        /* ── LOADING ── */
+        .loading { display:none; padding:48px 20px; text-align:center; }
+        .loading.active { display:block; }
+        .loading-dots { display:flex; justify-content:center; gap:6px; margin-bottom:16px; }
+        .loading-dot {
+            width:8px; height:8px;
+            background: var(--ink);
+            border-radius:50%;
+            opacity:.3;
+            animation: pulse 1.2s ease-in-out infinite;
+        }
+        .loading-dot:nth-child(2) { animation-delay:.2s; }
+        .loading-dot:nth-child(3) { animation-delay:.4s; }
+        @keyframes pulse { 0%,80%,100%{opacity:.2;transform:scale(.8)} 40%{opacity:1;transform:scale(1)} }
+        .loading-label {
+            font-family: Arial, sans-serif;
+            font-size: .72rem;
+            letter-spacing: .05em;
+            color: var(--gray);
+        }
+
+        /* ── ERROR ── */
+        .error-msg {
+            display: none;
+            margin: 16px 20px;
+            padding: 13px 16px;
+            background: rgba(160,24,16,.06);
+            border-left: 3px solid var(--red);
+            font-family: Arial, sans-serif;
+            font-size: .78rem;
+            color: var(--red);
+            line-height: 1.6;
+        }
+        .error-msg.active { display:block; }
+
+        /* ── RESULTS ── */
+        .results { display:none; }
+        .results.active { display:block; }
+
+        /* address bar */
+        .address-bar {
+            padding: 10px 20px;
+            background: var(--panel);
+            border-bottom: 1px solid var(--line-lt);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .address-pin {
+            width: 6px; height: 6px;
+            background: var(--blue);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .address-text {
+            font-family: Arial, sans-serif;
+            font-size: .66rem;
+            letter-spacing: .05em;
+            color: var(--ink);
+        }
+
+        /* ── TWO COLUMNS ── */
+        .columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+        @media (max-width: 620px) { .columns { grid-template-columns: 1fr; } }
+
+        .col {
+            padding: 22px 20px 20px;
+            border-bottom: 2px solid var(--line);
+        }
+        .col:first-child { border-right: 1px solid var(--line); }
+        @media (max-width: 620px) { .col:first-child { border-right: none; } }
+
+        .col-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--line);
+        }
+        .col-heading-icon {
+            width: 30px; height: 30px;
+            background: var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            font-size: .52rem;
+            font-weight: bold;
+            letter-spacing: .08em;
+            color: #ffffff;
+            flex-shrink: 0;
+        }
+        .col-heading-title {
+            font-family: Arial, sans-serif;
+            font-size: .88rem;
+            font-weight: bold;
+            letter-spacing: .05em;
+            color: var(--ink);
+            margin-bottom: 1px;
+        }
+        .col-heading-sub {
+            font-family: Arial, sans-serif;
+            font-size: .62rem;
+            color: var(--gray);
+        }
+
+        /* ── STATION ROWS ── */
+        .station-list { display:flex; flex-direction:column; gap:5px; margin-bottom:16px; }
+
+        .station-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 11px 12px;
+            background: #ffffff;
+            border: 1px solid var(--line);
+            cursor: pointer;
+            transition: all .15s;
+        }
+        .station-item:hover { background: var(--panel); border-color: rgba(13,13,13,.3); }
+        .station-item.selected {
+            background: rgba(29,63,168,.05);
+            border: 1px solid rgba(29,63,168,.35);
+            border-left: 3px solid var(--blue);
+        }
+
+        .station-selector {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            border: 2px solid rgba(13,13,13,.3);
+            flex-shrink: 0;
+            margin-top: 2px;
+            position: relative;
+            transition: all .15s;
+        }
+        .station-item.selected .station-selector {
+            border-color: var(--blue);
+            background: var(--blue);
+        }
+        .station-item.selected .station-selector::after {
+            content: '';
+            position: absolute;
+            top:50%; left:50%;
+            transform: translate(-50%,-50%);
+            width:5px; height:5px;
+            background: #ffffff;
+            border-radius: 50%;
+        }
+
+        .station-item-body { flex:1; min-width:0; }
+        .station-item-name {
+            font-family: Arial, sans-serif;
+            font-size: .78rem;
+            font-weight: bold;
+            letter-spacing: .02em;
+            color: var(--ink);
+            line-height: 1.3;
+            margin-bottom: 3px;
+        }
+        .station-item-address {
+            font-family: Arial, sans-serif;
+            font-size: .64rem;
+            color: var(--gray);
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+        .station-item-address:empty { display:none; }
+
+        .pill-row { display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+        .pill {
+            font-family: Arial, sans-serif;
+            font-size: .54rem;
+            font-weight: bold;
+            letter-spacing: .06em;
+            padding: 2px 7px;
+            border: 1px solid var(--line);
+        }
+        .pill-career    { background: var(--panel); color: var(--ink); }
+        .pill-volunteer { background: rgba(160,24,16,.07);  color: var(--red); border-color: rgba(160,24,16,.25); }
+        .pill-unknown   { background: var(--panel); color: var(--gray); }
+        .pill-town      { background: rgba(29,63,168,.08); color: var(--blue); }
+        .pill-outside   { background: var(--panel); color: var(--gray); }
+        .pill-dist      { font-family: Arial, sans-serif; font-size: .58rem; color: var(--gray); font-weight: normal; border: none; padding: 0; }
+
+        /* ── READOUT CARD ── */
+        .readout-card {
+            border: 1px solid var(--line);
+            background: #ffffff;
+        }
+        .readout-top {
+            background: var(--ink);
+            padding: 10px 14px;
+        }
+        .readout-station-name {
+            font-family: Arial, sans-serif;
+            font-size: .66rem;
+            letter-spacing: .04em;
+            color: #ffffff;
+            line-height: 1.4;
+        }
+        .readout-body { padding: 16px 14px; }
+
+        .juris-note {
+            background: rgba(160,24,16,.06);
+            border-left: 3px solid var(--red);
+            padding: 9px 12px;
+            margin-bottom: 12px;
+            font-family: Arial, sans-serif;
+            font-size: .66rem;
+            color: var(--red);
+            line-height: 1.5;
+        }
+
+        .time-block { text-align:center; padding:14px 10px 10px; }
+        .time-num {
+            font-family: var(--serif);
+            font-size: 5rem;
+            font-weight: 400;
+            line-height: .9;
+            color: var(--ink);
+            letter-spacing: -.02em;
+        }
+        .time-num.threat { color: var(--red); }
+        .time-word {
+            font-family: Arial, sans-serif;
+            font-size: .6rem;
+            font-weight: bold;
+            letter-spacing: .12em;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+        .time-caption {
+            font-family: Arial, sans-serif;
+            font-size: .82rem;
+            color: var(--gray);
+            margin-top: 6px;
+            line-height: 1.5;
+        }
+
+        .readout-dist {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            font-size: .9rem;
+            color: var(--ink);
+            padding-top: 10px;
+            border-top: 1px solid var(--line-lt);
+            margin-top: 10px;
+        }
+        .readout-dist strong { color: var(--ink); font-weight: bold; }
+
+        /* ── CONTEXT ── */
+        .context {
+            padding: 32px 20px;
+            border-bottom: 2px solid var(--line);
+            background: var(--panel);
+        }
+        .context-heading {
+            font-family: var(--serif);
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 400;
+            letter-spacing: 0;
+            color: var(--ink);
+            margin-bottom: 24px;
+        }
+        .context-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 32px;
+            max-width: 820px;
+        }
+        @media (max-width: 540px) { .context-grid { grid-template-columns: 1fr; } }
+        .context-simple {
+            font-family: var(--serif);
+            font-size: clamp(1rem, 2.4vw, 1.3rem);
+            color: var(--ink);
+            line-height: 1.6;
+            max-width: 640px;
+            border-left: 3px solid var(--blue);
+            padding-left: 16px;
+        }
+
+        /* ── METHODOLOGY ── */
+        .methodology {
+            padding: 32px 20px;
+            border-bottom: 2px solid var(--line);
+        }
+        .method-heading {
+            font-family: var(--serif);
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 400;
+            letter-spacing: 0;
+            color: var(--ink);
+            margin-bottom: 10px;
+        }
+        .method-intro {
+            font-family: Arial, sans-serif;
+            font-size: .76rem;
+            color: var(--ink);
+            line-height: 1.72;
+            max-width: 720px;
+            margin-bottom: 24px;
+            border-left: 3px solid var(--line);
+            padding-left: 14px;
+        }
+        .method-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 28px;
+            margin-bottom: 28px;
+            max-width: 880px;
+        }
+        @media (max-width: 600px) { .method-grid { grid-template-columns: 1fr; } }
+        .method-block {
+            padding: 14px;
+            background: #ffffff;
+            border: 1px solid var(--line);
+            border-left: 3px solid var(--blue);
+        }
+        .method-block-title {
+            font-family: Arial, sans-serif;
+            font-size: .6rem;
+            font-weight: bold;
+            letter-spacing: .08em;
+            color: var(--ink);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 10px;
+        }
+        .method-block-body p {
+            font-family: Arial, sans-serif;
+            font-size: .72rem;
+            color: var(--ink);
+            line-height: 1.7;
+            margin-bottom: 7px;
+        }
+        .method-block-body p:last-child { margin-bottom:0; }
+        .method-block-body strong { color: var(--ink); font-weight: bold; }
+        .method-sources {
+            border-top: 1px solid var(--line);
+            padding-top: 20px;
+            max-width: 880px;
+        }
+        .method-sources-label {
+            font-family: Arial, sans-serif;
+            font-size: .58rem;
+            font-weight: bold;
+            letter-spacing: .08em;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        .method-sources-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            counter-reset: source-counter;
+        }
+        .method-sources-list li {
+            font-family: Arial, sans-serif;
+            font-size: .66rem;
+            color: var(--ink);
+            line-height: 1.65;
+            padding-left: 26px;
+            position: relative;
+            counter-increment: source-counter;
+        }
+        .method-sources-list li::before {
+            content: counter(source-counter);
+            position: absolute;
+            left: 0; top: 1px;
+            font-family: Arial, sans-serif;
+            color: var(--blue);
+            font-size: .68rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .method-sources-list em { font-style:italic; color: var(--gray); }
+        .method-sources-list strong { color: var(--ink); font-weight:bold; }
+        sup {
+            font-size: .5rem;
+            font-weight: bold;
+            color: var(--blue);
+            vertical-align: super;
+            line-height: 0;
+            margin-left: 1px;
+        }
+
+        /* ── CTA ── */
+        .cta {
+            background: var(--ink);
+            padding: 32px 20px;
+            text-align: center;
+        }
+        .cta-label {
+            font-family: Arial, sans-serif;
+            font-size: .58rem;
+            font-weight: bold;
+            letter-spacing: .1em;
+            color: rgba(255,255,255,.6);
+            margin-bottom: 10px;
+        }
+        .cta h2 {
+            font-family: var(--serif);
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-weight: 400;
+            letter-spacing: 0;
+            color: #ffffff;
+            line-height: 1.15;
+            margin-bottom: 12px;
+        }
+        .cta-sub {
+            font-family: Arial, sans-serif;
+            font-size: .8rem;
+            color: rgba(255,255,255,.75);
+            line-height: 1.65;
+            max-width: 400px;
+            margin: 0 auto 20px;
+        }
+        .cta-btn {
+            display: inline-block;
+            background: #ffffff;
+            color: var(--ink);
+            padding: 14px 28px;
+            font-family: Arial, sans-serif;
+            font-size: .9rem;
+            font-weight: bold;
+            letter-spacing: .02em;
+            text-decoration: none;
+            transition: opacity .15s;
+        }
+        .cta-btn:hover { opacity: .8; }
+    </style>
+</head>
+<body>
+
+<div class="input-panel">
+    <div class="input-label">YOUR HOME ADDRESS</div>
+    <div class="input-row">
+        <div class="input-street">
+            <input class="addr-field" id="addr-street" type="text" placeholder="Street address" autocomplete="off">
+        </div>
+    </div>
+    <div class="input-row-bottom">
+        <div class="input-city">
+            <input class="addr-field" id="addr-city" type="text" placeholder="City / Town" autocomplete="off">
+        </div>
+        <div class="input-state">
+            <input class="addr-field" id="addr-state" type="text" placeholder="ST" autocomplete="off" maxlength="2">
+        </div>
+        <div class="input-zip">
+            <input class="addr-field" id="addr-zip" type="text" placeholder="ZIP" autocomplete="off" maxlength="5">
+        </div>
+        <button id="search-btn" onclick="runCalculation()">Calculate →</button>
+    </div>
+</div>
+
+<div class="loading" id="loading">
+    <div class="loading-dots">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+    </div>
+    <div class="loading-label" id="loading-text">LOCATING EMERGENCY STATIONS...</div>
+</div>
+
+<div class="error-msg" id="error-msg"></div>
+
+<div class="results" id="results">
+
+    <div class="address-bar">
+        <div class="address-pin"></div>
+        <div class="address-text" id="address-text"></div>
+    </div>
+
+    <div class="columns">
+        <div class="col">
+            <div class="col-heading">
+                <div class="col-heading-icon">FIRE</div>
+                <div>
+                    <div class="col-heading-title">FIRE RESPONSE</div>
+                    <div class="col-heading-sub">Select a station to see response time</div>
+                </div>
+            </div>
+            <div class="station-list" id="fire-list"></div>
+            <div id="fire-readout"></div>
+        </div>
+
+        <div class="col">
+            <div class="col-heading">
+                <div class="col-heading-icon">EMS</div>
+                <div>
+                    <div class="col-heading-title">EMS / RESCUE</div>
+                    <div class="col-heading-sub">Select a station to see response time</div>
+                </div>
+            </div>
+            <div class="station-list" id="ems-list"></div>
+            <div id="ems-readout"></div>
+        </div>
+    </div>
+
+    <div class="context">
+        <div class="context-heading">What these numbers mean for your family</div>
+        <p class="context-simple">A house fire takes about 3 minutes to reach the second floor and block your exits. If your fire department's response time is longer than 3 minutes, your family is on its own to survive.</p>
+    </div>
+
+</div>
+
+<script>
+let appData = null;
+
+function showError(msg) {
+    setLoading(false);
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.classList.add('active');
+}
+function clearError() {
+    const el = document.getElementById('error-msg');
+    el.textContent = '';
+    el.classList.remove('active');
+}
+function setLoading(on, text) {
+    document.getElementById('loading').classList.toggle('active', on);
+    if (text) document.getElementById('loading-text').textContent = text;
+    document.getElementById('search-btn').disabled = on;
+}
+function showResults(on) {
+    document.getElementById('results').classList.toggle('active', on);
+}
+
+const PROXY = 'https://www.safestepsplansforms.com/_functions/places';
+
+async function placesCall(body) {
+    const res = await fetch(PROXY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+}
+
+async function getDriving(origin, destLat, destLng) {
+    try {
+        const res = await placesCall({ type: 'directions', origin, dest: destLat + ',' + destLng });
+        if (res.error) return null;
+        return { distance: res.distance, duration: res.duration };
+    } catch { return null; }
+}
+
+function detectDeptType(name, fromKeyword) {
+    const n = (name || '').toUpperCase();
+    if (/VOLUNTEER|\bVFD\b|\bVFC\b|\bVFRS\b|FIRE COMPANY|FIRE CO\./.test(n)) return 'volunteer';
+    if (/FIRST AID|RESCUE SQUAD|RESCUE CORPS|AMBULANCE CORPS|AMBULANCE SQUAD/.test(n)) return 'volunteer';
+    if (/\bCITY\b|\bCOUNTY\b|\bMETRO\b|\bMUNICIPAL\b|\bCAREER\b/.test(n)) return 'career';
+    if (fromKeyword) return 'volunteer';
+    return 'unknown';
+}
+
+function buildReadout(station, type) {
+    if (!station) return '';
+    const isFire = (type === 'fire');
+    const careerOverhead = isFire ? 3 : 4;
+    const volOverhead    = isFire ? 8 : 10;
+    const driveMin = station.drive_minutes;
+    const total    = driveMin + (station.dept_type === 'volunteer' ? volOverhead : careerOverhead);
+    const isThreat = total >= 10;
+    const outsideNote = station.in_town ? '' : ' · outside your municipality, may respond as mutual aid';
+    const caption = station.dept_type === 'volunteer'
+        ? (isFire
+            ? `Estimated total response time · ~1 min dispatch + ~2 min turnout + ~5 min volunteer call-out + ${driveMin} min drive${outsideNote}`
+            : `Estimated total response time · ~3 min EMD protocol + ~2 min turnout + ~5 min volunteer call-out + ${driveMin} min drive${outsideNote}`)
+        : (isFire
+            ? `Estimated total response time · ~1 min dispatch + ~2 min turnout + ${driveMin} min drive${outsideNote}`
+            : `Estimated total response time · ~3 min EMD protocol + ~1 min turnout + ${driveMin} min drive${outsideNote}`);
+    const jurisNote = station.in_town ? '' : `<div class="juris-note">Outside your municipality — may respond as mutual aid. Actual response time could vary.</div>`;
+    return `
+        <div class="readout-card">
+            <div class="readout-top">
+                <div class="readout-station-name">${station.station_name}</div>
+            </div>
+            <div class="readout-body">
+                ${jurisNote}
+                <div class="time-block">
+                    <div class="time-num${isThreat ? ' threat' : ''}">${total}</div>
+                    <div class="time-word">MINUTES</div>
+                    <div class="time-caption">${caption}</div>
+                </div>
+                <div class="readout-dist"><strong>${station.distance_miles} miles</strong> driving distance</div>
+            </div>
+        </div>`;
+}
+
+function buildList(type, stations, activeIdx) {
+    const listEl = document.getElementById(type + '-list');
+    listEl.innerHTML = '';
+    stations.forEach((s, i) => {
+        const item = document.createElement('div');
+        item.className = 'station-item' + (i === activeIdx ? ' selected' : '');
+        item.onclick = () => selectStation(type, i);
+        let deptPill = '';
+        if (s.dept_type === 'career')         deptPill = '<span class="pill pill-career">CAREER</span>';
+        else if (s.dept_type === 'volunteer') deptPill = '<span class="pill pill-volunteer">VOLUNTEER</span>';
+        else                                  deptPill = '<span class="pill pill-unknown">TYPE UNKNOWN</span>';
+        const jurisdPill = s.in_town
+            ? '<span class="pill pill-town">IN TOWN</span>'
+            : '<span class="pill pill-outside">OUT OF TOWN</span>';
+        item.innerHTML = `
+            <div class="station-selector"></div>
+            <div class="station-item-body">
+                <div class="station-item-name">${s.station_name}</div>
+                <div class="station-item-address">${s.address || ''}</div>
+                <div class="pill-row">
+                    ${deptPill}${jurisdPill}
+                    <span class="pill-dist">${s.distance_miles} mi</span>
+                </div>
+            </div>`;
+        listEl.appendChild(item);
+    });
+}
+
+function selectStation(type, idx) {
+    const stations = type === 'fire' ? appData.fire_stations : appData.ems_stations;
+    document.querySelectorAll('#' + type + '-list .station-item').forEach((el, i) => {
+        el.classList.toggle('selected', i === idx);
+    });
+    document.getElementById(type + '-readout').innerHTML = buildReadout(stations[idx], type);
+}
+
+const FIRE_DB_URL = 'https://raw.githubusercontent.com/jacklimongelli/safesteps-wizard/main/fire-stations.json';
+let fireDbCache = null;
+async function loadFireDb() {
+    if (fireDbCache) return fireDbCache;
+    const res = await fetch(FIRE_DB_URL);
+    if (!res.ok) throw new Error('Could not load fire station database');
+    fireDbCache = await res.json();
+    return fireDbCache;
+}
+function haversineMiles(lat1, lng1, lat2, lng2) {
+    const R = 3958.8;
+    const dLat = (lat2-lat1)*Math.PI/180, dLng = (lng2-lng1)*Math.PI/180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+    return R*2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+async function getFireStations(lat, lng, address, municipality) {
+    const db = await loadFireDb();
+    const nearest10 = db
+        .map(s => ({...s, _miles: haversineMiles(lat, lng, s.lat, s.lng)}))
+        .sort((a,b) => a._miles - b._miles)
+        .slice(0, 10);
+    const withDrive = await Promise.all(nearest10.map(async s => {
+        const drive = await getDriving(address, s.lat, s.lng);
+        return {...s, drive};
+    }));
+    return withDrive
+        .filter(s => s.drive)
+        .sort((a,b) => parseDuration(a.drive.duration) - parseDuration(b.drive.duration))
+        .slice(0, 5)
+        .map(s => ({
+            station_name:   s.n,
+            address:        s.a || '',
+            dept_type:      s.t,
+            in_town:        municipality ? s.n.toLowerCase().includes(municipality.toLowerCase()) : false,
+            drive_minutes:  parseDuration(s.drive.duration),
+            distance_miles: s.drive.distance.replace(' mi',''),
+            _drive_min:     parseDuration(s.drive.duration)
+        }));
+}
+
+async function runCalculation() {
+    const street = document.getElementById('addr-street').value.trim();
+    const city   = document.getElementById('addr-city').value.trim();
+    const state  = document.getElementById('addr-state').value.trim();
+    const zip    = document.getElementById('addr-zip').value.trim();
+    if (!street || !city || !state) { showError('Please enter your street address, city, and state.'); return; }
+    const address = [street, city, state, zip].filter(Boolean).join(', ');
+    clearError();
+    showResults(false);
+
+    try {
+        setLoading(true, 'LOCATING YOUR ADDRESS...');
+        const geo = await placesCall({ type: 'geocode', address });
+        if (geo.error) throw new Error('Address not found: ' + geo.status);
+        const { lat, lng } = geo;
+        const municipality = city;
+
+        setLoading(true, 'FINDING FIRE STATIONS NEAR YOU...');
+        const fireStations = await getFireStations(lat, lng, address, municipality);
+
+        setLoading(true, 'FINDING EMS AND RESCUE STATIONS...');
+        const emsNearby = await placesCall({ type: 'nearby', lat, lng, keywords: ['rescue squad', 'EMS', 'ambulance corps', 'first aid squad'], rankby: 'distance' });
+        const emsPlaces = (emsNearby.results || []).slice(0, 5);
+        const emsDeptTypeMap = {};
+        emsPlaces.forEach(p => { emsDeptTypeMap[p.place_id] = detectDeptType(p.name, false); });
+
+        setLoading(true, 'CALCULATING DRIVE TIMES...');
+
+        const buildStations = async (places, deptTypeMap = {}) => {
+            const results = await Promise.all(places.map(async p => {
+                try {
+                    const [det, drive] = await Promise.all([
+                        placesCall({ type: 'details', place_id: p.place_id }),
+                        getDriving(address, p.lat, p.lng)
+                    ]);
+                    const driveMin = drive ? parseDuration(drive.duration) : 99;
+                    const in_town = municipality ? (det.address || p.address || '').toLowerCase().includes(municipality.toLowerCase()) : false;
+                    return {
+                        station_name:   det.name || p.name,
+                        address:        det.address || p.address || '',
+                        dept_type:      deptTypeMap[p.place_id] || p.dept_type || detectDeptType(det.name || p.name, p._fromKeyword),
+                        in_town,
+                        drive_minutes:  driveMin,
+                        distance_miles: drive ? drive.distance.replace(' mi', '') : '?',
+                        _drive_min:     driveMin
+                    };
+                } catch { return null; }
+            }));
+            return results.filter(Boolean);
+        };
+
+        const emsStations = await buildStations(emsPlaces, emsDeptTypeMap);
+
+        fireStations.sort((a, b) => a.in_town !== b.in_town ? (a.in_town ? -1 : 1) : a._drive_min - b._drive_min);
+        emsStations.sort((a, b) => a._drive_min - b._drive_min);
+
+        if (!fireStations.length) throw new Error('No fire stations found near this address.');
+
+        appData = {
+            formatted_address: address,
+            municipality,
+            fire_stations: fireStations.slice(0, 3),
+            ems_stations:  emsStations.slice(0, 3)
+        };
+
+        setLoading(false);
+        document.getElementById('address-text').textContent = address;
+        buildList('fire', appData.fire_stations, 0);
+        document.getElementById('fire-readout').innerHTML = buildReadout(appData.fire_stations[0], 'fire');
+        if (appData.ems_stations.length) {
+            buildList('ems', appData.ems_stations, 0);
+            document.getElementById('ems-readout').innerHTML = buildReadout(appData.ems_stations[0], 'ems');
+        } else {
+            document.getElementById('ems-list').innerHTML = '<div style="padding:14px;font-family:Arial,sans-serif;font-size:.72rem;color:rgba(13,13,13,.5);">No EMS stations found near this address.</div>';
+        }
+        showResults(true);
+        if(typeof gtag === 'function'){
+            gtag('event', 'calculator_result', {
+                event_category: 'Free Tool',
+                event_label: 'Response Time Calculator',
+                address_city: municipality
+            });
+        }
+
+    } catch(err) {
+        showError(err.message || 'Something went wrong. Please try again.');
+        setLoading(false);
+        if(typeof gtag === 'function'){
+            gtag('event', 'calculator_error', {
+                event_category: 'Free Tool',
+                event_label: err.message || 'Unknown error'
+            });
+        }
+    }
+}
+
+function parseDuration(str) {
+    if (!str) return 99;
+    const h = str.match(/(\d+)\s*hour/);
+    const m = str.match(/(\d+)\s*min/);
+    return ((h ? parseInt(h[1]) : 0) * 60) + (m ? parseInt(m[1]) : 0);
+}
+
+['addr-street','addr-city','addr-state','addr-zip'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+        if (e.key === 'Enter') runCalculation();
+    });
+});
+
+function reportHeight() {
+    const height = document.body.scrollHeight;
+    window.parent.postMessage({ action: 'resize', height }, '*');
+}
+window.addEventListener('load', reportHeight);
+const resizeObserver = new ResizeObserver(reportHeight);
+resizeObserver.observe(document.body);
+</script>
+</body>
+</html>
